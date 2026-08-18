@@ -1,0 +1,2668 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Labs -- Component Gallery</title>
+<style>
+/*
+  Ember Labs starter stylesheet
+  ------------------------------------------------------------
+  Design tokens + ready component classes extracted from the Ember Labs
+  Figma mockups (see references/colour-tokens.md, typography.md,
+  components.md for the full rationale behind every value here).
+
+  Drop this file into a vibe-coded HTML data tool, or crib the values
+  into an existing stylesheet. Every colour and size traces back to a
+  documented source -- don't hand-edit a value here without updating the
+  matching reference file.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root {
+  /* ---- neutrals (three-step contrast scale) ---- */
+  --el-navy: #192238;     /* primary / darkest surface */
+  --el-canvas: #414F6F;   /* mid surface: content canvas / mid card fill */
+  --el-slate: #626E88;    /* secondary / lighter surface */
+  --el-black: #000000;
+  --el-white: #FFFFFF;
+
+  /* ---- accents ---- */
+  --el-yellow: #FFC400;   /* primary accent: controls, primary badge, icons */
+  --el-orange: #E04B00;   /* secondary accent: deltas, costs, alt badge */
+
+  /* ---- data / semantic ---- */
+  --el-green: #13CE74;    /* headline / positive metrics */
+  --el-blue: #37A6E6;     /* dataviz series 2 */
+  --el-blue-light: #97CCED; /* a lighter step of --el-blue for pairing with it (e.g. a stacked "before/after" sub-segment) -- NOT the same as --el-chart-cat-5 below, which is a separate, even paler blue reserved for the 6-colour categorical set. See charts.md. */
+  --el-muted: #B0B7C6;    /* secondary text, gridlines, unfilled tracks */
+
+  /* ---- data visualization: the official 6-colour categorical/discrete
+     palette, fixed order, never cycled. Colours 1-4 are the same hexes as
+     the UI accents above (--el-yellow/--el-blue/--el-green/--el-orange) --
+     re-declared here under chart-specific names so a chart's colour
+     choice reads as "the Nth categorical colour" rather than incidentally
+     matching a button colour. See references/charts.md. ---- */
+  --el-chart-cat-1: #FFC400;
+  --el-chart-cat-2: #37A6E6;
+  --el-chart-cat-3: #13CE74;
+  --el-chart-cat-4: #E04B00;
+  --el-chart-cat-5: #C4D9E9;
+  --el-chart-cat-6: #FFF4A3;
+
+  /* ---- data visualization: sequential ramps, one per accent hue, for
+     magnitude/order (stacked bars and areas, a choropleth map, an ordered
+     line series). Each ramp's step 3 is the same hex as the matching UI
+     accent/categorical colour above -- the ramp is built around that
+     colour, not a separate palette. Numbered 1 (darkest) -> 5 (lightest).
+     See references/charts.md for which steps have a flagged contrast/
+     legibility caveat. ---- */
+  --el-ramp-yellow-1: #B77A00;
+  --el-ramp-yellow-2: #CC9900;
+  --el-ramp-yellow-3: #FFC400;
+  --el-ramp-yellow-4: #FFDA44;
+  --el-ramp-yellow-5: #FFF4A3;
+
+  --el-ramp-green-1: #0B6638;
+  --el-ramp-green-2: #109553;
+  --el-ramp-green-3: #13CE74;
+  --el-ramp-green-4: #A3D9A5;
+  --el-ramp-green-5: #D3EADF;
+
+  --el-ramp-blue-1: #203772;
+  --el-ramp-blue-2: #1E609C;
+  --el-ramp-blue-3: #37A6E6;
+  --el-ramp-blue-4: #97CCED;
+  --el-ramp-blue-5: #C4D9E9;
+
+  --el-ramp-orange-1: #891B05;
+  --el-ramp-orange-2: #BF3100;
+  --el-ramp-orange-3: #E04B00;
+  --el-ramp-orange-4: #EE7309;
+  --el-ramp-orange-5: #FCA311;
+
+  /* ---- type scale (px) ---- */
+  --el-h1: 60px;
+  --el-h2: 42px;
+  --el-h3: 36px;
+  --el-h4: 32px;
+  --el-h5: 24px;
+  --el-h6: 22px;
+  --el-body: 20px;
+  --el-caption: 15px;
+  --el-label: 15px;
+
+  --el-font: 'Poppins', system-ui, sans-serif;
+
+  /* ---- spacing ---- */
+  --el-gap: 20px;
+  --el-pad-card: 28px;
+  --el-pad-section: 48px;
+  --el-radius: 0px; /* sharp corners everywhere -- see the rules that never bend */
+  --el-radius-badge: 0px; /* kept as a separate token in case badge/tag sizing ever needs to change independently, but the value is 0 like everything else -- there is NO rounding exception anywhere in this system, including badges/tags. An earlier draft used 3px here; that was wrong and has been corrected. */
+
+  /* ---- interaction states (derived, for the UI-kit components) ---- */
+  --el-yellow-hover: #E6B300;
+  --el-yellow-active: #CC9F00;
+  --el-orange-hover: #C64300;
+  --el-white-wash-08: rgba(255, 255, 255, 0.08);  /* subtle hover fill on dark surfaces */
+  --el-white-wash-12: rgba(255, 255, 255, 0.12);
+  --el-divider: rgba(255, 255, 255, 0.12);        /* hairline between list/table rows, tab underline track */
+  --el-overlay: rgba(25, 34, 56, 0.75);           /* modal backdrop -- navy-tinted, not black */
+}
+
+/* ---------------------------------------------------------------- */
+/* Base                                                              */
+/* ---------------------------------------------------------------- */
+
+.el-root {
+  font-family: var(--el-font);
+  background: var(--el-canvas);
+  color: var(--el-white);
+  margin: 0;
+}
+
+.el-root h1, .el-root h2, .el-root h3,
+.el-root h4, .el-root h5, .el-root h6 {
+  font-family: var(--el-font);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.15;
+}
+.el-root h1 { font-size: var(--el-h1); }
+.el-root h2 { font-size: var(--el-h2); }
+.el-root h3 { font-size: var(--el-h3); }
+.el-root h4 { font-size: var(--el-h4); }
+.el-root h5 { font-size: var(--el-h5); }
+.el-root h6 { font-size: var(--el-h6); }
+
+.el-root p, .el-root body {
+  font-weight: 400;
+  font-size: var(--el-body);
+  line-height: 1.4;
+  margin: 0; /* no default UA paragraph margin -- every gap in this system is an
+                explicit, deliberate margin set on the specific class that needs
+                one (see e.g. .el-help, .el-stat-sublabel below), not a browser
+                default stacking silently on top of it. A missing reset here was
+                previously responsible for the stat tile rendering with far more
+                vertical whitespace than the mockup (each unstyled <p> was
+                collapsing in its own ~1em top+bottom margin against its
+                neighbours) -- always reset a text element's margin to 0 and add
+                spacing back deliberately, rather than relying on the default. */
+}
+
+.el-muted { color: var(--el-muted); }
+.el-caption { font-size: var(--el-caption); line-height: 1.35; color: var(--el-muted); }
+
+/* ---------------------------------------------------------------- */
+/* Logo                                                               */
+/* ---------------------------------------------------------------- */
+/* Real vector wordmarks live in assets/svg/ember-labs-logo-white.svg and
+   ember-labs-logo-black.svg. Inline the SVG markup directly (best for a
+   single-file vibe-coded tool) or reference via <img src="...">. Size by
+   wrapping in a container and setting its width -- both files use
+   width/height="100%" and a fixed viewBox, so they scale cleanly. Do not
+   recolour or re-typeset the wordmark; pick the white or black file to
+   match the background instead. See references/components.md and
+   references/colour-tokens.md for the (deliberately not-quite-token-exact)
+   colours baked into these files. */
+
+.el-logo-mark { display: inline-block; height: 28px; width: auto; }
+
+/* ---------------------------------------------------------------- */
+/* Nav                                                                */
+/* ---------------------------------------------------------------- */
+
+.el-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--el-black);
+  padding: 20px 32px;
+}
+.el-nav.el-nav--transparent { background: transparent; position: relative; z-index: 2; }
+.el-nav-links { display: flex; gap: 36px; list-style: none; margin: 0; padding: 0; }
+.el-nav-links a {
+  color: var(--el-white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+}
+.el-nav-links a:hover { opacity: 0.8; }
+
+/* ---------------------------------------------------------------- */
+/* Hero                                                               */
+/* ---------------------------------------------------------------- */
+
+.el-hero {
+  background: var(--el-navy);
+  padding: var(--el-pad-section) 32px;
+  /* Explicit column stack -- do NOT change this to a row/inline layout.
+     The badge, title, and subtitle must always stack vertically (badge on
+     top). Because .el-badge is itself `display: inline-flex`, relying on
+     plain block flow here is fragile: if the title is ever written as a
+     span/div instead of a heading tag, or if this rule is ever swapped for
+     `display: flex` without `flex-direction: column` (a very easy mistake --
+     that combination defaults to a horizontal row), the badge and title will
+     sit on the same line. Setting flex-direction: column explicitly makes
+     every direct child of .el-hero stack top-to-bottom regardless of what
+     element/display type that child happens to be. */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.el-hero .el-badge { margin-bottom: 20px; }
+.el-hero h1, .el-hero h2, .el-hero h3 { margin-bottom: 10px; }
+.el-hero .el-hero-subtitle { color: var(--el-muted); font-size: var(--el-body); margin-top: 8px; }
+
+/* ---------------------------------------------------------------- */
+/* Badge / pill                                                       */
+/* ---------------------------------------------------------------- */
+
+.el-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px;
+  border-radius: var(--el-radius-badge);
+  font-weight: 600;
+  font-size: 15px;
+  background: var(--el-yellow);
+  color: var(--el-navy);
+}
+.el-badge.el-badge--orange { background: var(--el-orange); color: var(--el-white); }
+
+/* ---------------------------------------------------------------- */
+/* Canvas + generic card                                              */
+/* ---------------------------------------------------------------- */
+
+.el-canvas {
+  background: var(--el-canvas);
+  padding: var(--el-pad-section) 32px;
+}
+
+.el-grid {
+  display: grid;
+  gap: var(--el-gap);
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+/* Stat tiles are compact by design (see .el-stat below) -- a row of them
+   should pack tighter and narrower than a row of full-size cards/charts,
+   matching the mockup's 4-across stat row rather than stretching each
+   tile to a generic card's width. */
+.el-grid--stats {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+}
+
+.el-card {
+  background: var(--el-navy);
+  padding: var(--el-pad-card);
+  border-radius: var(--el-radius);
+}
+/* Use on a dark (--el-navy) canvas so the card contrasts correctly */
+.el-card--on-navy { background: var(--el-slate); }
+.el-card h6 { margin-bottom: 16px; }
+
+/* ---------------------------------------------------------------- */
+/* Slider / control row                                               */
+/* ---------------------------------------------------------------- */
+
+.el-slider-row { margin-bottom: 26px; }
+.el-slider-row:last-child { margin-bottom: 0; }
+.el-slider-row .el-slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.el-slider-row .el-slider-label { font-weight: 600; font-size: 17px; }
+.el-slider-row .el-slider-value { font-weight: 600; font-size: 19px; color: var(--el-yellow); }
+
+.el-slider-track {
+  position: relative;
+  height: 6px;
+  background: var(--el-muted);
+  width: 100%;
+}
+.el-slider-track .el-slider-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background: var(--el-yellow);
+}
+.el-slider-track .el-slider-handle {
+  position: absolute;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  background: var(--el-yellow);
+  border: 1px solid var(--el-navy);
+  transform: translate(-50%, -50%);
+}
+.el-slider-row .el-slider-caption { margin-top: 8px; }
+
+/* ---------------------------------------------------------------- */
+/* Stat tile                                                          */
+/* ---------------------------------------------------------------- */
+
+/* Compact by design -- see components.md: the mockup's stat tile is a
+   packed, roughly 5:4 rectangle, not a tall column, so padding and the
+   gaps between its four lines are intentionally tight rather than using
+   the generic .el-card padding. */
+.el-card.el-stat { padding: 20px 22px; }
+
+.el-stat .el-stat-label { font-size: 16px; font-weight: 600; line-height: 1.2; }
+.el-stat .el-stat-sublabel {
+  font-size: var(--el-caption);
+  color: var(--el-white);
+  opacity: 0.85;
+  line-height: 1.2;
+  margin-top: 2px;
+}
+.el-stat .el-stat-value {
+  font-weight: 600;
+  font-size: 40px;
+  color: var(--el-green);
+  line-height: 1;
+  margin-top: 14px;
+}
+.el-stat .el-stat-value .el-stat-unit {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--el-white);
+  margin-left: 4px;
+}
+.el-stat .el-stat-delta {
+  margin-top: 10px;
+  font-size: var(--el-caption);
+  /* Plain secondary text, same treatment as .el-stat-sublabel -- this is
+     routine context ("vs no battery"), not a warning. An earlier draft of
+     this skill wrongly coloured it --el-orange; pixel-sampling the actual
+     mockup confirms this line is plain white. Orange is reserved for
+     exceptional/warning states (form errors, danger badges/alerts, the
+     cost-side dataviz fill) -- not for ordinary secondary or delta text. */
+  color: var(--el-white);
+  opacity: 0.75;
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------------------------- */
+/* Chart card                                                         */
+/* ---------------------------------------------------------------- */
+
+.el-chart-card .el-chart-desc { margin: 8px 0 18px; }
+.el-chart-card .el-chart-area { width: 100%; }
+/* Suggested dataviz series order for charting libraries:
+   var(--el-yellow), var(--el-blue), var(--el-green), var(--el-orange), var(--el-blue-light) */
+
+/* ---------------------------------------------------------------- */
+/* Data confidence                                                    */
+/* ---------------------------------------------------------------- */
+
+.el-confidence { display: flex; align-items: center; gap: 10px; font-size: 16px; }
+.el-confidence .el-confidence-squares { display: flex; gap: 4px; }
+.el-confidence .el-confidence-square { width: 18px; height: 18px; background: var(--el-muted); }
+.el-confidence .el-confidence-square.is-filled { background: var(--el-yellow); }
+
+/* ---------------------------------------------------------------- */
+/* Footer CTA                                                         */
+/* ---------------------------------------------------------------- */
+
+.el-footer-cta { background: var(--el-navy); padding: var(--el-pad-section) 32px; }
+.el-footer-cta .el-eyebrow { font-size: 15px; font-weight: 600; color: var(--el-muted); margin-bottom: 10px; }
+.el-footer-cta h2, .el-footer-cta h3 { margin-bottom: 28px; }
+.el-footer-cta .el-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+.el-footer-cta .el-card { background: var(--el-canvas); }
+.el-footer-cta .el-cta-icon { width: 36px; height: 36px; color: var(--el-yellow); margin-bottom: 16px; }
+.el-footer-cta .el-cta-card h4, .el-footer-cta .el-cta-card h5 { margin-bottom: 8px; }
+.el-footer-cta .el-cta-card p { font-size: var(--el-caption); color: var(--el-white); opacity: 0.9; }
+.el-footer-cta .el-cta-card a { color: var(--el-white); }
+
+/* ---------------------------------------------------------------- */
+/* Icons (assets/svg/icon-flask.svg, icon-sparkle.svg)                */
+/* ---------------------------------------------------------------- */
+/* These are solid-fill compound paths (the outline look is baked into the
+   geometry) with fill="currentColor" already set on the <path> -- recolour
+   by setting `color`, not `stroke`. Inline the SVG markup and wrap it in
+   one of these classes, or apply the class straight to an inlined <svg>. */
+
+.el-icon { display: inline-block; color: var(--el-yellow); width: 20px; height: 20px; }
+.el-icon.el-icon--dark { color: var(--el-navy); }
+.el-icon.el-icon--white { color: var(--el-white); }
+.el-icon-lg { width: 36px; height: 36px; } /* footer CTA / feature-card size */
+.el-icon-sm { width: 15px; height: 15px; } /* inline-in-badge size */
+
+/* =================================================================
+   UI KIT -- generic interactive components
+   Added on top of the data-tool-specific patterns above. Same rules:
+   NO border-radius anywhere (no exceptions -- not even the badge/tag),
+   squares over circles, one yellow/one navy, contrast with whatever's
+   behind. See references/ui-kit.md for the rationale behind each one.
+   ================================================================= */
+
+/* ---------------------------------------------------------------- */
+/* Buttons + button group                                             */
+/* ---------------------------------------------------------------- */
+
+.el-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--el-font);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 12px 22px;
+  border: none;
+  border-radius: var(--el-radius);
+  cursor: pointer;
+  background: transparent;
+  color: var(--el-white);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.el-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.el-btn--primary { background: var(--el-yellow); color: var(--el-navy); }
+.el-btn--primary:hover:not(:disabled) { background: var(--el-yellow-hover); }
+.el-btn--primary:active:not(:disabled) { background: var(--el-yellow-active); }
+
+.el-btn--secondary { background: transparent; color: var(--el-white); border: 2px solid var(--el-white); padding: 10px 20px; }
+.el-btn--secondary:hover:not(:disabled) { background: var(--el-white-wash-08); }
+
+.el-btn--ghost { background: transparent; color: var(--el-white); padding: 12px 10px; }
+.el-btn--ghost:hover:not(:disabled) { background: var(--el-white-wash-08); }
+
+.el-btn--danger { background: var(--el-orange); color: var(--el-white); }
+.el-btn--danger:hover:not(:disabled) { background: var(--el-orange-hover); }
+
+.el-btn--sm { padding: 8px 14px; font-size: 13px; }
+.el-btn--lg { padding: 16px 28px; font-size: 17px; }
+
+.el-btn-group { display: inline-flex; }
+.el-btn-group .el-btn {
+  background: transparent;
+  color: var(--el-white);
+  border: 1px solid var(--el-white-wash-12);
+  border-left-width: 0;
+  padding: 10px 18px;
+  font-size: 14px;
+}
+.el-btn-group .el-btn:first-child { border-left-width: 1px; }
+.el-btn-group .el-btn:hover:not(.is-active) { background: var(--el-white-wash-08); }
+.el-btn-group .el-btn.is-active { background: var(--el-yellow); color: var(--el-navy); border-color: var(--el-yellow); }
+
+/* ---------------------------------------------------------------- */
+/* Badges -- general-purpose tags (see also .el-badge pill in the    */
+/* data-tool section above, for the "Live experiments" style badge)  */
+/* ---------------------------------------------------------------- */
+
+.el-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: var(--el-radius-badge);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.el-tag--neutral { background: var(--el-white-wash-12); color: var(--el-white); }
+.el-tag--info { background: rgba(55, 166, 230, 0.18); color: var(--el-blue); }
+.el-tag--success { background: rgba(19, 206, 116, 0.18); color: var(--el-green); }
+.el-tag--warning { background: rgba(255, 196, 0, 0.18); color: var(--el-yellow); }
+.el-tag--danger { background: rgba(224, 75, 0, 0.18); color: var(--el-orange); }
+
+/* ---------------------------------------------------------------- */
+/* Breadcrumbs                                                        */
+/* ---------------------------------------------------------------- */
+
+.el-breadcrumbs { display: flex; align-items: center; gap: 8px; list-style: none; margin: 0; padding: 0; font-size: 14px; }
+.el-breadcrumbs li { display: flex; align-items: center; gap: 8px; color: var(--el-muted); }
+.el-breadcrumbs a { color: var(--el-muted); text-decoration: none; }
+.el-breadcrumbs a:hover { color: var(--el-white); text-decoration: underline; }
+.el-breadcrumbs li[aria-current="page"] { color: var(--el-white); font-weight: 600; }
+.el-breadcrumbs li:not(:last-child)::after { content: "/"; color: var(--el-muted); margin-left: 8px; opacity: 0.6; }
+
+/* ---------------------------------------------------------------- */
+/* Navs & tabs                                                        */
+/* ---------------------------------------------------------------- */
+
+.el-tabs { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; border-bottom: 2px solid var(--el-divider); }
+.el-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  color: var(--el-muted);
+  font-family: var(--el-font);
+  font-weight: 600;
+  font-size: 16px;
+  padding: 12px 2px;
+  cursor: pointer;
+}
+.el-tab:hover { color: var(--el-white); }
+.el-tab.is-active { color: var(--el-white); border-bottom-color: var(--el-yellow); }
+.el-tab-panel { display: none; }
+.el-tab-panel.is-active { display: block; }
+
+/* ---------------------------------------------------------------- */
+/* Accordion                                                          */
+/* ---------------------------------------------------------------- */
+
+.el-accordion { border-top: 1px solid var(--el-divider); }
+.el-accordion-item { border-bottom: 1px solid var(--el-divider); }
+.el-accordion-head {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: none;
+  border: none;
+  color: var(--el-white);
+  font-family: var(--el-font);
+  font-weight: 600;
+  font-size: 17px;
+  padding: 18px 4px;
+  cursor: pointer;
+  text-align: left;
+}
+.el-accordion-plus { position: relative; width: 14px; height: 14px; flex: none; }
+.el-accordion-plus::before, .el-accordion-plus::after {
+  content: ""; position: absolute; background: var(--el-yellow);
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+.el-accordion-plus::before { width: 14px; height: 2px; }
+.el-accordion-plus::after { width: 2px; height: 14px; }
+.el-accordion-item.is-open .el-accordion-plus::after { transform: translate(-50%, -50%) rotate(90deg); opacity: 0; }
+.el-accordion-panel { max-height: 0; overflow: hidden; transition: max-height 0.25s ease; }
+.el-accordion-item.is-open .el-accordion-panel { max-height: 320px; }
+.el-accordion-panel-inner { padding: 0 4px 20px; color: var(--el-muted); font-size: var(--el-caption); line-height: 1.5; }
+
+/* ---------------------------------------------------------------- */
+/* Dropdown                                                           */
+/* ---------------------------------------------------------------- */
+
+.el-dropdown { position: relative; display: inline-block; }
+.el-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 200px;
+  background: var(--el-canvas);
+  border: 1px solid var(--el-white-wash-12);
+  padding: 6px 0;
+  z-index: 30;
+  display: none;
+}
+.el-dropdown.is-open .el-dropdown-menu { display: block; }
+.el-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--el-white);
+  font-family: var(--el-font);
+  font-size: 14px;
+  text-align: left;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.el-dropdown-item:hover { background: var(--el-white-wash-08); }
+.el-dropdown-divider { height: 1px; background: var(--el-white-wash-12); margin: 6px 0; }
+
+/* ---------------------------------------------------------------- */
+/* Lists                                                              */
+/* ---------------------------------------------------------------- */
+
+.el-list { list-style: none; margin: 0; padding: 0; }
+.el-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--el-divider);
+}
+.el-list-item:last-child { border-bottom: none; }
+.el-list-item:hover { background: var(--el-white-wash-08); }
+.el-list-main { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.el-list-title { font-weight: 600; font-size: 15px; }
+.el-list-sub { font-size: var(--el-caption); color: var(--el-muted); }
+.el-list-meta { font-size: var(--el-caption); color: var(--el-muted); white-space: nowrap; }
+
+/* ---------------------------------------------------------------- */
+/* Carousel                                                           */
+/* ---------------------------------------------------------------- */
+
+.el-carousel { position: relative; overflow: hidden; background: var(--el-navy); }
+.el-carousel-track { display: flex; transition: transform 0.35s ease; }
+.el-carousel-slide { flex: 0 0 100%; padding: 28px 64px 44px; box-sizing: border-box; } /* extra L/R padding clears the overlaid arrows; extra bottom padding clears the overlaid dots */
+.el-carousel-slide h6 { margin-bottom: 8px; }
+.el-carousel-slide p { color: var(--el-muted); font-size: var(--el-caption); }
+.el-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  background: var(--el-navy);
+  border: 1px solid var(--el-white-wash-12);
+  color: var(--el-yellow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--el-font);
+}
+.el-carousel-arrow--prev { left: 12px; }
+.el-carousel-arrow--next { right: 12px; }
+/* Dots live INSIDE the .el-carousel box, overlaid bottom-centre -- not as a
+   separate row below it (that misaligned against the carousel's own width
+   the first time round, since a sibling block below defaults to the full
+   width of whatever it's inside rather than matching the carousel). */
+.el-carousel-dots {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+}
+.el-carousel-dot { width: 10px; height: 10px; background: var(--el-muted); cursor: pointer; border: none; padding: 0; border-radius: 0; }
+.el-carousel-dot.is-active { background: var(--el-yellow); }
+
+/* ---------------------------------------------------------------- */
+/* Pagination                                                         */
+/* ---------------------------------------------------------------- */
+
+.el-pagination { display: flex; align-items: center; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.el-page-item {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--el-white-wash-12);
+  color: var(--el-white);
+  font-family: var(--el-font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.el-page-item:hover:not(.is-active):not(:disabled) { background: var(--el-white-wash-08); }
+.el-page-item.is-active { background: var(--el-yellow); color: var(--el-navy); border-color: var(--el-yellow); }
+.el-page-item:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ---------------------------------------------------------------- */
+/* Progress bars                                                      */
+/* ---------------------------------------------------------------- */
+
+.el-progress-head { display: flex; justify-content: space-between; font-size: var(--el-caption); margin-bottom: 8px; }
+.el-progress-track { height: 8px; width: 100%; background: var(--el-white-wash-12); }
+.el-progress-fill { height: 100%; background: var(--el-yellow); transition: width 0.4s ease; }
+.el-progress-fill.el-progress--green { background: var(--el-green); }
+.el-progress-fill.el-progress--orange { background: var(--el-orange); }
+
+/* ---------------------------------------------------------------- */
+/* Spinners -- square, not circular, per the "squares not circles"   */
+/* rule; a rotating square with one highlighted edge instead of a    */
+/* generic circular ring.                                            */
+/* ---------------------------------------------------------------- */
+
+.el-spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.22);
+  border-top-color: var(--el-yellow);
+  border-radius: 0;
+  animation: el-spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+.el-spinner--sm { width: 14px; height: 14px; border-width: 2px; }
+.el-spinner--lg { width: 32px; height: 32px; border-width: 4px; }
+@keyframes el-spin { to { transform: rotate(360deg); } }
+
+/* ---------------------------------------------------------------- */
+/* Modals                                                             */
+/* ---------------------------------------------------------------- */
+
+.el-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--el-overlay);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+.el-modal-overlay.is-open { display: flex; }
+.el-modal {
+  background: var(--el-canvas);
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.el-modal-head { display: flex; align-items: center; justify-content: space-between; padding: 24px 28px; border-bottom: 1px solid var(--el-white-wash-12); }
+.el-modal-head h5 { margin: 0; }
+.el-modal-close { background: none; border: none; color: var(--el-white); font-size: 22px; line-height: 1; cursor: pointer; padding: 4px; }
+.el-modal-body { padding: 24px 28px; color: var(--el-white); }
+.el-modal-body p { color: var(--el-muted); font-size: var(--el-body); margin: 0 0 16px; }
+.el-modal-foot { display: flex; justify-content: flex-end; gap: 12px; padding: 20px 28px; border-top: 1px solid var(--el-white-wash-12); }
+
+/* ---------------------------------------------------------------- */
+/* Popovers -- panel with a small rotated-square pointer, reinforcing */
+/* the square motif instead of a rounded speech-bubble tail.          */
+/* ---------------------------------------------------------------- */
+
+.el-popover-wrap { position: relative; display: inline-block; }
+.el-popover {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  background: var(--el-navy);
+  border: 1px solid var(--el-white-wash-12);
+  padding: 18px 20px;
+  z-index: 30;
+  display: none;
+}
+.el-popover::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  background: var(--el-navy);
+  border-left: 1px solid var(--el-white-wash-12);
+  border-top: 1px solid var(--el-white-wash-12);
+  transform: translateX(-50%) rotate(45deg);
+}
+.el-popover-wrap.is-open .el-popover { display: block; }
+.el-popover h6 { margin-bottom: 8px; font-size: 15px; }
+.el-popover p { margin: 0; font-size: var(--el-caption); color: var(--el-muted); }
+
+/* ---------------------------------------------------------------- */
+/* Tooltips -- pure CSS, shown on hover/focus                        */
+/* ---------------------------------------------------------------- */
+
+.el-tooltip-wrap { position: relative; display: inline-flex; }
+.el-tooltip-bubble {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--el-black);
+  color: var(--el-white);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  z-index: 40;
+}
+.el-tooltip-bubble::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: var(--el-black);
+  transform: translateX(-50%) rotate(45deg);
+  margin-top: -4px;
+}
+.el-tooltip-wrap:hover .el-tooltip-bubble,
+.el-tooltip-wrap:focus-within .el-tooltip-bubble { opacity: 1; }
+
+/* ---------------------------------------------------------------- */
+/* Toasts                                                             */
+/* ---------------------------------------------------------------- */
+
+.el-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 200;
+  width: 320px;
+}
+.el-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--el-navy);
+  border-left: 4px solid var(--el-blue);
+  padding: 14px 16px;
+  animation: el-toast-in 0.2s ease;
+}
+.el-toast--success { border-left-color: var(--el-green); }
+.el-toast--warning { border-left-color: var(--el-yellow); }
+.el-toast--danger { border-left-color: var(--el-orange); }
+.el-toast-body { flex: 1; }
+.el-toast-title { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.el-toast-msg { font-size: var(--el-caption); color: var(--el-muted); }
+.el-toast-close { background: none; border: none; color: var(--el-muted); font-size: 16px; cursor: pointer; line-height: 1; }
+@keyframes el-toast-in { from { transform: translateX(24px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* =================================================================
+   FORM COMPONENTS
+   Text inputs, textarea, select, checkbox, radio, switch, validation
+   states. See references/forms.md for the reasoning -- in particular
+   why radios are square (nested squares, not a circle) while switches
+   are a sharp-cornered sliding rectangle instead of the usual pill.
+   ================================================================= */
+
+.el-field { margin-bottom: 22px; }
+.el-field:last-child { margin-bottom: 0; }
+
+.el-label {
+  display: block;
+  font-family: var(--el-font);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--el-white);
+  margin-bottom: 8px;
+}
+.el-label-required { color: var(--el-orange); margin-left: 3px; }
+.el-label-optional { color: var(--el-muted); font-weight: 400; margin-left: 6px; }
+
+.el-input, .el-textarea, .el-select {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--el-font);
+  font-size: 15px;
+  color: var(--el-white);
+  background: var(--el-white-wash-08);
+  border: 1px solid var(--el-white-wash-12);
+  border-radius: var(--el-radius);
+  padding: 12px 14px;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.el-input::placeholder, .el-textarea::placeholder { color: var(--el-muted); opacity: 1; }
+.el-input:hover, .el-textarea:hover, .el-select:hover { border-color: var(--el-white-wash-12); background: var(--el-white-wash-12); }
+.el-input:focus, .el-textarea:focus, .el-select:focus {
+  outline: none;
+  border-color: var(--el-yellow);
+  background: var(--el-white-wash-08);
+}
+.el-input:disabled, .el-textarea:disabled, .el-select:disabled { opacity: 0.4; cursor: not-allowed; }
+.el-textarea { resize: vertical; min-height: 96px; font-family: var(--el-font); }
+
+/* Native <select>, restyled with a custom chevron (appearance:none hides
+   the browser's own arrow, which can't otherwise be recoloured/squared off) */
+.el-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--el-yellow) 50%), linear-gradient(135deg, var(--el-yellow) 50%, transparent 50%);
+  background-position: calc(100% - 20px) center, calc(100% - 14px) center;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 40px;
+  cursor: pointer;
+}
+.el-select option { background: var(--el-navy); color: var(--el-white); }
+
+.el-help { margin-top: 7px; font-size: var(--el-caption); color: var(--el-muted); }
+.el-error-text { margin-top: 7px; font-size: var(--el-caption); color: var(--el-orange); }
+
+.el-field.has-error .el-input,
+.el-field.has-error .el-textarea,
+.el-field.has-error .el-select { border-color: var(--el-orange); background: rgba(224, 75, 0, 0.08); }
+
+.el-field.has-success .el-input,
+.el-field.has-success .el-textarea,
+.el-field.has-success .el-select { border-color: var(--el-green); }
+
+.el-input-group { display: flex; }
+.el-input-group .el-input { border-radius: 0; }
+.el-input-group-addon {
+  display: flex; align-items: center;
+  padding: 0 14px;
+  background: var(--el-white-wash-12);
+  border: 1px solid var(--el-white-wash-12);
+  color: var(--el-muted);
+  font-size: 14px;
+  white-space: nowrap;
+}
+.el-input-group .el-input:not(:first-child) { border-left: none; }
+.el-input-group .el-input-group-addon:not(:first-child) { border-left: none; }
+
+/* ---------------------------------------------------------------- */
+/* Checkbox -- square track, checkmark glyph when checked             */
+/* ---------------------------------------------------------------- */
+
+.el-checkbox {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--el-font);
+  font-size: 15px;
+  color: var(--el-white);
+  user-select: none;
+}
+.el-checkbox input { position: absolute; opacity: 0; width: 0; height: 0; }
+.el-checkbox-box {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--el-muted);
+  background: transparent;
+  position: relative;
+}
+.el-checkbox input:checked ~ .el-checkbox-box { background: var(--el-yellow); border-color: var(--el-yellow); }
+.el-checkbox input:checked ~ .el-checkbox-box::after {
+  content: "";
+  position: absolute;
+  left: 5px; top: 1px;
+  width: 6px; height: 10px;
+  border: solid var(--el-navy);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.el-checkbox input:disabled ~ .el-checkbox-box { opacity: 0.4; cursor: not-allowed; }
+.el-checkbox input:focus-visible ~ .el-checkbox-box { border-color: var(--el-yellow); }
+
+/* ---------------------------------------------------------------- */
+/* Radio -- deliberately square, not circular (see references/forms.md) */
+/* a smaller solid inner square marks the selected option, distinct   */
+/* from the checkbox's checkmark glyph.                                */
+/* ---------------------------------------------------------------- */
+
+.el-radio {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--el-font);
+  font-size: 15px;
+  color: var(--el-white);
+  user-select: none;
+}
+.el-radio input { position: absolute; opacity: 0; width: 0; height: 0; }
+.el-radio-box {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border: 2px solid var(--el-muted);
+  background: transparent;
+  position: relative;
+}
+.el-radio input:checked ~ .el-radio-box { border-color: var(--el-yellow); }
+.el-radio input:checked ~ .el-radio-box::after {
+  content: "";
+  position: absolute;
+  left: 4px; top: 4px;
+  width: 8px; height: 8px;
+  background: var(--el-yellow);
+}
+.el-radio input:disabled ~ .el-radio-box { opacity: 0.4; cursor: not-allowed; }
+.el-radio input:focus-visible ~ .el-radio-box { border-color: var(--el-yellow); }
+
+/* ---------------------------------------------------------------- */
+/* Switch -- a sharp-cornered sliding rectangle, NOT the usual pill   */
+/* track + circular knob. Squares over circles, and no border-radius, */
+/* both hold even here.                                               */
+/* ---------------------------------------------------------------- */
+
+.el-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--el-font);
+  font-size: 15px;
+  color: var(--el-white);
+  user-select: none;
+}
+.el-switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+.el-switch-track {
+  flex: none;
+  width: 40px;
+  height: 22px;
+  background: var(--el-white-wash-12);
+  border: 1px solid var(--el-white-wash-12);
+  position: relative;
+  transition: background-color 0.15s ease;
+}
+.el-switch-track::after {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  background: var(--el-white);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.el-switch input:checked ~ .el-switch-track { background: var(--el-yellow); border-color: var(--el-yellow); }
+.el-switch input:checked ~ .el-switch-track::after { transform: translateX(18px); background: var(--el-navy); }
+.el-switch input:disabled ~ .el-switch-track { opacity: 0.4; cursor: not-allowed; }
+
+.el-check-group { display: flex; flex-direction: column; gap: 12px; }
+.el-check-group--row { flex-direction: row; flex-wrap: wrap; gap: 24px; }
+
+/* =================================================================
+   PATTERNS -- tables, alerts, empty states, skeletons, dropzone,
+   sidebar, search, stepper. See references/patterns.md.
+   ================================================================= */
+
+/* ---------------------------------------------------------------- */
+/* Tables                                                             */
+/* ---------------------------------------------------------------- */
+
+.el-table-wrap { overflow-x: auto; }
+.el-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.el-table th {
+  text-align: left;
+  font-family: var(--el-font);
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--el-muted);
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--el-divider);
+  white-space: nowrap;
+}
+.el-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--el-divider);
+  color: var(--el-white);
+}
+.el-table tbody tr:hover { background: var(--el-white-wash-08); }
+.el-table tbody tr:last-child td { border-bottom: none; }
+.el-table td.num, .el-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.el-table-sort {
+  background: none; border: none; padding: 0; margin: 0;
+  display: inline-flex; align-items: center; gap: 5px;
+  color: var(--el-muted); font: inherit; font-weight: 600; cursor: pointer;
+}
+.el-table-sort:hover { color: var(--el-white); }
+.el-table-sort.is-active { color: var(--el-white); }
+.el-table-sort-arrow { font-size: 10px; color: var(--el-muted); }
+.el-table-sort.is-active .el-table-sort-arrow { color: var(--el-yellow); }
+
+/* ---------------------------------------------------------------- */
+/* Alerts / inline banners -- persistent, in-flow; NOT the floating,   */
+/* auto-dismissing toast (.el-toast) above.                           */
+/* ---------------------------------------------------------------- */
+
+.el-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--el-white-wash-12);
+  border-left: 4px solid var(--el-blue);
+  background: rgba(55, 166, 230, 0.08);
+}
+.el-alert--success { border-left-color: var(--el-green); background: rgba(19, 206, 116, 0.08); }
+.el-alert--warning { border-left-color: var(--el-yellow); background: rgba(255, 196, 0, 0.08); }
+.el-alert--danger { border-left-color: var(--el-orange); background: rgba(224, 75, 0, 0.08); }
+.el-alert-icon { flex: none; width: 20px; height: 20px; color: var(--el-blue); }
+.el-alert--success .el-alert-icon { color: var(--el-green); }
+.el-alert--warning .el-alert-icon { color: var(--el-yellow); }
+.el-alert--danger .el-alert-icon { color: var(--el-orange); }
+.el-alert-body { flex: 1; }
+.el-alert-title { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+.el-alert-msg { font-size: var(--el-caption); color: var(--el-muted); }
+.el-alert-close { flex: none; background: none; border: none; color: var(--el-muted); font-size: 16px; cursor: pointer; line-height: 1; }
+
+/* ---------------------------------------------------------------- */
+/* Empty states                                                       */
+/* ---------------------------------------------------------------- */
+
+.el-empty { text-align: center; padding: 56px 24px; }
+.el-empty-icon { width: 40px; height: 40px; color: var(--el-muted); margin: 0 auto 20px; }
+.el-empty h6 { margin-bottom: 8px; }
+.el-empty p { color: var(--el-muted); font-size: var(--el-caption); max-width: 360px; margin: 0 auto 20px; }
+
+/* ---------------------------------------------------------------- */
+/* Skeleton loaders -- a pulsing solid block, not a moving shine       */
+/* gradient, to stay consistent with this system's flat surfaces.     */
+/* ---------------------------------------------------------------- */
+
+.el-skeleton {
+  background: var(--el-white-wash-12);
+  animation: el-skeleton-pulse 1.1s ease-in-out infinite;
+}
+.el-skeleton-text { height: 14px; margin-bottom: 10px; width: 100%; }
+.el-skeleton-text:last-child { margin-bottom: 0; width: 65%; }
+.el-skeleton-title { height: 22px; width: 45%; margin-bottom: 18px; }
+.el-skeleton-block { height: 120px; width: 100%; }
+@keyframes el-skeleton-pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* ---------------------------------------------------------------- */
+/* File upload / dropzone                                             */
+/* ---------------------------------------------------------------- */
+
+.el-dropzone {
+  position: relative;
+  border: 2px dashed var(--el-white-wash-12);
+  padding: 40px 24px;
+  text-align: center;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.el-dropzone.is-dragover { border-color: var(--el-yellow); background: rgba(255, 196, 0, 0.06); }
+.el-dropzone-icon { width: 32px; height: 32px; color: var(--el-yellow); margin: 0 auto 14px; }
+.el-dropzone p { margin: 0 0 14px; color: var(--el-muted); font-size: var(--el-caption); }
+.el-dropzone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.el-dropzone-file {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-top: 16px; padding: 10px 14px;
+  background: var(--el-white-wash-08); border: 1px solid var(--el-white-wash-12);
+  font-size: 14px; text-align: left;
+}
+.el-dropzone-file-remove { background: none; border: none; color: var(--el-muted); cursor: pointer; font-size: 15px; }
+
+/* ---------------------------------------------------------------- */
+/* Sidebar / side navigation                                          */
+/* ---------------------------------------------------------------- */
+
+.el-sidebar { background: var(--el-navy); width: 240px; flex: none; padding: 20px 0; }
+.el-sidebar-group-label {
+  font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--el-muted); padding: 8px 20px; margin-top: 12px;
+}
+.el-sidebar-group-label:first-child { margin-top: 0; }
+.el-sidebar-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 20px;
+  color: var(--el-white); text-decoration: none;
+  font-size: 14px; font-weight: 600;
+  border-left: 3px solid transparent;
+}
+.el-sidebar-item:hover { background: var(--el-white-wash-08); }
+.el-sidebar-item.is-active { background: var(--el-white-wash-08); border-left-color: var(--el-yellow); }
+.el-sidebar-layout { display: flex; align-items: stretch; }
+.el-sidebar-content { flex: 1; padding: 24px; background: var(--el-canvas); min-width: 0; }
+
+/* ---------------------------------------------------------------- */
+/* Search input with autocomplete                                     */
+/* ---------------------------------------------------------------- */
+
+.el-search { position: relative; }
+.el-search-icon {
+  position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  width: 16px; height: 16px; color: var(--el-muted); pointer-events: none;
+}
+.el-search .el-input { padding-left: 40px; }
+.el-search-results {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--el-canvas); border: 1px solid var(--el-white-wash-12);
+  z-index: 30; display: none; max-height: 260px; overflow-y: auto;
+}
+.el-search.is-open .el-search-results { display: block; }
+.el-search-result {
+  display: block; width: 100%; text-align: left;
+  background: none; border: none; color: var(--el-white);
+  font-family: var(--el-font); font-size: 14px;
+  padding: 10px 14px; cursor: pointer;
+}
+.el-search-result:hover, .el-search-result.is-highlighted { background: var(--el-white-wash-08); }
+.el-search-result-meta { display: block; font-size: 12px; color: var(--el-muted); margin-top: 2px; }
+
+/* ---------------------------------------------------------------- */
+/* Stepper / multi-step wizard -- square step markers, not circular   */
+/* ---------------------------------------------------------------- */
+
+.el-stepper { display: flex; align-items: flex-start; }
+.el-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; text-align: center; }
+.el-step-marker {
+  width: 28px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--el-font); font-weight: 600; font-size: 13px;
+  border: 2px solid var(--el-white-wash-12);
+  color: var(--el-muted);
+  background: var(--el-navy);
+  z-index: 1;
+  margin-bottom: 10px;
+}
+.el-step-label { font-size: 13px; font-weight: 600; color: var(--el-muted); max-width: 130px; }
+.el-step::after {
+  content: "";
+  position: absolute;
+  top: 13px; left: calc(50% + 20px); right: calc(-50% + 20px);
+  height: 2px; background: var(--el-white-wash-12);
+}
+.el-step:last-child::after { display: none; }
+.el-step.is-complete .el-step-marker { background: var(--el-yellow); border-color: var(--el-yellow); color: var(--el-navy); }
+.el-step.is-complete .el-step-label { color: var(--el-white); }
+.el-step.is-complete::after { background: var(--el-yellow); }
+.el-step.is-active .el-step-marker { border-color: var(--el-yellow); color: var(--el-yellow); }
+.el-step.is-active .el-step-label { color: var(--el-white); }
+
+/* =================================================================
+   CHARTS -- line, area, bar, column, pie, world map. See
+   references/charts.md. Rendered as plain inline SVG (no charting
+   library) so a self-contained tool never carries an extra
+   dependency -- see charts.md for why, and for the deliberate spec
+   differences from generic dataviz defaults (no rounded bar caps, a
+   solid area fill rather than a light wash) that keep these
+   consistent with the rest of this system.
+   ================================================================= */
+
+.el-chart-wrap { position: relative; }
+.el-chart-svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+/* Gridlines & axis -- reuse the same hairline divider token as tables
+   and lists, so a chart's structural lines read as part of one system
+   rather than inventing a separate "chart gray." */
+.el-chart-grid { stroke: var(--el-white-wash-12); stroke-width: 1; shape-rendering: crispEdges; }
+.el-chart-baseline { stroke: var(--el-white-wash-12); stroke-width: 1; shape-rendering: crispEdges; }
+.el-chart-axis-label {
+  font-family: var(--el-font);
+  font-size: 11px;
+  fill: var(--el-muted);
+}
+
+/* Marks */
+.el-chart-line { fill: none; stroke-width: 2.5px; stroke-linejoin: round; stroke-linecap: round; }
+.el-chart-marker { stroke: var(--el-navy); stroke-width: 2px; }
+.el-chart-area { stroke-width: 2px; }
+.el-chart-bar, .el-chart-col { shape-rendering: crispEdges; } /* sharp rectangular ends -- no rounded data-caps, per rule 3 */
+.el-chart-bar:hover, .el-chart-col:hover, .el-chart-pie-slice:hover { opacity: 0.82; cursor: pointer; }
+
+.el-chart-value-label {
+  font-family: var(--el-font);
+  font-weight: 600;
+  font-size: 12px;
+  fill: var(--el-white);
+}
+
+/* Legend -- square swatches, matching "squares over circles" */
+.el-chart-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 14px; }
+.el-chart-legend-item { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--el-muted); }
+.el-chart-legend-swatch { width: 10px; height: 10px; flex: none; }
+.el-chart-legend-item.is-muted { opacity: 0.4; }
+
+/* Crosshair + tooltip (line/area hover) */
+.el-chart-crosshair { stroke: var(--el-white-wash-12); stroke-width: 1; pointer-events: none; }
+.el-chart-hit-layer { fill: transparent; cursor: crosshair; }
+.el-chart-tooltip {
+  position: absolute;
+  z-index: 20;
+  background: var(--el-black);
+  border: 1px solid var(--el-white-wash-12);
+  padding: 8px 12px;
+  font-size: 13px;
+  color: var(--el-white);
+  pointer-events: none;
+  white-space: nowrap;
+  display: none;
+}
+.el-chart-tooltip.is-visible { display: block; }
+.el-chart-tooltip-title { color: var(--el-muted); font-size: 11px; margin-bottom: 4px; }
+.el-chart-tooltip-row { display: flex; align-items: center; gap: 6px; }
+.el-chart-tooltip-row + .el-chart-tooltip-row { margin-top: 3px; }
+.el-chart-tooltip-swatch { width: 8px; height: 8px; flex: none; }
+
+/* World map -- a regional square-grid cartogram, not literal country
+   borders (no map asset has been supplied -- see charts.md). Sequential
+   single-hue yellow ramp for magnitude, per the colour-formula rule:
+   one hue, light to dark. */
+.el-chart-map-tile { stroke: var(--el-navy); stroke-width: 3px; cursor: pointer; }
+.el-chart-map-tile:hover { stroke: var(--el-white); }
+.el-chart-map-label {
+  font-family: var(--el-font);
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--el-navy);
+  pointer-events: none;
+}
+.el-chart-map-ramp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--el-muted);
+}
+.el-chart-map-ramp-swatches { display: flex; }
+.el-chart-map-ramp-swatch { width: 20px; height: 10px; }
+
+/* Palette reference swatches (categorical set + the 4 sequential ramps) --
+   shown once in the Charts tab so the raw hex values are visible and
+   copyable, not just used implicitly inside chart marks. */
+.el-chart-palette-row { display: flex; align-items: center; gap: 0; margin-bottom: 18px; flex-wrap: wrap; }
+.el-chart-palette-row:last-child { margin-bottom: 0; }
+.el-chart-palette-row-label { width: 100px; flex: none; font-size: 13px; font-weight: 600; color: var(--el-white); }
+.el-chart-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  width: 84px;
+  height: 56px;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-family: var(--el-font);
+  color: var(--el-navy);
+  flex: none;
+}
+.el-chart-swatch-name { font-weight: 600; }
+.el-chart-swatch-hex { opacity: 0.75; font-size: 10px; }
+.el-chart-swatch.is-light-text { color: var(--el-white); }
+
+/* Stacked bars/columns/areas -- a 2px surface-colour gap between touching
+   segments does the separating, not a border drawn around each one (see
+   charts.md / the dataviz skill's mark spec). */
+.el-chart-stack-gap { stroke: var(--el-navy); stroke-width: 2px; }
+
+</style>
+<style>
+  body { margin: 0; }
+  .gallery-section { margin-bottom: 40px; }
+  .gallery-section:last-child { margin-bottom: 0; }
+  .gallery-section > h6 { margin-bottom: 16px; }
+  .gallery-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+  .gallery-row + .gallery-row { margin-top: 14px; }
+  .el-crumbs-bar { background: var(--el-canvas); padding: 14px 32px; border-bottom: 1px solid var(--el-white-wash-12); }
+  .info-dot {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; background: var(--el-white-wash-12);
+    color: var(--el-white); font-size: 12px; font-weight: 700; cursor: default;
+  }
+</style>
+</head>
+<body class="el-root">
+
+  <!-- ============================================================ -->
+  <!-- NAVBAR                                                        -->
+  <!-- ============================================================ -->
+  <nav class="el-nav">
+    <span class="el-logo-mark"><svg width="100%" height="100%" viewBox="0 0 1920 870" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="type_CompoundPathItem_" d="M663.424,387.325L663.424,155.481L579.416,324.045L531.409,324.045L447.401,155.481L447.401,387.325L357.933,387.325L357.933,0.007L455.038,0.007L555.411,202.395L656.33,0.007L752.89,0.007L752.89,387.325L663.424,387.325Z" style="fill:white;fill-rule:nonzero;"/>
+    <path id="type_CompoundPathItem_2" d="M1162.725,288.039C1163.093,303.237 1159.521,318.273 1152.359,331.682C1145.454,344.039 1135.735,354.599 1123.991,362.504C1111.163,371.057 1096.953,377.332 1081.989,381.05C1065.416,385.306 1048.364,387.415 1031.254,387.325L842.504,387.325L842.504,0.007L1057.985,0.007C1070.704,-0.167 1083.268,2.834 1094.535,8.736C1105.214,14.369 1114.67,22.064 1122.355,31.375C1130.075,40.8 1136.076,51.511 1140.083,63.016C1144.233,74.661 1146.355,86.932 1146.358,99.294C1146.403,117.668 1141.604,135.733 1132.446,151.662C1122.944,168.236 1108.287,181.265 1090.714,188.759C1111.562,194.42 1130.033,206.669 1143.36,223.672C1156.873,242.333 1163.698,265.02 1162.725,288.039ZM931.972,76.381L931.972,156.569L1019.796,156.569C1029.434,156.636 1038.765,153.138 1045.984,146.75C1054.187,138.808 1058.396,127.581 1057.438,116.203C1058.133,105.435 1054.498,94.822 1047.346,86.743C1041.074,80.034 1032.256,76.27 1023.073,76.381L931.972,76.381ZM1071.624,270.037C1071.929,258.946 1068.251,248.104 1061.259,239.489C1054.986,231.438 1045.28,226.787 1035.075,226.943L931.972,226.943L931.972,311.498L1031.254,311.498C1042.054,311.83 1052.525,307.68 1060.166,300.041C1067.947,292.045 1072.094,281.184 1071.624,270.037Z" style="fill:white;fill-rule:nonzero;"/>
+    <path id="type_CompoundPathItem_3" d="M1597.051,387.325L1597.051,0.007L1771.619,0.007C1789.1,-0.152 1806.378,3.772 1822.076,11.464C1837.206,18.861 1850.809,29.041 1862.172,41.471C1873.413,53.79 1882.372,68.013 1888.63,83.473C1894.872,98.52 1898.115,114.644 1898.177,130.935C1898.277,154.019 1892.454,176.748 1881.267,196.94C1870.482,216.451 1854.406,232.526 1834.896,243.311L1920,387.327L1819.078,387.327L1744.888,262.402L1686.519,262.402L1686.519,387.325L1597.051,387.325ZM1686.519,184.393L1768.347,184.393C1779.337,184.161 1789.541,178.547 1795.622,169.389C1803.626,158.212 1807.659,144.669 1807.076,130.933C1807.801,116.996 1803.107,103.304 1793.982,92.744C1787.018,84.153 1776.669,78.978 1765.618,78.562L1686.519,78.562L1686.519,184.393Z" style="fill:white;fill-rule:nonzero;"/>
+    <rect id="logoMark_PathItem_" x="1231.322" y="308.77" width="272.214" height="78.555" style="fill:white;"/>
+    <rect id="logoMark_PathItem_2" x="1231.322" y="0.007" width="272.214" height="78.555" style="fill:white;"/>
+    <rect id="logoMark_PathItem_3" x="1231.16" y="154.388" width="272.214" height="78.555" style="fill:white;"/>
+    <path id="type_CompoundPathItem_4" d="M89.465,78.561L272.291,78.561L272.291,0.007L0,0.007L0,387.323L272.213,387.323L272.213,308.77L89.465,308.77L89.465,232.943L242.171,232.943L242.171,154.388L89.465,154.388L89.465,78.561Z" style="fill:white;fill-rule:nonzero;"/>
+    <rect x="0" y="511.001" width="355.291" height="355.291" style="fill:rgb(255,196,0);"/>
+    <path d="M430.887,866.291L430.887,511.291L456.387,511.291L456.387,843.291L668.387,843.291L668.387,866.291L430.887,866.291Z" style="fill:white;fill-rule:nonzero;"/>
+    <path d="M832.887,511.291L854.887,511.291L1004.887,866.291L977.887,866.291L928.387,749.291L758.887,749.291L709.387,866.291L681.887,866.291L832.887,511.291ZM921.387,728.291L843.887,542.291L764.887,728.291L921.387,728.291Z" style="fill:white;fill-rule:nonzero;"/>
+    <path d="M1320.387,774.291C1320.387,791.624 1316.137,807.207 1307.637,821.041C1299.137,834.874 1287.637,845.874 1273.137,854.041C1258.637,862.207 1242.554,866.291 1224.887,866.291L1058.887,866.291L1058.887,511.291L1224.387,511.291C1241.054,511.291 1255.47,515.707 1267.637,524.541C1279.804,533.374 1289.137,544.707 1295.637,558.541C1302.137,572.374 1305.387,586.791 1305.387,601.791C1305.387,619.457 1300.887,635.874 1291.887,651.041C1282.887,666.207 1270.387,677.291 1254.387,684.291C1274.72,690.291 1290.804,701.541 1302.637,718.041C1314.47,734.541 1320.387,753.291 1320.387,774.291ZM1294.887,770.791C1294.887,758.124 1291.97,746.291 1286.137,735.291C1280.304,724.291 1272.387,715.291 1262.387,708.291C1252.387,701.291 1241.054,697.791 1228.387,697.791L1084.387,697.791L1084.387,843.291L1224.887,843.291C1237.887,843.291 1249.72,839.874 1260.387,833.041C1271.054,826.207 1279.47,817.207 1285.637,806.041C1291.804,794.874 1294.887,783.124 1294.887,770.791ZM1084.387,534.291L1084.387,676.291L1214.387,676.291C1227.387,676.291 1238.804,672.874 1248.637,666.041C1258.47,659.207 1266.22,650.374 1271.887,639.541C1277.554,628.707 1280.387,617.291 1280.387,605.291C1280.387,592.291 1277.72,580.457 1272.387,569.791C1267.054,559.124 1259.637,550.541 1250.137,544.041C1240.637,537.541 1229.72,534.291 1217.387,534.291L1084.387,534.291Z" style="fill:white;fill-rule:nonzero;"/>
+    <path d="M1596.387,570.291C1590.72,563.957 1584.387,558.374 1577.387,553.541C1570.387,548.707 1562.887,544.707 1554.887,541.541C1546.887,538.374 1538.22,535.957 1528.887,534.291C1519.554,532.624 1509.554,531.791 1498.887,531.791C1464.22,531.791 1438.97,538.374 1423.137,551.541C1407.304,564.707 1399.387,582.457 1399.387,604.791C1399.387,619.791 1402.97,631.707 1410.137,640.541C1417.304,649.374 1428.554,656.457 1443.887,661.791C1459.22,667.124 1479.054,672.291 1503.387,677.291C1529.054,682.624 1551.22,688.874 1569.887,696.041C1588.554,703.207 1602.97,712.957 1613.137,725.291C1623.304,737.624 1628.387,754.291 1628.387,775.291C1628.387,790.957 1625.387,804.707 1619.387,816.541C1613.387,828.374 1604.72,838.124 1593.387,845.791C1582.054,853.457 1568.637,859.291 1553.137,863.291C1537.637,867.291 1520.387,869.291 1501.387,869.291C1483.054,869.291 1465.554,867.291 1448.887,863.291C1432.22,859.291 1416.554,853.457 1401.887,845.791C1387.22,838.124 1373.554,828.291 1360.887,816.291L1374.387,795.791C1381.72,803.791 1389.97,810.874 1399.137,817.041C1408.304,823.207 1418.304,828.457 1429.137,832.791C1439.97,837.124 1451.554,840.541 1463.887,843.041C1476.22,845.541 1489.054,846.791 1502.387,846.791C1533.387,846.791 1557.637,841.041 1575.137,829.541C1592.637,818.041 1601.387,800.957 1601.387,778.291C1601.387,762.624 1597.387,749.957 1589.387,740.291C1581.387,730.624 1569.054,722.707 1552.387,716.541C1535.72,710.374 1514.887,704.624 1489.887,699.291C1464.887,693.957 1443.637,687.957 1426.137,681.291C1408.637,674.624 1395.47,665.624 1386.637,654.291C1377.804,642.957 1373.387,627.624 1373.387,608.291C1373.387,586.957 1378.637,568.874 1389.137,554.041C1399.637,539.207 1414.387,527.957 1433.387,520.291C1452.387,512.624 1474.22,508.791 1498.887,508.791C1514.22,508.791 1528.47,510.291 1541.637,513.291C1554.804,516.291 1566.97,520.874 1578.137,527.041C1589.304,533.207 1599.72,540.957 1609.387,550.291L1596.387,570.291Z" style="fill:white;fill-rule:nonzero;"/>
+</svg></span>
+    <ul class="el-nav-links">
+      <li><a href="#">Tools</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- BREADCRUMBS                                                   -->
+  <!-- ============================================================ -->
+  <div class="el-crumbs-bar">
+    <ul class="el-breadcrumbs">
+      <li><a href="#">Ember Labs</a></li>
+      <li><a href="#">Tools</a></li>
+      <li aria-current="page">Component Gallery</li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- HERO                                                          -->
+  <!-- ============================================================ -->
+  <header class="el-hero">
+    <span class="el-badge">
+      <svg class="el-icon" style="width:14px;height:14px;color:var(--el-navy);" width="100%" height="100%" viewBox="0 0 943 943" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="sparkles.svg" fill="currentColor" d="M707.16,117.86L766.09,0L825.02,117.86L942.88,176.79L825.02,235.72L766.09,353.58L707.16,235.72L589.3,176.79L707.16,117.86ZM235.72,353.58L353.58,117.86L471.44,353.58L707.16,471.44L471.44,589.3L353.58,825.02L235.72,589.3L0,471.44L235.72,353.58ZM766.09,589.3L825.02,707.16L942.88,766.09L825.02,825.02L766.09,942.88L707.16,825.02L589.3,766.09L707.16,707.16L766.09,589.3Z" style="fill-rule:nonzero;"/>
+</svg>
+      Live experiments
+    </span>
+    <h2>Component Gallery</h2>
+    <p class="el-hero-subtitle">Every Ember Labs UI component, in one sample tool &bull; for reference only</p>
+  </header>
+
+  <!-- ============================================================ -->
+  <!-- TABS                                                          -->
+  <!-- ============================================================ -->
+  <main class="el-canvas">
+
+    <div style="margin-bottom: 32px;">
+      <div class="el-tabs" role="tablist">
+        <button class="el-tab is-active" data-tab="overview">Overview</button>
+        <button class="el-tab" data-tab="data">Data</button>
+        <button class="el-tab" data-tab="charts">Charts</button>
+        <button class="el-tab" data-tab="forms">Forms</button>
+        <button class="el-tab" data-tab="patterns">Patterns</button>
+        <button class="el-tab" data-tab="settings">Settings</button>
+      </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!-- TAB: OVERVIEW                                               -->
+    <!-- ========================================================== -->
+    <section class="el-tab-panel is-active" id="tab-overview">
+
+      <div class="gallery-section">
+        <h6>Badges &amp; tags</h6>
+        <div class="gallery-row">
+          <span class="el-badge"><svg class="el-icon" style="width:14px;height:14px;color:var(--el-navy);" width="100%" height="100%" viewBox="0 0 943 943" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="sparkles.svg" fill="currentColor" d="M707.16,117.86L766.09,0L825.02,117.86L942.88,176.79L825.02,235.72L766.09,353.58L707.16,235.72L589.3,176.79L707.16,117.86ZM235.72,353.58L353.58,117.86L471.44,353.58L707.16,471.44L471.44,589.3L353.58,825.02L235.72,589.3L0,471.44L235.72,353.58ZM766.09,589.3L825.02,707.16L942.88,766.09L825.02,825.02L766.09,942.88L707.16,825.02L589.3,766.09L707.16,707.16L766.09,589.3Z" style="fill-rule:nonzero;"/>
+</svg> Live experiments</span>
+          <span class="el-badge el-badge--orange"><svg class="el-icon" style="width:14px;height:14px;color:var(--el-white);" width="100%" height="100%" viewBox="0 0 807 922" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="flask.svg" fill="currentColor" d="M489.812,411.479L489.812,86.438L316.938,86.438L316.938,411.479L304.152,432.368L215.554,576.25L591.196,576.25L502.598,432.368L489.812,411.479ZM576.25,86.438L576.25,386.988L806.75,761.55L806.75,922L0,922L0,761.55L230.5,386.988L230.5,86.438L172.875,86.438L172.875,0L633.875,0L633.875,86.438L576.25,86.438Z" style="fill-rule:nonzero;"/>
+</svg> Needs review</span>
+          <span class="el-tag el-tag--neutral">Beta</span>
+          <span class="el-tag el-tag--info">Info</span>
+          <span class="el-tag el-tag--success">Validated</span>
+          <span class="el-tag el-tag--warning">In progress</span>
+          <span class="el-tag el-tag--danger">Deprecated</span>
+
+          <span class="el-tooltip-wrap">
+            <span class="info-dot">i</span>
+            <span class="el-tooltip-bubble">Tags summarise a tool's status at a glance</span>
+          </span>
+
+          <span class="el-popover-wrap" id="popover-1">
+            <button class="el-btn el-btn--ghost el-btn--sm" type="button" onclick="document.getElementById('popover-1').classList.toggle('is-open')">? What's data confidence</button>
+            <div class="el-popover">
+              <h6>Data confidence</h6>
+              <p>A 1-5 rating of how much we trust this dataset -- based on source quality, update frequency and how much manual cleaning was needed.</p>
+            </div>
+          </span>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Buttons &amp; button group</h6>
+        <div class="gallery-row">
+          <button class="el-btn el-btn--primary">Run simulation</button>
+          <button class="el-btn el-btn--secondary">Export</button>
+          <button class="el-btn el-btn--ghost">Learn more</button>
+          <button class="el-btn el-btn--danger">Reset to defaults</button>
+          <button class="el-btn el-btn--primary" disabled>Disabled</button>
+        </div>
+        <div class="gallery-row">
+          <div class="el-btn-group" id="range-group">
+            <button class="el-btn" data-range="24h">24h</button>
+            <button class="el-btn is-active" data-range="7d">7d</button>
+            <button class="el-btn" data-range="30d">30d</button>
+            <button class="el-btn" data-range="1y">1y</button>
+          </div>
+
+          <div class="el-dropdown" id="export-dropdown">
+            <button class="el-btn el-btn--secondary el-btn--sm" onclick="document.getElementById('export-dropdown').classList.toggle('is-open')">Export data &#9662;</button>
+            <div class="el-dropdown-menu">
+              <button class="el-dropdown-item">Download CSV</button>
+              <button class="el-dropdown-item">Download PNG</button>
+              <button class="el-dropdown-item">Download PDF</button>
+              <div class="el-dropdown-divider"></div>
+              <button class="el-dropdown-item">Copy share link</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Progress &amp; spinners</h6>
+        <div style="max-width: 420px;">
+          <div class="el-progress-head"><span>Data completeness</span><span>72%</span></div>
+          <div class="el-progress-track"><div class="el-progress-fill" id="progress-demo" style="width: 0%;"></div></div>
+        </div>
+        <div class="gallery-row" style="margin-top: 18px;">
+          <span class="el-spinner el-spinner--sm"></span>
+          <span class="el-spinner"></span>
+          <span class="el-spinner el-spinner--lg"></span>
+          <button class="el-btn el-btn--secondary el-btn--sm"><span class="el-spinner el-spinner--sm"></span>&nbsp; Refreshing&hellip;</button>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Carousel</h6>
+        <div class="el-carousel" style="max-width: 640px;">
+          <div class="el-carousel-track" id="carousel-track">
+            <div class="el-carousel-slide">
+              <span class="el-tag el-tag--neutral">Live experiments</span>
+              <h6 style="margin-top:10px;">Global Renewable Target Tracker</h6>
+              <p>Monthly dataset on electricity demand, generation and emissions.</p>
+            </div>
+            <div class="el-carousel-slide">
+              <span class="el-tag el-tag--neutral">Live experiments</span>
+              <h6 style="margin-top:10px;">UK Gas Capacity Simulator</h6>
+              <p>NESO half-hourly gas capacity modelling, 2022-2025.</p>
+            </div>
+            <div class="el-carousel-slide">
+              <span class="el-tag el-tag--neutral">Live experiments</span>
+              <h6 style="margin-top:10px;">Battery Storage Explorer</h6>
+              <p>Model how storage duration changes peak gas demand.</p>
+            </div>
+          </div>
+          <button class="el-carousel-arrow el-carousel-arrow--prev" onclick="carouselGo(-1)">&#8249;</button>
+          <button class="el-carousel-arrow el-carousel-arrow--next" onclick="carouselGo(1)">&#8250;</button>
+          <div class="el-carousel-dots" id="carousel-dots">
+            <button class="el-carousel-dot is-active" onclick="carouselSet(0)"></button>
+            <button class="el-carousel-dot" onclick="carouselSet(1)"></button>
+            <button class="el-carousel-dot" onclick="carouselSet(2)"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Accordion</h6>
+        <div class="el-accordion">
+          <div class="el-accordion-item is-open">
+            <button class="el-accordion-head" onclick="this.parentElement.classList.toggle('is-open')">
+              Supply assumptions <span class="el-accordion-plus"></span>
+            </button>
+            <div class="el-accordion-panel">
+              <div class="el-accordion-panel-inner">Wind and solar capacity scale from today's base by the multiplier set on the Supply Capacity card; interconnector flows are capped at 1.1x today's rating.</div>
+            </div>
+          </div>
+          <div class="el-accordion-item">
+            <button class="el-accordion-head" onclick="this.parentElement.classList.toggle('is-open')">
+              Demand assumptions <span class="el-accordion-plus"></span>
+            </button>
+            <div class="el-accordion-panel">
+              <div class="el-accordion-panel-inner">Demand growth scales the whole half-hourly load curve; peak heat-pump load is added as a flat addition on the coldest winter evening only.</div>
+            </div>
+          </div>
+          <div class="el-accordion-item">
+            <button class="el-accordion-head" onclick="this.parentElement.classList.toggle('is-open')">
+              What gas must cover <span class="el-accordion-plus"></span>
+            </button>
+            <div class="el-accordion-panel">
+              <div class="el-accordion-panel-inner">Gas covers demand net of nuclear, biomass, hydro and interconnector imports -- battery discharge is subtracted before the gas requirement is calculated.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Stat tiles</h6>
+        <p class="el-caption" style="color:var(--el-muted); margin-bottom:14px;">Compact and packed, matching the mockup's 4-across row -- not a tall card. The bottom line is plain white context, not a warning; orange is reserved for exceptional states (see Patterns &rarr; Alerts).</p>
+        <div class="el-grid el-grid--stats">
+          <section class="el-card el-stat">
+            <p class="el-stat-label">Peak gas needed</p>
+            <p class="el-stat-sublabel">with battery</p>
+            <p class="el-stat-value">26.6<span class="el-stat-unit">GW</span></p>
+            <p class="el-stat-delta">-5.1 GW (16%) vs no battery</p>
+          </section>
+          <section class="el-card el-stat">
+            <p class="el-stat-label">Peak gas needed</p>
+            <p class="el-stat-sublabel">no battery</p>
+            <p class="el-stat-value">31.7<span class="el-stat-unit">GW</span></p>
+            <p class="el-stat-delta">Base case, no storage</p>
+          </section>
+          <section class="el-card el-stat">
+            <p class="el-stat-label">Battery cycles</p>
+            <p class="el-stat-sublabel">per year</p>
+            <p class="el-stat-value">312<span class="el-stat-unit">cycles</span></p>
+            <p class="el-stat-delta">1.3x today's fleet average</p>
+          </section>
+          <section class="el-card el-stat">
+            <p class="el-stat-label">Gas cost avoided</p>
+            <p class="el-stat-sublabel">this scenario</p>
+            <p class="el-stat-value">4.2<span class="el-stat-unit">£bn</span></p>
+            <p class="el-stat-delta">vs no battery, 2025 prices</p>
+          </section>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Chart card &amp; data confidence (from the base skill)</h6>
+        <div class="el-grid">
+          <section class="el-card el-chart-card">
+            <h6>Gas load-duration curve</h6>
+            <p class="el-caption el-chart-desc">Gas output ranked highest to lowest hour.</p>
+          </section>
+          <section class="el-card">
+            <h6>Data confidence</h6>
+            <div class="el-confidence">
+              <span>Rating:</span>
+              <span class="el-confidence-squares">
+                <span class="el-confidence-square is-filled"></span>
+                <span class="el-confidence-square is-filled"></span>
+                <span class="el-confidence-square is-filled"></span>
+                <span class="el-confidence-square"></span>
+                <span class="el-confidence-square"></span>
+              </span>
+            </div>
+          </section>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- TAB: DATA                                                   -->
+    <!-- ========================================================== -->
+    <section class="el-tab-panel" id="tab-data">
+
+      <div class="gallery-section">
+        <h6>Lists</h6>
+        <ul class="el-list">
+          <li class="el-list-item">
+            <div class="el-list-main">
+              <svg class="el-icon" style="width:20px;height:20px;color:var(--el-yellow);flex:none;" width="100%" height="100%" viewBox="0 0 807 922" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="flask.svg" fill="currentColor" d="M489.812,411.479L489.812,86.438L316.938,86.438L316.938,411.479L304.152,432.368L215.554,576.25L591.196,576.25L502.598,432.368L489.812,411.479ZM576.25,86.438L576.25,386.988L806.75,761.55L806.75,922L0,922L0,761.55L230.5,386.988L230.5,86.438L172.875,86.438L172.875,0L633.875,0L633.875,86.438L576.25,86.438Z" style="fill-rule:nonzero;"/>
+</svg>
+              <div>
+                <div class="el-list-title">Run #114 -- Base scenario</div>
+                <div class="el-list-sub">Wind 30GW &bull; Solar 18GW &bull; Battery 30GW/18GWh</div>
+              </div>
+            </div>
+            <div class="el-list-meta"><span class="el-tag el-tag--success">Complete</span>&nbsp; 2 hours ago</div>
+          </li>
+          <li class="el-list-item">
+            <div class="el-list-main">
+              <svg class="el-icon" style="width:20px;height:20px;color:var(--el-yellow);flex:none;" width="100%" height="100%" viewBox="0 0 807 922" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="flask.svg" fill="currentColor" d="M489.812,411.479L489.812,86.438L316.938,86.438L316.938,411.479L304.152,432.368L215.554,576.25L591.196,576.25L502.598,432.368L489.812,411.479ZM576.25,86.438L576.25,386.988L806.75,761.55L806.75,922L0,922L0,761.55L230.5,386.988L230.5,86.438L172.875,86.438L172.875,0L633.875,0L633.875,86.438L576.25,86.438Z" style="fill-rule:nonzero;"/>
+</svg>
+              <div>
+                <div class="el-list-title">Run #113 -- High demand growth</div>
+                <div class="el-list-sub">Demand growth 1.15x &bull; Peak heat-pump +10GW</div>
+              </div>
+            </div>
+            <div class="el-list-meta"><span class="el-tag el-tag--success">Complete</span>&nbsp; 5 hours ago</div>
+          </li>
+          <li class="el-list-item">
+            <div class="el-list-main">
+              <svg class="el-icon" style="width:20px;height:20px;color:var(--el-yellow);flex:none;" width="100%" height="100%" viewBox="0 0 807 922" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="flask.svg" fill="currentColor" d="M489.812,411.479L489.812,86.438L316.938,86.438L316.938,411.479L304.152,432.368L215.554,576.25L591.196,576.25L502.598,432.368L489.812,411.479ZM576.25,86.438L576.25,386.988L806.75,761.55L806.75,922L0,922L0,761.55L230.5,386.988L230.5,86.438L172.875,86.438L172.875,0L633.875,0L633.875,86.438L576.25,86.438Z" style="fill-rule:nonzero;"/>
+</svg>
+              <div>
+                <div class="el-list-title">Run #112 -- Low interconnector availability</div>
+                <div class="el-list-sub">Interconnectors 0.6x &bull; Battery unchanged</div>
+              </div>
+            </div>
+            <div class="el-list-meta"><span class="el-tag el-tag--warning">Provisional</span>&nbsp; 1 day ago</div>
+          </li>
+          <li class="el-list-item">
+            <div class="el-list-main">
+              <svg class="el-icon" style="width:20px;height:20px;color:var(--el-yellow);flex:none;" width="100%" height="100%" viewBox="0 0 807 922" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="flask.svg" fill="currentColor" d="M489.812,411.479L489.812,86.438L316.938,86.438L316.938,411.479L304.152,432.368L215.554,576.25L591.196,576.25L502.598,432.368L489.812,411.479ZM576.25,86.438L576.25,386.988L806.75,761.55L806.75,922L0,922L0,761.55L230.5,386.988L230.5,86.438L172.875,86.438L172.875,0L633.875,0L633.875,86.438L576.25,86.438Z" style="fill-rule:nonzero;"/>
+</svg>
+              <div>
+                <div class="el-list-title">Run #111 -- No battery</div>
+                <div class="el-list-sub">Battery power/duration set to zero</div>
+              </div>
+            </div>
+            <div class="el-list-meta"><span class="el-tag el-tag--danger">Failed</span>&nbsp; 2 days ago</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Pagination</h6>
+        <ul class="el-pagination" id="pagination-demo">
+          <li><button class="el-page-item" disabled>&#8249;</button></li>
+          <li><button class="el-page-item is-active">1</button></li>
+          <li><button class="el-page-item">2</button></li>
+          <li><button class="el-page-item">3</button></li>
+          <li><button class="el-page-item">4</button></li>
+          <li><button class="el-page-item">&#8250;</button></li>
+        </ul>
+      </div>
+
+    </section>
+
+
+
+    <!-- ========================================================== -->
+    <!-- TAB: CHARTS                                                 -->
+    <!-- ========================================================== -->
+    <section class="el-tab-panel" id="tab-charts">
+
+      <div class="gallery-section">
+        <p class="el-caption" style="color:var(--el-muted); margin-bottom:20px; max-width:680px;">Ten chart configurations built on the official data-visualization palette below -- plain inline SVG, no charting library, hover for exact values. See <code>references/charts.md</code> for the full reasoning, the validator's notes on the palette's pale/dark steps, and the two places still flagged as open questions (the bar chart's decorative top-highlight, and the world map's regional-grid stand-in for real geography).</p>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Data visualization palette</h6>
+        <p class="el-caption" style="color:var(--el-muted); margin-bottom:16px;">Six categorical colours, fixed order, plus a 5-step sequential ramp per accent hue for magnitude (stacked segments, the map). Full rationale in <code>charts.md</code>.</p>
+        <div class="el-chart-palette-row">
+          <span class="el-chart-palette-row-label">Categorical</span>
+          <div class="el-chart-swatch " style="background:var(--el-chart-cat-1);"><span class="el-chart-swatch-name">Colour 1</span><span class="el-chart-swatch-hex">#FFC400</span></div>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-chart-cat-2);"><span class="el-chart-swatch-name">Colour 2</span><span class="el-chart-swatch-hex">#37A6E6</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-chart-cat-3);"><span class="el-chart-swatch-name">Colour 3</span><span class="el-chart-swatch-hex">#13CE74</span></div>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-chart-cat-4);"><span class="el-chart-swatch-name">Colour 4</span><span class="el-chart-swatch-hex">#E04B00</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-chart-cat-5);"><span class="el-chart-swatch-name">Colour 5</span><span class="el-chart-swatch-hex">#C4D9E9</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-chart-cat-6);"><span class="el-chart-swatch-name">Colour 6</span><span class="el-chart-swatch-hex">#FFF4A3</span></div>
+        </div>
+        <div class="el-chart-palette-row">
+          <span class="el-chart-palette-row-label">Yellow ramp</span>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-yellow-1);"><span class="el-chart-swatch-name">Step 1</span><span class="el-chart-swatch-hex">#B77A00</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-yellow-2);"><span class="el-chart-swatch-name">Step 2</span><span class="el-chart-swatch-hex">#CC9900</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-yellow-3);"><span class="el-chart-swatch-name">Step 3</span><span class="el-chart-swatch-hex">#FFC400</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-yellow-4);"><span class="el-chart-swatch-name">Step 4</span><span class="el-chart-swatch-hex">#FFDA44</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-yellow-5);"><span class="el-chart-swatch-name">Step 5</span><span class="el-chart-swatch-hex">#FFF4A3</span></div>
+        </div>
+        <div class="el-chart-palette-row">
+          <span class="el-chart-palette-row-label">Green ramp</span>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-green-1);"><span class="el-chart-swatch-name">Step 1</span><span class="el-chart-swatch-hex">#0B6638</span></div>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-green-2);"><span class="el-chart-swatch-name">Step 2</span><span class="el-chart-swatch-hex">#109553</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-green-3);"><span class="el-chart-swatch-name">Step 3</span><span class="el-chart-swatch-hex">#13CE74</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-green-4);"><span class="el-chart-swatch-name">Step 4</span><span class="el-chart-swatch-hex">#A3D9A5</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-green-5);"><span class="el-chart-swatch-name">Step 5</span><span class="el-chart-swatch-hex">#D3EADF</span></div>
+        </div>
+        <div class="el-chart-palette-row">
+          <span class="el-chart-palette-row-label">Blue ramp</span>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-blue-1);"><span class="el-chart-swatch-name">Step 1</span><span class="el-chart-swatch-hex">#203772</span></div>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-blue-2);"><span class="el-chart-swatch-name">Step 2</span><span class="el-chart-swatch-hex">#1E609C</span></div>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-blue-3);"><span class="el-chart-swatch-name">Step 3</span><span class="el-chart-swatch-hex">#37A6E6</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-blue-4);"><span class="el-chart-swatch-name">Step 4</span><span class="el-chart-swatch-hex">#97CCED</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-blue-5);"><span class="el-chart-swatch-name">Step 5</span><span class="el-chart-swatch-hex">#C4D9E9</span></div>
+        </div>
+        <div class="el-chart-palette-row">
+          <span class="el-chart-palette-row-label">Orange ramp</span>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-orange-1);"><span class="el-chart-swatch-name">Step 1</span><span class="el-chart-swatch-hex">#891B05</span></div>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-orange-2);"><span class="el-chart-swatch-name">Step 2</span><span class="el-chart-swatch-hex">#BF3100</span></div>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-orange-3);"><span class="el-chart-swatch-name">Step 3</span><span class="el-chart-swatch-hex">#E04B00</span></div>
+          <div class="el-chart-swatch is-light-text" style="background:var(--el-ramp-orange-4);"><span class="el-chart-swatch-name">Step 4</span><span class="el-chart-swatch-hex">#EE7309</span></div>
+          <div class="el-chart-swatch " style="background:var(--el-ramp-orange-5);"><span class="el-chart-swatch-name">Step 5</span><span class="el-chart-swatch-hex">#FCA311</span></div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <div class="el-grid" style="grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));">
+
+          <section class="el-card el-chart-card" id="chart-line-discrete">
+            <h6>Line chart &bull; discrete colours</h6>
+            <p class="el-caption el-chart-desc">Unrelated series -- identity by hue, fixed categorical order.</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 460 240">
+    <line class="el-chart-grid" x1="34" y1="214.0" x2="450" y2="214.0"/>
+    <text class="el-chart-axis-label" x="26" y="218.0" text-anchor="end">0</text>
+    <line class="el-chart-grid" x1="34" y1="163.0" x2="450" y2="163.0"/>
+    <text class="el-chart-axis-label" x="26" y="167.0" text-anchor="end">10</text>
+    <line class="el-chart-grid" x1="34" y1="112.0" x2="450" y2="112.0"/>
+    <text class="el-chart-axis-label" x="26" y="116.0" text-anchor="end">20</text>
+    <line class="el-chart-grid" x1="34" y1="61.0" x2="450" y2="61.0"/>
+    <text class="el-chart-axis-label" x="26" y="65.0" text-anchor="end">30</text>
+    <line class="el-chart-grid" x1="34" y1="10.0" x2="450" y2="10.0"/>
+    <text class="el-chart-axis-label" x="26" y="14.0" text-anchor="end">40</text>
+    <polyline class="el-chart-line" points="34.0,188.5 117.2,168.1 200.4,142.6 283.6,117.1 366.8,91.6 450.0,66.1" stroke="var(--el-chart-cat-1)"/>
+    <polyline class="el-chart-line" points="34.0,193.6 117.2,173.2 200.4,157.9 283.6,132.4 366.8,106.9 450.0,76.3" stroke="var(--el-chart-cat-2)"/>
+    <polyline class="el-chart-line" points="34.0,198.7 117.2,183.4 200.4,168.1 283.6,147.7 366.8,127.3 450.0,112.0" stroke="var(--el-chart-cat-3)"/>
+    <text class="el-chart-axis-label" x="34.0" y="234" text-anchor="middle">Jan</text>
+    <text class="el-chart-axis-label" x="117.2" y="234" text-anchor="middle">Feb</text>
+    <text class="el-chart-axis-label" x="200.4" y="234" text-anchor="middle">Mar</text>
+    <text class="el-chart-axis-label" x="283.6" y="234" text-anchor="middle">Apr</text>
+    <text class="el-chart-axis-label" x="366.8" y="234" text-anchor="middle">May</text>
+    <text class="el-chart-axis-label" x="450.0" y="234" text-anchor="middle">Jun</text>
+    <rect class="el-chart-hit-layer" x="0" y="0" width="460" height="240"/>
+    <line class="el-chart-crosshair" id="line-discrete-crosshair" x1="0" y1="10" x2="0" y2="214" style="display:none;"/>
+              </svg>
+            </div>
+            <div class="el-chart-legend">
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-1);"></span>Wind + solar</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-2);"></span>Base demand</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-3);"></span>Interconnector flow</span>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-line-seq">
+            <h6>Line chart &bull; sequential colours</h6>
+            <p class="el-caption el-chart-desc">An ordered family (forecast vintage) -- one ramp, darkest = most recent.</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 460 240">
+    <line class="el-chart-grid" x1="34" y1="214.0" x2="450" y2="214.0"/>
+    <text class="el-chart-axis-label" x="26" y="218.0" text-anchor="end">0</text>
+    <line class="el-chart-grid" x1="34" y1="163.0" x2="450" y2="163.0"/>
+    <text class="el-chart-axis-label" x="26" y="167.0" text-anchor="end">10</text>
+    <line class="el-chart-grid" x1="34" y1="112.0" x2="450" y2="112.0"/>
+    <text class="el-chart-axis-label" x="26" y="116.0" text-anchor="end">20</text>
+    <line class="el-chart-grid" x1="34" y1="61.0" x2="450" y2="61.0"/>
+    <text class="el-chart-axis-label" x="26" y="65.0" text-anchor="end">30</text>
+    <line class="el-chart-grid" x1="34" y1="10.0" x2="450" y2="10.0"/>
+    <text class="el-chart-axis-label" x="26" y="14.0" text-anchor="end">40</text>
+    <polyline class="el-chart-line" points="34.0,203.8 138.0,188.5 242.0,168.1 346.0,142.6 450.0,112.0" stroke="var(--el-ramp-blue-5)"/>
+    <polyline class="el-chart-line" points="34.0,198.7 138.0,178.3 242.0,152.8 346.0,122.2 450.0,91.6" stroke="var(--el-ramp-blue-4)"/>
+    <polyline class="el-chart-line" points="34.0,193.6 138.0,168.1 242.0,137.5 346.0,106.9 450.0,71.2" stroke="var(--el-ramp-blue-3)"/>
+    <polyline class="el-chart-line" points="34.0,188.5 138.0,157.9 242.0,122.2 346.0,86.5 450.0,50.8" stroke="var(--el-ramp-blue-2)"/>
+    <polyline class="el-chart-line" points="34.0,183.4 138.0,147.7 242.0,106.9 346.0,66.1 450.0,30.4" stroke="var(--el-ramp-blue-1)"/>
+    <text class="el-chart-axis-label" x="34.0" y="234" text-anchor="middle">Q1</text>
+    <text class="el-chart-axis-label" x="138.0" y="234" text-anchor="middle">Q2</text>
+    <text class="el-chart-axis-label" x="242.0" y="234" text-anchor="middle">Q3</text>
+    <text class="el-chart-axis-label" x="346.0" y="234" text-anchor="middle">Q4</text>
+    <text class="el-chart-axis-label" x="450.0" y="234" text-anchor="middle">Q5</text>
+    <rect class="el-chart-hit-layer" x="0" y="0" width="460" height="240"/>
+    <line class="el-chart-crosshair" id="line-seq-crosshair" x1="0" y1="10" x2="0" y2="214" style="display:none;"/>
+              </svg>
+            </div>
+            <div class="el-chart-legend">
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-ramp-blue-5);"></span>2026</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-ramp-blue-4);"></span>2027</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-ramp-blue-3);"></span>2028</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-ramp-blue-2);"></span>2029</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-ramp-blue-1);"></span>2030</span>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-area-single">
+            <h6>Area chart &bull; single series</h6>
+            <p class="el-caption el-chart-desc">Gas load-duration curve -- the mockup's own "hero" chart, solid fill.</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 460 240">
+    <line class="el-chart-grid" x1="34" y1="214.0" x2="450" y2="214.0"/>
+    <text class="el-chart-axis-label" x="26" y="218.0" text-anchor="end">0</text>
+    <line class="el-chart-grid" x1="34" y1="163.0" x2="450" y2="163.0"/>
+    <text class="el-chart-axis-label" x="26" y="167.0" text-anchor="end">10</text>
+    <line class="el-chart-grid" x1="34" y1="112.0" x2="450" y2="112.0"/>
+    <text class="el-chart-axis-label" x="26" y="116.0" text-anchor="end">20</text>
+    <line class="el-chart-grid" x1="34" y1="61.0" x2="450" y2="61.0"/>
+    <text class="el-chart-axis-label" x="26" y="65.0" text-anchor="end">30</text>
+    <line class="el-chart-grid" x1="34" y1="10.0" x2="450" y2="10.0"/>
+    <text class="el-chart-axis-label" x="26" y="14.0" text-anchor="end">40</text>
+    <path d="M 34.0,20.2 L 103.3,45.7 L 172.7,81.4 L 242.0,122.2 L 311.3,157.9 L 380.7,188.5 L 450.0,208.9 L 450.0,214.0 L 34.0,214.0 Z" fill="var(--el-chart-cat-4)" fill-opacity="0.92"/>
+    <path class="el-chart-area" d="M 34.0,20.2 L 103.3,45.7 L 172.7,81.4 L 242.0,122.2 L 311.3,157.9 L 380.7,188.5 L 450.0,208.9" fill="none" stroke="var(--el-chart-cat-4)"/>
+    <text class="el-chart-axis-label" x="34.0" y="234" text-anchor="middle">0h</text>
+    <text class="el-chart-axis-label" x="103.3" y="234" text-anchor="middle">4h</text>
+    <text class="el-chart-axis-label" x="172.7" y="234" text-anchor="middle">8h</text>
+    <text class="el-chart-axis-label" x="242.0" y="234" text-anchor="middle">12h</text>
+    <text class="el-chart-axis-label" x="311.3" y="234" text-anchor="middle">16h</text>
+    <text class="el-chart-axis-label" x="380.7" y="234" text-anchor="middle">20h</text>
+    <text class="el-chart-axis-label" x="450.0" y="234" text-anchor="middle">24h</text>
+    <rect class="el-chart-hit-layer" x="0" y="0" width="460" height="240"/>
+    <line class="el-chart-crosshair" id="area-single-crosshair" x1="0" y1="10" x2="0" y2="214" style="display:none;"/>
+              </svg>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-area-stacked">
+            <h6>Area chart &bull; stacked</h6>
+            <p class="el-caption el-chart-desc">Generation mix by hour -- 4 categorical series, ~0.92 opacity so every layer stays legible.</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 460 240">
+    <line class="el-chart-grid" x1="34" y1="214.0" x2="450" y2="214.0"/>
+    <text class="el-chart-axis-label" x="26" y="218.0" text-anchor="end">0</text>
+    <line class="el-chart-grid" x1="34" y1="163.0" x2="450" y2="163.0"/>
+    <text class="el-chart-axis-label" x="26" y="167.0" text-anchor="end">10</text>
+    <line class="el-chart-grid" x1="34" y1="112.0" x2="450" y2="112.0"/>
+    <text class="el-chart-axis-label" x="26" y="116.0" text-anchor="end">20</text>
+    <line class="el-chart-grid" x1="34" y1="61.0" x2="450" y2="61.0"/>
+    <text class="el-chart-axis-label" x="26" y="65.0" text-anchor="end">30</text>
+    <line class="el-chart-grid" x1="34" y1="10.0" x2="450" y2="10.0"/>
+    <text class="el-chart-axis-label" x="26" y="14.0" text-anchor="end">40</text>
+    <path class="el-chart-area" d="M 34.0,174.4 L 103.3,184.6 L 172.7,189.7 L 242.0,179.5 L 311.3,164.2 L 380.7,148.9 L 450.0,169.3 L 450.0,212.8 L 380.7,212.8 L 311.3,212.8 L 242.0,212.8 L 172.7,212.8 L 103.3,212.8 L 34.0,212.8 Z" fill="var(--el-chart-cat-1)" fill-opacity="0.92" stroke="var(--el-chart-cat-1)" data-label="Wind"/>
+    <path class="el-chart-area" d="M 34.0,143.8 L 103.3,154.0 L 172.7,159.1 L 242.0,148.9 L 311.3,133.6 L 380.7,118.3 L 450.0,138.7 L 450.0,166.9 L 380.7,146.5 L 311.3,161.8 L 242.0,177.1 L 172.7,187.3 L 103.3,182.2 L 34.0,172.0 Z" fill="var(--el-chart-cat-3)" fill-opacity="0.92" stroke="var(--el-chart-cat-3)" data-label="Nuclear"/>
+    <path class="el-chart-area" d="M 34.0,142.6 L 103.3,152.8 L 172.7,138.7 L 242.0,103.0 L 311.3,97.9 L 380.7,113.2 L 450.0,137.5 L 450.0,137.5 L 380.7,115.9 L 311.3,131.2 L 242.0,146.5 L 172.7,156.7 L 103.3,152.8 L 34.0,142.6 Z" fill="var(--el-chart-cat-2)" fill-opacity="0.92" stroke="var(--el-chart-cat-2)" data-label="Solar"/>
+    <path class="el-chart-area" d="M 34.0,82.6 L 103.3,103.0 L 172.7,103.0 L 242.0,77.5 L 311.3,52.0 L 380.7,41.8 L 450.0,57.1 L 450.0,136.3 L 380.7,110.8 L 311.3,95.5 L 242.0,100.6 L 172.7,136.3 L 103.3,151.6 L 34.0,141.4 Z" fill="var(--el-chart-cat-4)" fill-opacity="0.92" stroke="var(--el-chart-cat-4)" data-label="Gas"/>
+    <text class="el-chart-axis-label" x="34.0" y="234" text-anchor="middle">0h</text>
+    <text class="el-chart-axis-label" x="103.3" y="234" text-anchor="middle">4h</text>
+    <text class="el-chart-axis-label" x="172.7" y="234" text-anchor="middle">8h</text>
+    <text class="el-chart-axis-label" x="242.0" y="234" text-anchor="middle">12h</text>
+    <text class="el-chart-axis-label" x="311.3" y="234" text-anchor="middle">16h</text>
+    <text class="el-chart-axis-label" x="380.7" y="234" text-anchor="middle">20h</text>
+    <text class="el-chart-axis-label" x="450.0" y="234" text-anchor="middle">24h</text>
+    <rect class="el-chart-hit-layer" x="0" y="0" width="460" height="240"/>
+    <line class="el-chart-crosshair" id="area-stacked-crosshair" x1="0" y1="10" x2="0" y2="214" style="display:none;"/>
+              </svg>
+            </div>
+            <div class="el-chart-legend">
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-1);"></span>Wind</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-3);"></span>Nuclear</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-2);"></span>Solar</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-4);"></span>Gas</span>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-bar-unstacked">
+            <h6>Bar chart &bull; unstacked (grouped)</h6>
+            <p class="el-caption el-chart-desc">Capacity by source, 2024 vs. 2025 -- 2 series per category.</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 460 240">
+    <line class="el-chart-grid" x1="96.0" y1="6" x2="96.0" y2="216"/>
+    <text class="el-chart-axis-label" x="96.0" y="232" text-anchor="middle">0</text>
+    <line class="el-chart-grid" x1="186.9" y1="6" x2="186.9" y2="216"/>
+    <text class="el-chart-axis-label" x="186.9" y="232" text-anchor="middle">10</text>
+    <line class="el-chart-grid" x1="277.7" y1="6" x2="277.7" y2="216"/>
+    <text class="el-chart-axis-label" x="277.7" y="232" text-anchor="middle">20</text>
+    <line class="el-chart-grid" x1="368.6" y1="6" x2="368.6" y2="216"/>
+    <text class="el-chart-axis-label" x="368.6" y="232" text-anchor="middle">30</text>
+    <text class="el-chart-axis-label" x="86" y="36.2" text-anchor="end">Gas</text>
+    <rect class="el-chart-bar" x="96" y="21.8" width="199.9" height="9" fill="var(--el-chart-cat-1)" data-label="2024 &bull; Gas" data-val="22 GW"/>
+    <rect class="el-chart-bar" x="96" y="33.8" width="236.2" height="9" fill="var(--el-chart-cat-2)" data-label="2025 &bull; Gas" data-val="26 GW"/>
+    <text class="el-chart-axis-label" x="86" y="88.8" text-anchor="end">Wind</text>
+    <rect class="el-chart-bar" x="96" y="74.2" width="236.2" height="9" fill="var(--el-chart-cat-1)" data-label="2024 &bull; Wind" data-val="26 GW"/>
+    <rect class="el-chart-bar" x="96" y="86.2" width="272.6" height="9" fill="var(--el-chart-cat-2)" data-label="2025 &bull; Wind" data-val="30 GW"/>
+    <text class="el-chart-axis-label" x="86" y="141.2" text-anchor="end">Nuclear</text>
+    <rect class="el-chart-bar" x="96" y="126.8" width="181.7" height="9" fill="var(--el-chart-cat-1)" data-label="2024 &bull; Nuclear" data-val="20 GW"/>
+    <rect class="el-chart-bar" x="96" y="138.8" width="199.9" height="9" fill="var(--el-chart-cat-2)" data-label="2025 &bull; Nuclear" data-val="22 GW"/>
+    <text class="el-chart-axis-label" x="86" y="193.8" text-anchor="end">Solar</text>
+    <rect class="el-chart-bar" x="96" y="179.2" width="127.2" height="9" fill="var(--el-chart-cat-1)" data-label="2024 &bull; Solar" data-val="14 GW"/>
+    <rect class="el-chart-bar" x="96" y="191.2" width="163.5" height="9" fill="var(--el-chart-cat-2)" data-label="2025 &bull; Solar" data-val="18 GW"/>
+              </svg>
+            </div>
+            <div class="el-chart-legend">
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-1);"></span>2024</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-2);"></span>2025</span>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-bar-stacked">
+            <h6>Bar chart &bull; stacked</h6>
+            <p class="el-caption el-chart-desc">Capacity mix by year -- one bar per year, segments sum to the total.</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 460 240">
+    <line class="el-chart-grid" x1="96.0" y1="6" x2="96.0" y2="216"/>
+    <text class="el-chart-axis-label" x="96.0" y="232" text-anchor="middle">0</text>
+    <line class="el-chart-grid" x1="175.5" y1="6" x2="175.5" y2="216"/>
+    <text class="el-chart-axis-label" x="175.5" y="232" text-anchor="middle">20</text>
+    <line class="el-chart-grid" x1="255.0" y1="6" x2="255.0" y2="216"/>
+    <text class="el-chart-axis-label" x="255.0" y="232" text-anchor="middle">40</text>
+    <line class="el-chart-grid" x1="334.5" y1="6" x2="334.5" y2="216"/>
+    <text class="el-chart-axis-label" x="334.5" y="232" text-anchor="middle">60</text>
+    <line class="el-chart-grid" x1="414.0" y1="6" x2="414.0" y2="216"/>
+    <text class="el-chart-axis-label" x="414.0" y="232" text-anchor="middle">80</text>
+    <text class="el-chart-axis-label" x="86" y="45.0" text-anchor="end">2023</text>
+    <rect class="el-chart-bar" x="96.0" y="28.0" width="87.5" height="26" fill="var(--el-chart-cat-1)" data-label="Wind &bull; 2023" data-val="22 GW"/>
+    <rect class="el-chart-bar" x="184.6" y="28.0" width="70.3" height="26" fill="var(--el-chart-cat-3)" data-label="Nuclear &bull; 2023" data-val="18 GW"/>
+    <rect class="el-chart-bar" x="256.2" y="28.0" width="38.5" height="26" fill="var(--el-chart-cat-2)" data-label="Solar &bull; 2023" data-val="10 GW"/>
+    <rect class="el-chart-bar" x="295.9" y="28.0" width="78.3" height="26" fill="var(--el-chart-cat-4)" data-label="Gas &bull; 2023" data-val="20 GW"/>
+    <text class="el-chart-value-label" x="382.2" y="45.0" text-anchor="start">70 GW</text>
+    <text class="el-chart-axis-label" x="86" y="115.0" text-anchor="end">2024</text>
+    <rect class="el-chart-bar" x="96.0" y="98.0" width="103.4" height="26" fill="var(--el-chart-cat-1)" data-label="Wind &bull; 2024" data-val="26 GW"/>
+    <rect class="el-chart-bar" x="200.6" y="98.0" width="70.3" height="26" fill="var(--el-chart-cat-3)" data-label="Nuclear &bull; 2024" data-val="18 GW"/>
+    <rect class="el-chart-bar" x="272.1" y="98.0" width="54.4" height="26" fill="var(--el-chart-cat-2)" data-label="Solar &bull; 2024" data-val="14 GW"/>
+    <rect class="el-chart-bar" x="327.7" y="98.0" width="62.4" height="26" fill="var(--el-chart-cat-4)" data-label="Gas &bull; 2024" data-val="16 GW"/>
+    <text class="el-chart-value-label" x="398.2" y="115.0" text-anchor="start">74 GW</text>
+    <text class="el-chart-axis-label" x="86" y="185.0" text-anchor="end">2025</text>
+    <rect class="el-chart-bar" x="96.0" y="168.0" width="119.2" height="26" fill="var(--el-chart-cat-1)" data-label="Wind &bull; 2025" data-val="30 GW"/>
+    <rect class="el-chart-bar" x="216.4" y="168.0" width="62.4" height="26" fill="var(--el-chart-cat-3)" data-label="Nuclear &bull; 2025" data-val="16 GW"/>
+    <rect class="el-chart-bar" x="280.1" y="168.0" width="70.3" height="26" fill="var(--el-chart-cat-2)" data-label="Solar &bull; 2025" data-val="18 GW"/>
+    <rect class="el-chart-bar" x="351.6" y="168.0" width="46.5" height="26" fill="var(--el-chart-cat-4)" data-label="Gas &bull; 2025" data-val="12 GW"/>
+    <text class="el-chart-value-label" x="406.1" y="185.0" text-anchor="start">76 GW</text>
+              </svg>
+            </div>
+            <div class="el-chart-legend">
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-1);"></span>Wind</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-3);"></span>Nuclear</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-2);"></span>Solar</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-4);"></span>Gas</span>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-column-unstacked">
+            <h6>Column chart &bull; unstacked (grouped)</h6>
+            <p class="el-caption el-chart-desc">Wind vs. solar output by month, GW -- grouped multi-series.</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 460 240">
+    <line class="el-chart-grid" x1="34" y1="206.0" x2="450" y2="206.0"/>
+    <text class="el-chart-axis-label" x="26" y="210.0" text-anchor="end">0</text>
+    <line class="el-chart-grid" x1="34" y1="157.0" x2="450" y2="157.0"/>
+    <text class="el-chart-axis-label" x="26" y="161.0" text-anchor="end">6</text>
+    <line class="el-chart-grid" x1="34" y1="108.0" x2="450" y2="108.0"/>
+    <text class="el-chart-axis-label" x="26" y="112.0" text-anchor="end">12</text>
+    <line class="el-chart-grid" x1="34" y1="59.0" x2="450" y2="59.0"/>
+    <text class="el-chart-axis-label" x="26" y="63.0" text-anchor="end">18</text>
+    <line class="el-chart-grid" x1="34" y1="10.0" x2="450" y2="10.0"/>
+    <text class="el-chart-axis-label" x="26" y="14.0" text-anchor="end">24</text>
+    <rect class="el-chart-col" x="58.1" y="91.7" width="16" height="114.3" fill="var(--el-chart-cat-1)" data-label="Wind &bull; Jan" data-val="14 GW"/>
+    <rect class="el-chart-col" x="77.1" y="181.5" width="16" height="24.5" fill="var(--el-chart-cat-2)" data-label="Solar &bull; Jan" data-val="3 GW"/>
+    <text class="el-chart-axis-label" x="75.6" y="230" text-anchor="middle">Jan</text>
+    <rect class="el-chart-col" x="141.3" y="75.3" width="16" height="130.7" fill="var(--el-chart-cat-1)" data-label="Wind &bull; Feb" data-val="16 GW"/>
+    <rect class="el-chart-col" x="160.3" y="165.2" width="16" height="40.8" fill="var(--el-chart-cat-2)" data-label="Solar &bull; Feb" data-val="5 GW"/>
+    <text class="el-chart-axis-label" x="158.8" y="230" text-anchor="middle">Feb</text>
+    <rect class="el-chart-col" x="224.5" y="108.0" width="16" height="98.0" fill="var(--el-chart-cat-1)" data-label="Wind &bull; Mar" data-val="12 GW"/>
+    <rect class="el-chart-col" x="243.5" y="132.5" width="16" height="73.5" fill="var(--el-chart-cat-2)" data-label="Solar &bull; Mar" data-val="9 GW"/>
+    <text class="el-chart-axis-label" x="242.0" y="230" text-anchor="middle">Mar</text>
+    <rect class="el-chart-col" x="307.7" y="124.3" width="16" height="81.7" fill="var(--el-chart-cat-1)" data-label="Wind &bull; Apr" data-val="10 GW"/>
+    <rect class="el-chart-col" x="326.7" y="91.7" width="16" height="114.3" fill="var(--el-chart-cat-2)" data-label="Solar &bull; Apr" data-val="14 GW"/>
+    <text class="el-chart-axis-label" x="325.2" y="230" text-anchor="middle">Apr</text>
+    <rect class="el-chart-col" x="390.9" y="132.5" width="16" height="73.5" fill="var(--el-chart-cat-1)" data-label="Wind &bull; May" data-val="9 GW"/>
+    <rect class="el-chart-col" x="409.9" y="59.0" width="16" height="147.0" fill="var(--el-chart-cat-2)" data-label="Solar &bull; May" data-val="18 GW"/>
+    <text class="el-chart-axis-label" x="408.4" y="230" text-anchor="middle">May</text>
+              </svg>
+            </div>
+            <div class="el-chart-legend">
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-1);"></span>Wind</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-2);"></span>Solar</span>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-column-stacked">
+            <h6>Column chart &bull; stacked</h6>
+            <p class="el-caption el-chart-desc">Generation mix by month, GW -- 4 categorical series stacked per column.</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 460 240">
+    <line class="el-chart-grid" x1="34" y1="206.0" x2="450" y2="206.0"/>
+    <text class="el-chart-axis-label" x="26" y="210.0" text-anchor="end">0</text>
+    <line class="el-chart-grid" x1="34" y1="157.0" x2="450" y2="157.0"/>
+    <text class="el-chart-axis-label" x="26" y="161.0" text-anchor="end">10</text>
+    <line class="el-chart-grid" x1="34" y1="108.0" x2="450" y2="108.0"/>
+    <text class="el-chart-axis-label" x="26" y="112.0" text-anchor="end">20</text>
+    <line class="el-chart-grid" x1="34" y1="59.0" x2="450" y2="59.0"/>
+    <text class="el-chart-axis-label" x="26" y="63.0" text-anchor="end">30</text>
+    <line class="el-chart-grid" x1="34" y1="10.0" x2="450" y2="10.0"/>
+    <text class="el-chart-axis-label" x="26" y="14.0" text-anchor="end">40</text>
+    <rect class="el-chart-col" x="58.6" y="157.0" width="34" height="49.0" fill="var(--el-chart-cat-1)" data-label="Wind &bull; Jan" data-val="10 GW"/>
+    <rect class="el-chart-col" x="58.6" y="119.0" width="34" height="38.0" fill="var(--el-chart-cat-3)" data-label="Nuclear &bull; Jan" data-val="8 GW"/>
+    <rect class="el-chart-col" x="58.6" y="109.2" width="34" height="8.6" fill="var(--el-chart-cat-2)" data-label="Solar &bull; Jan" data-val="2 GW"/>
+    <rect class="el-chart-col" x="58.6" y="65.1" width="34" height="42.9" fill="var(--el-chart-cat-4)" data-label="Gas &bull; Jan" data-val="9 GW"/>
+    <text class="el-chart-axis-label" x="75.6" y="230" text-anchor="middle">Jan</text>
+    <rect class="el-chart-col" x="141.8" y="147.2" width="34" height="58.8" fill="var(--el-chart-cat-1)" data-label="Wind &bull; Feb" data-val="12 GW"/>
+    <rect class="el-chart-col" x="141.8" y="109.2" width="34" height="38.0" fill="var(--el-chart-cat-3)" data-label="Nuclear &bull; Feb" data-val="8 GW"/>
+    <rect class="el-chart-col" x="141.8" y="89.6" width="34" height="18.4" fill="var(--el-chart-cat-2)" data-label="Solar &bull; Feb" data-val="4 GW"/>
+    <rect class="el-chart-col" x="141.8" y="55.3" width="34" height="33.1" fill="var(--el-chart-cat-4)" data-label="Gas &bull; Feb" data-val="7 GW"/>
+    <text class="el-chart-axis-label" x="158.8" y="230" text-anchor="middle">Feb</text>
+    <rect class="el-chart-col" x="225.0" y="161.9" width="34" height="44.1" fill="var(--el-chart-cat-1)" data-label="Wind &bull; Mar" data-val="9 GW"/>
+    <rect class="el-chart-col" x="225.0" y="123.9" width="34" height="38.0" fill="var(--el-chart-cat-3)" data-label="Nuclear &bull; Mar" data-val="8 GW"/>
+    <rect class="el-chart-col" x="225.0" y="84.7" width="34" height="38.0" fill="var(--el-chart-cat-2)" data-label="Solar &bull; Mar" data-val="8 GW"/>
+    <rect class="el-chart-col" x="225.0" y="55.3" width="34" height="28.2" fill="var(--el-chart-cat-4)" data-label="Gas &bull; Mar" data-val="6 GW"/>
+    <text class="el-chart-axis-label" x="242.0" y="230" text-anchor="middle">Mar</text>
+    <rect class="el-chart-col" x="308.2" y="171.7" width="34" height="34.3" fill="var(--el-chart-cat-1)" data-label="Wind &bull; Apr" data-val="7 GW"/>
+    <rect class="el-chart-col" x="308.2" y="133.7" width="34" height="38.0" fill="var(--el-chart-cat-3)" data-label="Nuclear &bull; Apr" data-val="8 GW"/>
+    <rect class="el-chart-col" x="308.2" y="74.9" width="34" height="57.6" fill="var(--el-chart-cat-2)" data-label="Solar &bull; Apr" data-val="12 GW"/>
+    <rect class="el-chart-col" x="308.2" y="50.4" width="34" height="23.3" fill="var(--el-chart-cat-4)" data-label="Gas &bull; Apr" data-val="5 GW"/>
+    <text class="el-chart-axis-label" x="325.2" y="230" text-anchor="middle">Apr</text>
+    <rect class="el-chart-col" x="391.4" y="176.6" width="34" height="29.4" fill="var(--el-chart-cat-1)" data-label="Wind &bull; May" data-val="6 GW"/>
+    <rect class="el-chart-col" x="391.4" y="138.6" width="34" height="38.0" fill="var(--el-chart-cat-3)" data-label="Nuclear &bull; May" data-val="8 GW"/>
+    <rect class="el-chart-col" x="391.4" y="60.2" width="34" height="77.2" fill="var(--el-chart-cat-2)" data-label="Solar &bull; May" data-val="16 GW"/>
+    <rect class="el-chart-col" x="391.4" y="40.6" width="34" height="18.4" fill="var(--el-chart-cat-4)" data-label="Gas &bull; May" data-val="4 GW"/>
+    <text class="el-chart-axis-label" x="408.4" y="230" text-anchor="middle">May</text>
+              </svg>
+            </div>
+            <div class="el-chart-legend">
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-1);"></span>Wind</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-3);"></span>Nuclear</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-2);"></span>Solar</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-4);"></span>Gas</span>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-pie">
+            <h6>Pie chart</h6>
+            <p class="el-caption el-chart-desc">Generation mix, this scenario -- the one deliberate exception to squares-over-circles (see charts.md).</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 240 240" style="max-width:240px; margin: 0 auto; display:block;">
+    <path class="el-chart-pie-slice" d="M 120,120 L 120.0,20.0 A 100,100 0 0 1 204.4,173.6 Z" fill="var(--el-chart-cat-1)" data-label="Wind" data-val="34%"/>
+    <path class="el-chart-pie-slice" d="M 120,120 L 204.4,173.6 A 100,100 0 0 1 61.2,200.9 Z" fill="var(--el-chart-cat-2)" data-label="Gas" data-val="26%"/>
+    <path class="el-chart-pie-slice" d="M 120,120 L 61.2,200.9 A 100,100 0 0 1 21.8,101.3 Z" fill="var(--el-chart-cat-3)" data-label="Nuclear" data-val="18%"/>
+    <path class="el-chart-pie-slice" d="M 120,120 L 21.8,101.3 A 100,100 0 0 1 66.4,35.6 Z" fill="var(--el-chart-cat-4)" data-label="Solar" data-val="13%"/>
+    <path class="el-chart-pie-slice" d="M 120,120 L 66.4,35.6 A 100,100 0 0 1 120.0,20.0 Z" fill="var(--el-chart-cat-5)" data-label="Imports" data-val="9%"/>
+              </svg>
+            </div>
+            <div class="el-chart-legend">
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-1);"></span>Wind 34%</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-2);"></span>Gas 26%</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-3);"></span>Nuclear 18%</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-4);"></span>Solar 13%</span>
+              <span class="el-chart-legend-item"><span class="el-chart-legend-swatch" style="background:var(--el-chart-cat-5);"></span>Imports 9%</span>
+            </div>
+          </section>
+
+          <section class="el-card el-chart-card" id="chart-map">
+            <h6>World map</h6>
+            <p class="el-caption el-chart-desc">Share of 2030 renewable target achieved, by region -- sequential yellow ramp, 5 buckets. Regional square-grid stand-in for real geography (flagged in charts.md).</p>
+            <div class="el-chart-wrap">
+              <svg class="el-chart-svg" viewBox="0 0 280 168" style="max-width: 320px;">
+    <rect class="el-chart-map-tile" x="0" y="0" width="50" height="50" fill="var(--el-ramp-yellow-2)" data-region="North America" data-val="62%"/>
+    <text class="el-chart-map-label" x="25.0" y="29.0" text-anchor="middle" style="fill:var(--el-white);">62%</text>
+    <rect class="el-chart-map-tile" x="112" y="0" width="50" height="50" fill="var(--el-ramp-yellow-1)" data-region="Europe" data-val="78%"/>
+    <text class="el-chart-map-label" x="137.0" y="29.0" text-anchor="middle" style="fill:var(--el-white);">78%</text>
+    <rect class="el-chart-map-tile" x="168" y="0" width="50" height="50" fill="var(--el-ramp-yellow-4)" data-region="Asia" data-val="41%"/>
+    <text class="el-chart-map-label" x="193.0" y="29.0" text-anchor="middle" style="fill:var(--el-navy);">41%</text>
+    <rect class="el-chart-map-tile" x="56" y="112" width="50" height="50" fill="var(--el-ramp-yellow-2)" data-region="South America" data-val="55%"/>
+    <text class="el-chart-map-label" x="81.0" y="141.0" text-anchor="middle" style="fill:var(--el-white);">55%</text>
+    <rect class="el-chart-map-tile" x="112" y="112" width="50" height="50" fill="var(--el-ramp-yellow-5)" data-region="Africa" data-val="23%"/>
+    <text class="el-chart-map-label" x="137.0" y="141.0" text-anchor="middle" style="fill:var(--el-navy);">23%</text>
+    <rect class="el-chart-map-tile" x="168" y="56" width="50" height="50" fill="var(--el-ramp-yellow-4)" data-region="Middle East" data-val="34%"/>
+    <text class="el-chart-map-label" x="193.0" y="85.0" text-anchor="middle" style="fill:var(--el-navy);">34%</text>
+    <rect class="el-chart-map-tile" x="224" y="112" width="50" height="50" fill="var(--el-ramp-yellow-3)" data-region="Oceania" data-val="47%"/>
+    <text class="el-chart-map-label" x="249.0" y="141.0" text-anchor="middle" style="fill:var(--el-navy);">47%</text>
+              </svg>
+            </div>
+            <div class="el-chart-map-ramp">
+              <span>Lower</span>
+              <span class="el-chart-map-ramp-swatches">
+                <span class="el-chart-map-ramp-swatch" style="background:var(--el-ramp-yellow-5);"></span>
+                <span class="el-chart-map-ramp-swatch" style="background:var(--el-ramp-yellow-4);"></span>
+                <span class="el-chart-map-ramp-swatch" style="background:var(--el-ramp-yellow-3);"></span>
+                <span class="el-chart-map-ramp-swatch" style="background:var(--el-ramp-yellow-2);"></span>
+                <span class="el-chart-map-ramp-swatch" style="background:var(--el-ramp-yellow-1);"></span>
+              </span>
+              <span>Higher</span>
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+    </section>
+    <!-- ========================================================== -->
+    <!-- TAB: FORMS                                                  -->
+    <!-- ========================================================== -->
+    <section class="el-tab-panel" id="tab-forms">
+
+      <div class="gallery-section">
+        <h6>Text inputs, textarea &amp; select</h6>
+        <div class="el-grid">
+          <div class="el-card">
+            <div class="el-field">
+              <label class="el-label" for="f-name">Scenario name</label>
+              <input class="el-input" type="text" id="f-name" placeholder="e.g. High renewables 2030">
+              <p class="el-help">Shown on the saved-runs list and in exports.</p>
+            </div>
+            <div class="el-field">
+              <label class="el-label" for="f-power">Battery power<span class="el-input-group-addon" style="display:none;"></span></label>
+              <div class="el-input-group">
+                <input class="el-input" type="number" id="f-power" value="30">
+                <span class="el-input-group-addon">GW</span>
+              </div>
+            </div>
+            <div class="el-field">
+              <label class="el-label" for="f-select">Weather year</label>
+              <select class="el-select" id="f-select">
+                <option>2022 (mild winter)</option>
+                <option selected>2023 (average)</option>
+                <option>2024 (cold snap)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="el-card">
+            <div class="el-field has-error">
+              <label class="el-label" for="f-email">Notify email<span class="el-label-required">*</span></label>
+              <input class="el-input" type="email" id="f-email" value="not-an-email">
+              <p class="el-error-text">Enter a valid email address.</p>
+            </div>
+            <div class="el-field">
+              <label class="el-label" for="f-notes">Notes<span class="el-label-optional">(optional)</span></label>
+              <textarea class="el-textarea" id="f-notes" placeholder="Anything else worth flagging about this run&hellip;"></textarea>
+            </div>
+            <div class="el-field">
+              <label class="el-label" for="f-disabled">Locked field</label>
+              <input class="el-input" type="text" id="f-disabled" value="Set by admin" disabled>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Checkboxes, radios &amp; switches</h6>
+        <div class="el-grid">
+          <div class="el-card">
+            <p class="el-label" style="margin-bottom:14px;">Supply sources to include</p>
+            <div class="el-check-group">
+              <label class="el-checkbox"><input type="checkbox" checked><span class="el-checkbox-box"></span> Wind</label>
+              <label class="el-checkbox"><input type="checkbox" checked><span class="el-checkbox-box"></span> Solar</label>
+              <label class="el-checkbox"><input type="checkbox"><span class="el-checkbox-box"></span> Interconnectors</label>
+              <label class="el-checkbox"><input type="checkbox" disabled><span class="el-checkbox-box"></span> Nuclear (locked)</label>
+            </div>
+          </div>
+
+          <div class="el-card">
+            <p class="el-label" style="margin-bottom:14px;">Weather year source</p>
+            <div class="el-check-group">
+              <label class="el-radio"><input type="radio" name="wyear" checked><span class="el-radio-box"></span> Historical (NESO)</label>
+              <label class="el-radio"><input type="radio" name="wyear"><span class="el-radio-box"></span> Synthetic ensemble</label>
+              <label class="el-radio"><input type="radio" name="wyear" disabled><span class="el-radio-box"></span> Custom upload (locked)</label>
+            </div>
+          </div>
+
+          <div class="el-card">
+            <p class="el-label" style="margin-bottom:14px;">Preferences</p>
+            <div class="el-check-group">
+              <label class="el-switch"><input type="checkbox" checked><span class="el-switch-track"></span> Auto-refresh results</label>
+              <label class="el-switch"><input type="checkbox"><span class="el-switch-track"></span> Email me when a run finishes</label>
+              <label class="el-switch"><input type="checkbox" disabled><span class="el-switch-track"></span> Beta features (locked)</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- TAB: PATTERNS                                               -->
+    <!-- ========================================================== -->
+    <section class="el-tab-panel" id="tab-patterns">
+
+      <div class="gallery-section">
+        <h6>Table</h6>
+        <div class="el-table-wrap">
+          <table class="el-table">
+            <thead>
+              <tr>
+                <th><button class="el-table-sort is-active" data-sort-col="run">Run <span class="el-table-sort-arrow">&#9660;</span></button></th>
+                <th><button class="el-table-sort" data-sort-col="scenario">Scenario <span class="el-table-sort-arrow">&#9650;</span></button></th>
+                <th class="num"><button class="el-table-sort" data-sort-col="gas" style="justify-content:flex-end; width:100%;">Peak gas (GW) <span class="el-table-sort-arrow">&#9650;</span></button></th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>#114</td><td>Base scenario</td><td class="num">26.6</td><td><span class="el-tag el-tag--success">Complete</span></td></tr>
+              <tr><td>#113</td><td>High demand growth</td><td class="num">31.2</td><td><span class="el-tag el-tag--success">Complete</span></td></tr>
+              <tr><td>#112</td><td>Low interconnector availability</td><td class="num">29.8</td><td><span class="el-tag el-tag--warning">Provisional</span></td></tr>
+              <tr><td>#111</td><td>No battery</td><td class="num">33.5</td><td><span class="el-tag el-tag--danger">Failed</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Alerts / inline banners</h6>
+        <div class="el-grid" style="grid-template-columns: 1fr;">
+          <div class="el-alert">
+            <svg class="el-alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg>
+            <div class="el-alert-body">
+              <div class="el-alert-title">Using synthetic weather ensemble</div>
+              <div class="el-alert-msg">This run isn't based on a single historical year -- see Weather year source in Forms for details.</div>
+            </div>
+          </div>
+          <div class="el-alert el-alert--success">
+            <svg class="el-alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="el-alert-body">
+              <div class="el-alert-title">Run complete</div>
+              <div class="el-alert-msg">Run #114 finished with no data-quality flags.</div>
+            </div>
+          </div>
+          <div class="el-alert el-alert--warning" id="alert-dismissable">
+            <svg class="el-alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="el-alert-body">
+              <div class="el-alert-title">Provisional data</div>
+              <div class="el-alert-msg">Run #112 used an interconnector availability figure that hasn't been confirmed by NESO yet.</div>
+            </div>
+            <button class="el-alert-close" onclick="document.getElementById('alert-dismissable').remove()">&times;</button>
+          </div>
+          <div class="el-alert el-alert--danger">
+            <svg class="el-alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01" stroke-linecap="round"/></svg>
+            <div class="el-alert-body">
+              <div class="el-alert-title">Run failed</div>
+              <div class="el-alert-msg">Run #111 couldn't resolve a gas requirement with battery power/duration set to zero and demand growth above 1.1x. Adjust inputs and re-run.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Empty state</h6>
+        <div class="el-card">
+          <div class="el-empty">
+            <svg class="el-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="0"/><path d="M3 9h18M8 4v5" stroke-linecap="round"/></svg>
+            <h6>No saved runs yet</h6>
+            <p>Runs you save from the simulator will show up here, with their inputs and results ready to reopen.</p>
+            <button class="el-btn el-btn--primary el-btn--sm">Run your first scenario</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Skeleton loaders</h6>
+        <div class="el-grid">
+          <div class="el-card">
+            <div class="el-skeleton el-skeleton-title"></div>
+            <div class="el-skeleton el-skeleton-text"></div>
+            <div class="el-skeleton el-skeleton-text"></div>
+            <div class="el-skeleton el-skeleton-text"></div>
+          </div>
+          <div class="el-card">
+            <div class="el-skeleton el-skeleton-title"></div>
+            <div class="el-skeleton el-skeleton-block"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>File upload / dropzone</h6>
+        <div style="max-width: 480px;">
+          <div class="el-dropzone" id="dropzone">
+            <svg class="el-dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M7 9l5-5 5 5M4 20h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <p>Drag a CSV here, or click to browse</p>
+            <input type="file" id="dropzone-input">
+          </div>
+          <div id="dropzone-files"></div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Sidebar / side navigation</h6>
+        <p class="el-caption" style="color:var(--el-muted); margin-bottom:14px;">Shown framed at reduced height -- in a real tool this occupies the full page height.</p>
+        <div style="border: 1px solid var(--el-white-wash-12); height: 280px; overflow: hidden;">
+          <div class="el-sidebar-layout" style="height: 100%;">
+            <nav class="el-sidebar">
+              <p class="el-sidebar-group-label">Simulator</p>
+              <a class="el-sidebar-item is-active" href="#">Supply &amp; demand</a>
+              <a class="el-sidebar-item" href="#">Battery storage</a>
+              <a class="el-sidebar-item" href="#">Results</a>
+              <p class="el-sidebar-group-label">Account</p>
+              <a class="el-sidebar-item" href="#">Saved runs</a>
+              <a class="el-sidebar-item" href="#">Settings</a>
+            </nav>
+            <div class="el-sidebar-content">
+              <h6>Supply &amp; demand</h6>
+              <p class="el-caption" style="color:var(--el-muted);">Sidebar content pane -- uses the same <code>--el-canvas</code> tier as any other content area next to a navy structural surface.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Search with autocomplete</h6>
+        <div class="el-search" id="search-demo" style="max-width: 360px;">
+          <svg class="el-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+          <input class="el-input" type="text" id="search-input" placeholder="Search tools and datasets&hellip;" autocomplete="off">
+          <div class="el-search-results" id="search-results"></div>
+        </div>
+      </div>
+
+      <div class="gallery-section">
+        <h6>Stepper / multi-step wizard</h6>
+        <div class="el-stepper" id="stepper-demo">
+          <div class="el-step is-complete">
+            <span class="el-step-marker">&#10003;</span>
+            <span class="el-step-label">Data source</span>
+          </div>
+          <div class="el-step is-active">
+            <span class="el-step-marker">2</span>
+            <span class="el-step-label">Assumptions</span>
+          </div>
+          <div class="el-step">
+            <span class="el-step-marker">3</span>
+            <span class="el-step-label">Review &amp; run</span>
+          </div>
+        </div>
+        <div class="gallery-row" style="margin-top: 20px;">
+          <button class="el-btn el-btn--secondary el-btn--sm" onclick="stepperGo(-1)">Back</button>
+          <button class="el-btn el-btn--primary el-btn--sm" onclick="stepperGo(1)">Next</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================== -->
+    <!-- TAB: SETTINGS                                               -->
+    <!-- ========================================================== -->
+    <section class="el-tab-panel" id="tab-settings">
+
+      <div class="gallery-section">
+        <h6>Modal</h6>
+        <div class="gallery-row">
+          <button class="el-btn el-btn--primary" onclick="document.getElementById('settings-modal').classList.add('is-open')">Open advanced settings</button>
+          <button class="el-btn el-btn--danger" onclick="showToast('danger', 'Reset to defaults', 'All sliders have been restored to their base values.')">Reset to defaults</button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ============================================================ -->
+  <!-- MODAL                                                         -->
+  <!-- ============================================================ -->
+  <div class="el-modal-overlay" id="settings-modal" onclick="if(event.target===this) this.classList.remove('is-open')">
+    <div class="el-modal">
+      <div class="el-modal-head">
+        <h5>Advanced settings</h5>
+        <button class="el-modal-close" onclick="document.getElementById('settings-modal').classList.remove('is-open')">&times;</button>
+      </div>
+      <div class="el-modal-body">
+        <p>These settings apply to every scenario run from this tool until changed.</p>
+        <div class="el-slider-row">
+          <div class="el-slider-head">
+            <span class="el-slider-label">Battery round-trip efficiency</span>
+            <span class="el-slider-value">88%</span>
+          </div>
+          <div class="el-slider-track">
+            <div class="el-slider-fill" style="width: 88%;"></div>
+            <div class="el-slider-handle" style="left: 88%;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="el-modal-foot">
+        <button class="el-btn el-btn--secondary" onclick="document.getElementById('settings-modal').classList.remove('is-open')">Cancel</button>
+        <button class="el-btn el-btn--primary" onclick="document.getElementById('settings-modal').classList.remove('is-open'); showToast('success', 'Settings saved', 'Your advanced settings have been updated.')">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TOASTS                                                        -->
+  <!-- ============================================================ -->
+  <div class="el-toast-container" id="toast-container"></div>
+
+  <!-- ============================================================ -->
+  <!-- FOOTER CTA (from the base skill)                              -->
+  <!-- ============================================================ -->
+  <footer class="el-footer-cta">
+    <p class="el-eyebrow">Contact us</p>
+    <h3>Help shape Ember Labs</h3>
+    <div class="el-grid">
+      <div class="el-card el-cta-card">
+        <svg class="el-icon el-icon-lg el-cta-icon" style="color:var(--el-yellow);" width="100%" height="100%" viewBox="0 0 807 922" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <path id="flask.svg" fill="currentColor" d="M489.812,411.479L489.812,86.438L316.938,86.438L316.938,411.479L304.152,432.368L215.554,576.25L591.196,576.25L502.598,432.368L489.812,411.479ZM576.25,86.438L576.25,386.988L806.75,761.55L806.75,922L0,922L0,761.55L230.5,386.988L230.5,86.438L172.875,86.438L172.875,0L633.875,0L633.875,86.438L576.25,86.438Z" style="fill-rule:nonzero;"/>
+</svg>
+        <h5>Test with us.</h5>
+        <p>Tell us what you like and what we can do better<br><a href="mailto:labs@ember-energy.org">labs@ember-energy.org</a></p>
+      </div>
+      <div class="el-card el-cta-card">
+        <svg class="el-icon el-icon-lg el-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18M6 20V10l6-6 6 6v10" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h5>Build with us.</h5>
+        <p>Fund us to turn Labs experiments into lasting products<br><a href="mailto:development@ember-energy.org">development@ember-energy.org</a></p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // ---- Tabs ----
+  document.querySelectorAll('.el-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.el-tab').forEach(t => t.classList.remove('is-active'));
+      document.querySelectorAll('.el-tab-panel').forEach(p => p.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      document.getElementById('tab-' + tab.dataset.tab).classList.add('is-active');
+    });
+  });
+
+  // ---- Button group (time range) ----
+  document.getElementById('range-group').addEventListener('click', (e) => {
+    const btn = e.target.closest('.el-btn');
+    if (!btn) return;
+    document.querySelectorAll('#range-group .el-btn').forEach(b => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+  });
+
+  // ---- Pagination ----
+  document.getElementById('pagination-demo').addEventListener('click', (e) => {
+    const btn = e.target.closest('.el-page-item');
+    if (!btn || btn.disabled) return;
+    if (!/^[0-9]+$/.test(btn.textContent.trim())) return;
+    document.querySelectorAll('#pagination-demo .el-page-item').forEach(b => b.classList.remove('is-active'));
+    btn.classList.add('is-active');
+  });
+
+  // ---- Dropdown: close on outside click / Escape ----
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll('.el-dropdown.is-open').forEach(dd => {
+      if (!dd.contains(e.target)) dd.classList.remove('is-open');
+    });
+    document.querySelectorAll('.el-popover-wrap.is-open').forEach(pw => {
+      if (!pw.contains(e.target)) pw.classList.remove('is-open');
+    });
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.el-dropdown.is-open').forEach(dd => dd.classList.remove('is-open'));
+      document.querySelectorAll('.el-popover-wrap.is-open').forEach(pw => pw.classList.remove('is-open'));
+      document.getElementById('settings-modal').classList.remove('is-open');
+    }
+  });
+
+  // ---- Carousel ----
+  let carouselIndex = 0;
+  const carouselSlideCount = 3;
+  function carouselRender() {
+    document.getElementById('carousel-track').style.transform = `translateX(-${carouselIndex * 100}%)`;
+    document.querySelectorAll('#carousel-dots .el-carousel-dot').forEach((d, i) => {
+      d.classList.toggle('is-active', i === carouselIndex);
+    });
+  }
+  function carouselGo(delta) {
+    carouselIndex = (carouselIndex + delta + carouselSlideCount) % carouselSlideCount;
+    carouselRender();
+  }
+  function carouselSet(i) { carouselIndex = i; carouselRender(); }
+
+  // ---- Progress bar: animate to target on load ----
+  window.addEventListener('DOMContentLoaded', () => {
+    requestAnimationFrame(() => {
+      setTimeout(() => { document.getElementById('progress-demo').style.width = '72%'; }, 150);
+    });
+  });
+
+  // ---- Table sort (demo only -- toggles active column, doesn't re-sort real data) ----
+  document.querySelectorAll('.el-table-sort').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.el-table-sort').forEach(b => b.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      const arrow = btn.querySelector('.el-table-sort-arrow');
+      arrow.innerHTML = arrow.innerHTML === '&#9660;' ? '&#9650;' : '&#9660;';
+    });
+  });
+
+  // ---- Dropzone ----
+  const dropzone = document.getElementById('dropzone');
+  const dropzoneInput = document.getElementById('dropzone-input');
+  const dropzoneFiles = document.getElementById('dropzone-files');
+  ['dragenter', 'dragover'].forEach(evt => {
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('is-dragover'); });
+  });
+  ['dragleave', 'drop'].forEach(evt => {
+    dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('is-dragover'); });
+  });
+  dropzone.addEventListener('drop', (e) => {
+    const files = e.dataTransfer && e.dataTransfer.files;
+    if (files && files.length) addDropzoneFile(files[0].name);
+  });
+  dropzoneInput.addEventListener('change', () => {
+    if (dropzoneInput.files.length) addDropzoneFile(dropzoneInput.files[0].name);
+  });
+  function addDropzoneFile(name) {
+    dropzoneFiles.innerHTML = `<div class="el-dropzone-file"><span>${name}</span><button class="el-dropzone-file-remove" onclick="this.closest('.el-dropzone-file').remove()">&times;</button></div>`;
+  }
+
+  // ---- Search with autocomplete (demo dataset, client-side filter) ----
+  const searchData = [
+    { label: 'UK Gas Capacity Simulator', meta: 'Tool • Live experiment' },
+    { label: 'Global Renewable Target Tracker', meta: 'Tool • Live experiment' },
+    { label: 'Battery Storage Explorer', meta: 'Tool • Live experiment' },
+    { label: 'NESO half-hourly demand, 2022-2025', meta: 'Dataset' },
+    { label: 'Weather ensemble, synthetic', meta: 'Dataset' },
+  ];
+  const searchWrap = document.getElementById('search-demo');
+  const searchInput = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    if (!q) { searchWrap.classList.remove('is-open'); searchResults.innerHTML = ''; return; }
+    const matches = searchData.filter(d => d.label.toLowerCase().includes(q));
+    if (!matches.length) {
+      searchResults.innerHTML = '<div class="el-search-result" style="cursor:default; color:var(--el-muted);">No matches</div>';
+    } else {
+      searchResults.innerHTML = matches.map(d =>
+        `<button class="el-search-result" type="button">${d.label}<span class="el-search-result-meta">${d.meta}</span></button>`
+      ).join('');
+    }
+    searchWrap.classList.add('is-open');
+  });
+  searchResults.addEventListener('click', (e) => {
+    const btn = e.target.closest('.el-search-result');
+    if (!btn) return;
+    searchInput.value = btn.childNodes[0].textContent.trim();
+    searchWrap.classList.remove('is-open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!searchWrap.contains(e.target)) searchWrap.classList.remove('is-open');
+  });
+
+  // ---- Stepper ----
+  const stepperSteps = document.querySelectorAll('#stepper-demo .el-step');
+  let stepperIndex = 1;
+  function stepperRender() {
+    stepperSteps.forEach((step, i) => {
+      step.classList.toggle('is-complete', i < stepperIndex);
+      step.classList.toggle('is-active', i === stepperIndex);
+      step.querySelector('.el-step-marker').innerHTML = i < stepperIndex ? '&#10003;' : String(i + 1);
+    });
+  }
+  function stepperGo(delta) {
+    stepperIndex = Math.max(0, Math.min(stepperSteps.length - 1, stepperIndex + delta));
+    stepperRender();
+  }
+
+
+  // ---- Charts: shared tooltip helpers ----
+  function chartLocalToPx(svg, evt) {
+    const rect = svg.getBoundingClientRect();
+    return { pxX: evt.clientX - rect.left, pxY: evt.clientY - rect.top, rectW: rect.width, rectH: rect.height };
+  }
+  function ensureChartTooltip(card) {
+    let tip = card.querySelector('.el-chart-tooltip');
+    if (!tip) {
+      tip = document.createElement('div');
+      tip.className = 'el-chart-tooltip';
+      card.querySelector('.el-chart-wrap').appendChild(tip);
+    }
+    return tip;
+  }
+  function positionTooltip(tip, wrap, pxX, pxY) {
+    tip.style.left = '0px'; tip.style.top = '0px'; tip.classList.add('is-visible');
+    const wrapRect = wrap.getBoundingClientRect();
+    let left = pxX + 14;
+    let top = Math.max(0, pxY - 14);
+    if (left + tip.offsetWidth > wrapRect.width) left = pxX - tip.offsetWidth - 14;
+    tip.style.left = left + 'px';
+    tip.style.top = top + 'px';
+  }
+  function hideTooltip(tip) { tip.classList.remove('is-visible'); }
+
+  // ---- Crosshair charts (line, area) ----
+  function wireCrosshairChart(cardId, crosshairId, xs, cats, series, unit) {
+    const card = document.getElementById(cardId);
+    const svg = card.querySelector('.el-chart-svg');
+    const wrap = card.querySelector('.el-chart-wrap');
+    const hit = svg.querySelector('.el-chart-hit-layer');
+    const crosshair = document.getElementById(crosshairId);
+    const tip = ensureChartTooltip(card);
+    const xsNum = xs.map(parseFloat);
+
+    hit.addEventListener('mousemove', (e) => {
+      const vb = svg.viewBox.baseVal;
+      const { pxX, pxY, rectW } = chartLocalToPx(svg, e);
+      const localX = (pxX / rectW) * vb.width;
+      let nearest = 0, best = Infinity;
+      xsNum.forEach((xv, i) => { const d = Math.abs(xv - localX); if (d < best) { best = d; nearest = i; } });
+      const xPix = xsNum[nearest];
+      crosshair.setAttribute('x1', xPix); crosshair.setAttribute('x2', xPix);
+      crosshair.style.display = 'block';
+      let html = '<div class="el-chart-tooltip-title">' + cats[nearest] + '</div>';
+      series.forEach(s => {
+        html += '<div class="el-chart-tooltip-row"><span class="el-chart-tooltip-swatch" style="background:' + s.colorVar + '"></span>' + s.label + ': <strong>&nbsp;' + s.values[nearest] + unit + '</strong></div>';
+      });
+      tip.innerHTML = html;
+      const pxXOnScreen = (xPix / vb.width) * rectW;
+      positionTooltip(tip, wrap, pxXOnScreen, pxY);
+    });
+    hit.addEventListener('mouseleave', () => { hideTooltip(tip); crosshair.style.display = 'none'; });
+  }
+  wireCrosshairChart('chart-line-discrete', 'line-discrete-crosshair', ['34.0', '117.2', '200.4', '283.6', '366.8', '450.0'], ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'], [{'colorVar': 'var(--el-chart-cat-1)', 'label': 'Wind + solar', 'values': [5, 9, 14, 19, 24, 29]}, {'colorVar': 'var(--el-chart-cat-2)', 'label': 'Base demand', 'values': [4, 8, 11, 16, 21, 27]}, {'colorVar': 'var(--el-chart-cat-3)', 'label': 'Interconnector flow', 'values': [3, 6, 9, 13, 17, 20]}], ' GW');
+  wireCrosshairChart('chart-line-seq', 'line-seq-crosshair', ['34.0', '138.0', '242.0', '346.0', '450.0'], ['Q1', 'Q2', 'Q3', 'Q4', 'Q5'], [{'colorVar': 'var(--el-ramp-blue-5)', 'label': '2026 forecast', 'values': [2, 5, 9, 14, 20]}, {'colorVar': 'var(--el-ramp-blue-4)', 'label': '2027 forecast', 'values': [3, 7, 12, 18, 24]}, {'colorVar': 'var(--el-ramp-blue-3)', 'label': '2028 forecast', 'values': [4, 9, 15, 21, 28]}, {'colorVar': 'var(--el-ramp-blue-2)', 'label': '2029 forecast', 'values': [5, 11, 18, 25, 32]}, {'colorVar': 'var(--el-ramp-blue-1)', 'label': '2030 forecast', 'values': [6, 13, 21, 29, 36]}], ' GW');
+  wireCrosshairChart('chart-area-single', 'area-single-crosshair', ['34.0', '103.3', '172.7', '242.0', '311.3', '380.7', '450.0'], ['0h', '4h', '8h', '12h', '16h', '20h', '24h'], [{'colorVar': 'var(--el-chart-cat-4)', 'label': 'Gas output', 'values': [38, 33, 26, 18, 11, 5, 1]}], ' GW');
+  wireCrosshairChart('chart-area-stacked', 'area-stacked-crosshair', ['34.0', '103.3', '172.7', '242.0', '311.3', '380.7', '450.0'], ['0h', '4h', '8h', '12h', '16h', '20h', '24h'], [{'colorVar': 'var(--el-chart-cat-1)', 'label': 'Wind', 'values': [8, 6, 5, 7, 10, 13, 9]}, {'colorVar': 'var(--el-chart-cat-3)', 'label': 'Nuclear', 'values': [6, 6, 6, 6, 6, 6, 6]}, {'colorVar': 'var(--el-chart-cat-2)', 'label': 'Solar', 'values': [0, 0, 4, 9, 7, 1, 0]}, {'colorVar': 'var(--el-chart-cat-4)', 'label': 'Gas', 'values': [12, 10, 7, 5, 9, 14, 16]}], ' GW');
+
+  // ---- Discrete-mark charts (bar, column, pie, map) ----
+  function wireDiscreteChart(cardId, selector) {
+    const card = document.getElementById(cardId);
+    const svg = card.querySelector('.el-chart-svg');
+    const wrap = card.querySelector('.el-chart-wrap');
+    const tip = ensureChartTooltip(card);
+    svg.querySelectorAll(selector).forEach(mark => {
+      mark.addEventListener('mousemove', (e) => {
+        const { pxX, pxY } = chartLocalToPx(svg, e);
+        const label = mark.dataset.label || mark.dataset.region || '';
+        const val = mark.dataset.val || '';
+        tip.innerHTML = '<div class="el-chart-tooltip-row"><span class="el-chart-tooltip-swatch" style="background:' + getComputedStyle(mark).fill + '"></span>' + label + ': <strong>&nbsp;' + val + '</strong></div>';
+        positionTooltip(tip, wrap, pxX, pxY);
+      });
+      mark.addEventListener('mouseleave', () => hideTooltip(tip));
+    });
+  }
+  wireDiscreteChart('chart-bar-unstacked', '.el-chart-bar');
+  wireDiscreteChart('chart-bar-stacked', '.el-chart-bar');
+  wireDiscreteChart('chart-column-unstacked', '.el-chart-col');
+  wireDiscreteChart('chart-column-stacked', '.el-chart-col');
+  wireDiscreteChart('chart-pie', '.el-chart-pie-slice');
+  wireDiscreteChart('chart-map', '.el-chart-map-tile');
+  // ---- Toasts ----
+  const toastCopy = {
+    info: { title: 'Notice' }, success: { title: 'Success' },
+    warning: { title: 'Warning' }, danger: { title: 'Attention' }
+  };
+  function showToast(type, title, msg) {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'el-toast el-toast--' + type;
+    toast.innerHTML = `<div class="el-toast-body"><div class="el-toast-title">${title}</div><div class="el-toast-msg">${msg}</div></div><button class="el-toast-close">&times;</button>`;
+    toast.querySelector('.el-toast-close').addEventListener('click', () => toast.remove());
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 5000);
+  }
+</script>
+</body>
+</html>
