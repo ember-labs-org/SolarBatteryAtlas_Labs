@@ -4,108 +4,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solar + Battery Atlas</title>
+    <title>Solar + Battery Atlas | Ember Labs</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', '"SF Pro"', '"Segoe UI"', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
-                    },
-                    colors: {
-                        surface: '#15181a',
-                        'surface-variant': '#1f2325',
-                        primary: '#f59e0b',
-                        'ember-hover': '#fbbf24',
-                        'on-surface': '#ECEFF5',
-                        outline: '#2a2f31',
-                        'bg-page': '#0b0d0c',
-                        muted: '#9aa19f',
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Custom Ember Labs Stylesheet -->
+    <link rel="stylesheet" href="deployment/css/style.css">
+
+    <!-- Pre-built Tailwind CSS (rebuild with npm run build:css) -->
+    <link rel="stylesheet" href="deployment/css/tailwind.css">
 </head>
 
-<body
-    class="bg-bg-page text-on-surface font-sans min-h-screen flex items-center justify-center p-6 selection:bg-primary selection:text-black">
-    <div class="max-w-2xl w-full">
-        <header class="text-center mb-12">
-            <div
-                class="relative w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center bg-surface-variant ring-1 ring-white/10 shadow-lg overflow-hidden">
-                <svg viewBox="0 0 40 40" class="w-[52px] h-[52px]" fill="none" stroke-linecap="round"
-                    stroke-linejoin="round">
-                    <defs>
-                        <linearGradient id="solarAtlasGrad" x1="0" y1="0" x2="1" y2="1">
-                            <stop offset="0%" stop-color="#fbbf24" />
-                            <stop offset="100%" stop-color="#f59e0b" />
-                        </linearGradient>
-                    </defs>
-                    <circle cx="20" cy="20" r="15.5" stroke="url(#solarAtlasGrad)" stroke-width="1.4" />
-                    <path d="M5.5 25 Q 20 21.5 34.5 25" stroke="url(#solarAtlasGrad)" stroke-width="1.4" />
-                    <g stroke="#facc15" stroke-width="1.25">
-                        <line x1="20" y1="12.8" x2="20" y2="15.2" />
-                        <line x1="15.2" y1="15.2" x2="16.5" y2="16.5" />
-                        <line x1="24.8" y1="15.2" x2="23.5" y2="16.5" />
-                        <line x1="12.5" y1="19.8" x2="14.4" y2="19.8" />
-                        <line x1="27.5" y1="19.8" x2="25.6" y2="19.8" />
-                    </g>
-                    <circle cx="20" cy="21.8" r="2.9" fill="#facc15" stroke="none" />
-                </svg>
-            </div>
-            <h1 class="text-4xl font-medium tracking-tight text-white inline-flex items-start gap-2">
-                Solar + Battery Atlas
-                <span class="mt-2 inline-flex items-center rounded-full border border-white/60 px-2.5 py-0.5 text-[11px] font-medium leading-none tracking-[0.15em] text-white">BETA</span>
-            </h1>
-        </header>
+<body class="el-root bg-canvas text-white font-sans min-h-screen flex flex-col selection:bg-yellow selection:text-navy">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Interactive Atlas -->
-            <a href="deployment/index.html"
-                class="group block bg-surface/90 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg hover:border-primary/50 hover:bg-surface-variant transition-all duration-300">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="material-symbols-outlined text-primary">explore</span>
-                    <h2 class="text-xl font-medium text-white">Interactive Atlas</h2>
-                </div>
-                <p class="text-muted text-sm leading-relaxed mb-4">
-                    The full interactive experience with map views, LCOE calculators, and population analysis.
-                </p>
-                <div class="flex items-center text-primary text-sm font-medium">
-                    Open Tool <span
-                        class="material-symbols-outlined ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </div>
-            </a>
-
-            <!-- Article: Harnessing the Sun -->
-            <a href="deployment/scrollytelling/index.html"
-                class="group block bg-surface/90 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg hover:border-primary/50 hover:bg-surface-variant transition-all duration-300">
-                <div class="flex items-center gap-3 mb-4">
-                    <span class="material-symbols-outlined text-primary">auto_stories</span>
-                    <h2 class="text-xl font-medium text-white">Article: Harnessing the Sun</h2>
-                </div>
-                <p class="text-muted text-sm leading-relaxed mb-4">
-                    A guided narrative exploration of global solar potential and the energy transition.
-                </p>
-                <div class="flex items-center text-primary text-sm font-medium">
-                    Read Article <span
-                        class="material-symbols-outlined ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </div>
+    <!-- Top Navigation Bar -->
+    <nav class="el-nav">
+        <div class="flex items-center gap-3">
+            <a href="index.html" class="el-logo-mark flex items-center gap-3" aria-label="Ember Labs Home">
+                <img src="deployment/assets/svg/ember-labs-logo-white.svg" alt="EMBER.LABS" class="h-6 w-auto" />
+                <span class="text-muted text-lg font-normal">/</span>
+                <span class="text-white font-semibold text-sm tracking-wider uppercase">Solar + Battery Atlas</span>
             </a>
         </div>
+        <ul class="el-nav-links">
+            <li><a href="deployment/index.html">Interactive Atlas</a></li>
+            <li><a href="deployment/scrollytelling/index.html">Article</a></li>
+            <li><a href="https://ember-climate.org" target="_blank" rel="noopener noreferrer">Ember</a></li>
+            <li><a href="https://github.com/ember-climate" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        </ul>
+    </nav>
 
-        <footer class="mt-12 text-center text-muted/70 text-xs">
-            <p>Front-end designed with AI. Data and methodology curated and verified by humans.</p>
-            <p class="mt-1">Solar + Battery Atlas &bull; 2026</p>
-        </footer>
-    </div>
+    <!-- Hero Band -->
+    <header class="el-hero">
+        <div class="max-w-5xl w-full mx-auto flex flex-col items-start">
+            <span class="el-badge mb-4">
+                <svg class="el-icon" style="width:14px;height:14px;color:var(--el-navy);" viewBox="0 0 943 943" fill="currentColor">
+                    <path d="M707.16,117.86L766.09,0L825.02,117.86L942.88,176.79L825.02,235.72L766.09,353.58L707.16,235.72L589.3,176.79L707.16,117.86ZM235.72,353.58L353.58,117.86L471.44,353.58L707.16,471.44L471.44,589.3L353.58,825.02L235.72,589.3L0,471.44L235.72,353.58ZM766.09,589.3L825.02,707.16L942.88,766.09L825.02,825.02L766.09,942.88L707.16,825.02L589.3,766.09L707.16,707.16L766.09,589.3Z" />
+                </svg>
+                Live experiments ▪ Beta
+            </span>
+            <h1 class="text-[60px] font-semibold leading-[1.15] text-white tracking-tight mb-4">Solar + Battery Atlas</h1>
+            <p class="text-[20px] font-normal leading-[1.4] text-muted max-w-3xl">
+                Global capacity factor simulation, 168-hour dispatch replay, and levelized cost analytics for 24/7 solar + storage baseload power.
+            </p>
+        </div>
+    </header>
+
+    <!-- Content Canvas -->
+    <main class="el-canvas flex-1 py-12 px-8">
+        <div class="max-w-5xl w-full mx-auto">
+            <div class="el-card-grid grid grid-cols-1 md:grid-cols-2 gap-[20px]">
+                <!-- Card 1: Interactive Atlas -->
+                <div class="el-card bg-navy p-[28px] border border-white/12 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="el-tag el-tag--warning">Interactive Tool</span>
+                            <span class="material-symbols-outlined text-yellow text-2xl">explore</span>
+                        </div>
+                        <h2 class="text-[32px] font-semibold leading-[1.15] text-white mb-3">Interactive Atlas</h2>
+                        <p class="text-[15px] font-normal leading-[1.4] text-muted mb-6">
+                            Explore global solar and battery baseload feasibility across 5,000+ Voronoi zones. Includes interactive LCOE calculators, hourly dispatch replays, and supply-demand population analysis.
+                        </p>
+                    </div>
+                    <div>
+                        <a href="deployment/index.html" class="el-btn el-btn-primary inline-flex items-center gap-2">
+                            <span>Launch Tool</span>
+                            <span class="material-symbols-outlined text-base">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card 2: Scrollytelling Article -->
+                <div class="el-card bg-navy p-[28px] border border-white/12 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="el-tag el-tag--info">Narrative Article</span>
+                            <span class="material-symbols-outlined text-blue text-2xl">auto_stories</span>
+                        </div>
+                        <h2 class="text-[32px] font-semibold leading-[1.15] text-white mb-3">Harnessing the Sun</h2>
+                        <p class="text-[15px] font-normal leading-[1.4] text-muted mb-6">
+                            A guided, data-driven visual walkthrough of global clean energy transition economics, the seasonal storage challenge, and fossil fuel replacement baselines.
+                        </p>
+                    </div>
+                    <div>
+                        <a href="deployment/scrollytelling/index.html" class="el-btn el-btn-secondary inline-flex items-center gap-2">
+                            <span>Read Article</span>
+                            <span class="material-symbols-outlined text-base">arrow_forward</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer CTA Band -->
+    <footer class="el-footer-cta border-t border-white/12 py-12 px-8 bg-navy text-white">
+        <div class="max-w-5xl w-full mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div class="md:col-span-2">
+                    <p class="text-[15px] font-semibold text-muted mb-2">About Ember Labs</p>
+                    <h3 class="text-[24px] font-semibold leading-[1.15] text-white mb-3">Accelerating the clean electricity transition</h3>
+                    <p class="text-[15px] font-normal leading-[1.4] text-muted max-w-xl">
+                        Ember Labs builds open-source data tools and interactive simulators to give policymakers, researchers, and energy analysts clarity on the economics of clean energy technologies.
+                    </p>
+                </div>
+                <div class="flex flex-col justify-start">
+                    <p class="text-[15px] font-semibold text-muted mb-2">Data &amp; Methodology</p>
+                    <ul class="text-[15px] text-muted space-y-1.5">
+                        <li>• ERA5 &amp; Global Solar Atlas (PVOUT)</li>
+                        <li>• Global Energy Monitor (GEM)</li>
+                        <li>• WorldPop Population Densities</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/12 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-muted gap-4">
+                <p>© 2026 Ember. Open data under CC-BY-4.0.</p>
+                <p class="text-muted/80">Ember Labs &bull; Solar + Battery Atlas</p>
+            </div>
+        </div>
+    </footer>
+
 </body>
 
 </html>
