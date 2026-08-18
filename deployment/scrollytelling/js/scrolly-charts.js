@@ -5,21 +5,21 @@
 
 // ========== CHART CONFIGURATION ==========
 const CHART_COLORS = {
-    primary: '#f59e0b',
-    secondary: '#3b82f6',
-    tertiary: '#10b981',
-    danger: '#ef4444',
-    muted: '#6b7280',
-    grid: 'rgba(255, 255, 255, 0.1)',
-    text: '#e5e5e5',
-    textMuted: '#9ca3af'
+    primary: '#FFC400',
+    secondary: '#37A6E6',
+    tertiary: '#13CE74',
+    danger: '#E04B00',
+    muted: '#B0B7C6',
+    grid: 'rgba(255, 255, 255, 0.12)',
+    text: '#FFFFFF',
+    textMuted: '#B0B7C6'
 };
 
 const FUEL_COLORS = {
-    coal: '#f97316',
-    oil_gas: '#38bdf8',
-    bioenergy: '#84cc16',
-    nuclear: '#a855f7'
+    coal: '#E04B00',
+    oil_gas: '#37A6E6',
+    bioenergy: '#13CE74',
+    nuclear: '#97CCED'
 };
 
 // Track multiple chart instances
@@ -60,8 +60,25 @@ function queueChartResize(containerId) {
 function applyChartDpiCap() {
     if (window.Chart) {
         window.Chart.defaults.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
-        // SF Pro for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
-        window.Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+        // Poppins font for canvas-rendered chart text
+        window.Chart.defaults.font.family = "'Poppins', system-ui, sans-serif";
+        window.Chart.defaults.color = CHART_COLORS.textMuted;
+        window.Chart.defaults.borderColor = CHART_COLORS.grid;
+        if (!window.Chart.defaults.elements) window.Chart.defaults.elements = {};
+        if (!window.Chart.defaults.elements.bar) window.Chart.defaults.elements.bar = {};
+        window.Chart.defaults.elements.bar.borderRadius = 0;
+        if (!window.Chart.defaults.plugins) window.Chart.defaults.plugins = {};
+        window.Chart.defaults.plugins.tooltip = {
+            backgroundColor: '#000000',
+            borderColor: 'rgba(255, 255, 255, 0.12)',
+            borderWidth: 1,
+            cornerRadius: 0,
+            padding: 8,
+            titleFont: { family: "'Poppins', system-ui, sans-serif", weight: '600', size: 12 },
+            bodyFont: { family: "'Poppins', system-ui, sans-serif", weight: '400', size: 12 },
+            boxPadding: 4,
+            usePointStyle: true
+        };
     }
 }
 
@@ -179,16 +196,16 @@ function buildReliabilityDistribution(reliabilityData) {
             label: 'Population (billions)',
             data,
             backgroundColor: [
-                'rgba(239, 68, 68, 0.7)',    // No Access - red
-                'rgba(249, 115, 22, 0.7)',   // 0-50 - orange
-                'rgba(234, 179, 8, 0.7)',    // 50-80 - yellow
-                'rgba(132, 204, 22, 0.7)',   // 80-95 - lime
-                'rgba(34, 197, 94, 0.7)',    // 95-99 - green
-                'rgba(16, 185, 129, 0.7)'    // 100 - emerald
+                'rgba(224, 75, 0, 0.7)',     // No Access - Ember Orange
+                'rgba(238, 115, 9, 0.7)',    // 0-50 - Orange ramp
+                'rgba(255, 196, 0, 0.7)',    // 50-80 - Filament Yellow
+                'rgba(255, 218, 68, 0.7)',   // 80-95 - Yellow ramp
+                'rgba(19, 206, 116, 0.7)',   // 95-99 - Live Green
+                'rgba(16, 149, 83, 0.7)'     // 100 - Green ramp
             ],
             borderColor: [
-                '#ef4444', '#f97316', '#eab308',
-                '#84cc16', '#22c55e', '#10b981'
+                '#E04B00', '#EE7309', '#FFC400',
+                '#FFDA44', '#13CE74', '#109553'
             ],
             borderWidth: 1
         }]
@@ -463,8 +480,9 @@ export async function showWeeklySampleChart(sampleData, locationName = 'Represen
                 type: 'bar',
                 label: 'Direct Solar',
                 data: solarUsed,
-                backgroundColor: '#facc15',
-                borderColor: '#facc15',
+                backgroundColor: '#FFC400',
+                borderColor: '#FFC400',
+                borderRadius: 0,
                 stack: 'stack0',
                 order: 2
             },
@@ -472,8 +490,9 @@ export async function showWeeklySampleChart(sampleData, locationName = 'Represen
                 type: 'bar',
                 label: 'Battery Discharge',
                 data: battDischarge,
-                backgroundColor: '#a855f7',
-                borderColor: '#a855f7',
+                backgroundColor: '#37A6E6',
+                borderColor: '#37A6E6',
+                borderRadius: 0,
                 stack: 'stack0',
                 order: 2
             },
@@ -481,8 +500,9 @@ export async function showWeeklySampleChart(sampleData, locationName = 'Represen
                 type: 'bar',
                 label: 'Unserved Load',
                 data: unserved,
-                backgroundColor: '#9ca3af',
-                borderColor: '#9ca3af',
+                backgroundColor: '#E04B00',
+                borderColor: '#E04B00',
+                borderRadius: 0,
                 stack: 'stack0',
                 order: 2
             },
@@ -490,7 +510,7 @@ export async function showWeeklySampleChart(sampleData, locationName = 'Represen
                 type: 'line',
                 label: 'Solar Potential',
                 data: solarPotential,
-                borderColor: '#fbbf24',
+                borderColor: '#FFC400',
                 borderDash: [3, 3],
                 borderWidth: 1.5,
                 pointRadius: 0,
@@ -1367,8 +1387,8 @@ export async function showBackupCostChart(backupResults, populationData, sbTarge
     const chartData = {
         labels,
         datasets: [
-            { label: 'Generator capex', data: capexData, backgroundColor: 'rgba(100,116,139,0.85)', borderColor: '#64748b', borderWidth: 1 },
-            { label: 'Back-up fuel', data: opexData, backgroundColor: 'rgba(245,158,11,0.85)', borderColor: '#f59e0b', borderWidth: 1 }
+            { label: 'Generator capex', data: capexData, backgroundColor: 'rgba(98, 110, 136, 0.85)', borderColor: '#626E88', borderWidth: 1, borderRadius: 0 },
+            { label: 'Back-up fuel', data: opexData, backgroundColor: 'rgba(255, 196, 0, 0.85)', borderColor: '#FFC400', borderWidth: 1, borderRadius: 0 }
         ]
     };
 
@@ -1553,21 +1573,21 @@ export async function showLatitudeDemandSupplyChart(populationData, lcoeResults)
         {
             type: 'line', label: 'Population share (%)', data: demandLineData,
             xAxisID: 'xDemand', yAxisID: 'y',
-            borderColor: '#fbbf24', backgroundColor: 'rgba(251,191,36,0.22)',
+            borderColor: '#FFC400', backgroundColor: 'rgba(255, 196, 0, 0.22)',
             borderWidth: 2, pointRadius: 0, pointHoverRadius: 3, stepped: 'middle',
             fill: 'origin', spanGaps: false, order: 2
         },
         {
             type: 'line', label: 'Median LCOE ($/MWh)', data: supplyLineData,
             xAxisID: 'xSupply', yAxisID: 'y',
-            borderColor: '#38bdf8', backgroundColor: 'rgba(56,189,248,0)',
+            borderColor: '#37A6E6', backgroundColor: 'rgba(55, 166, 230, 0)',
             borderWidth: 2.5, pointRadius: 0, pointHoverRadius: 3, tension: 0.4,
             fill: false, spanGaps: true, order: 1
         },
         {
             type: 'scatter', label: 'LCOE solar + battery ($/MWh)', data: scatterData,
             xAxisID: 'xSupply', yAxisID: 'y',
-            backgroundColor: 'rgba(52,211,153,0.25)', borderColor: 'rgba(52,211,153,0)',
+            backgroundColor: 'rgba(19, 206, 116, 0.25)', borderColor: 'rgba(19, 206, 116, 0)',
             pointRadius: 1.5, pointHoverRadius: 3, order: 3
         }
     ];
@@ -1599,22 +1619,22 @@ export async function showLatitudeDemandSupplyChart(populationData, lcoeResults)
         scales: {
             xDemand: {
                 position: 'top',
-                title: { display: true, text: 'Population share (%)', color: '#fbbf24', font: { size: 11 } },
-                grid: { color: 'rgba(255,255,255,0.04)', drawOnChartArea: true },
-                ticks: { color: '#fbbf24', font: { size: 10 }, callback: (v) => `${Number(v).toFixed(1)}%` },
+                title: { display: true, text: 'Population share (%)', color: '#FFC400', font: { family: "'Poppins', system-ui, sans-serif", size: 11, weight: '600' } },
+                grid: { color: 'rgba(255,255,255,0.06)', drawOnChartArea: true },
+                ticks: { color: '#FFC400', font: { family: "'Poppins', system-ui, sans-serif", size: 10 }, callback: (v) => `${Number(v).toFixed(1)}%` },
                 min: 0, suggestedMax: demandSuggestedMax
             },
             xSupply: {
                 position: 'bottom',
-                title: { display: true, text: 'LCOE solar + battery ($/MWh)', color: '#38bdf8', font: { size: 11 } },
-                grid: { color: 'rgba(255,255,255,0.04)', drawOnChartArea: false },
-                ticks: { color: '#38bdf8', font: { size: 10 }, callback: (v) => `$${Number(v).toFixed(0)}` },
+                title: { display: true, text: 'LCOE solar + battery ($/MWh)', color: '#37A6E6', font: { family: "'Poppins', system-ui, sans-serif", size: 11, weight: '600' } },
+                grid: { color: 'rgba(255,255,255,0.06)', drawOnChartArea: false },
+                ticks: { color: '#37A6E6', font: { family: "'Poppins', system-ui, sans-serif", size: 10 }, callback: (v) => `$${Number(v).toFixed(0)}` },
                 min: 0, max: 200
             },
             y: {
                 min: -90, max: 90,
-                title: { display: true, text: 'Latitude', font: { size: 11 } },
-                ticks: { stepSize: 30, callback: (v) => `${v}°`, color: '#9ca3af', font: { size: 10 } },
+                title: { display: true, text: 'Latitude', color: '#B0B7C6', font: { family: "'Poppins', system-ui, sans-serif", size: 11, weight: '600' } },
+                ticks: { stepSize: 30, callback: (v) => `${v}°`, color: '#B0B7C6', font: { family: "'Poppins', system-ui, sans-serif", size: 10 } },
                 grid: { color: 'rgba(255,255,255,0.06)' }
             }
         }

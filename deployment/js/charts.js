@@ -3,20 +3,31 @@ let charts = {};
 
 const SEASONS = ['winter', 'spring', 'summer', 'fall'];
 const COLORS = {
-    solar: 'rgba(251, 191, 36, 0.5)', // Amber 400
-    solarBorder: 'rgba(251, 191, 36, 1)',
-    battery: 'rgba(34, 211, 238, 0.5)', // Cyan 400
-    batteryBorder: 'rgba(34, 211, 238, 1)',
-    unserved: 'rgba(248, 113, 113, 0.5)', // Red 400
-    unservedBorder: 'rgba(248, 113, 113, 1)',
-    soc: 'rgba(16, 185, 129, 1)' // Emerald 500 (Line)
+    solar: 'rgba(255, 196, 0, 0.65)', // Filament Yellow #FFC400
+    solarBorder: '#FFC400',
+    battery: 'rgba(55, 166, 230, 0.65)', // Burner Blue #37A6E6
+    batteryBorder: '#37A6E6',
+    unserved: 'rgba(224, 75, 0, 0.65)', // Ember Orange #E04B00
+    unservedBorder: '#E04B00',
+    soc: '#13CE74' // Live Green #13CE74 (Line)
 };
 
 export function initCharts() {
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.borderColor = '#1e293b';
-    // SF Pro for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
-    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+    Chart.defaults.color = '#B0B7C6';
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.12)';
+    Chart.defaults.font.family = "'Poppins', system-ui, sans-serif";
+    if (!Chart.defaults.plugins) Chart.defaults.plugins = {};
+    Chart.defaults.plugins.tooltip = {
+        backgroundColor: '#000000',
+        borderColor: 'rgba(255, 255, 255, 0.12)',
+        borderWidth: 1,
+        cornerRadius: 0,
+        padding: 8,
+        titleFont: { family: "'Poppins', system-ui, sans-serif", weight: '600', size: 12 },
+        bodyFont: { family: "'Poppins', system-ui, sans-serif", weight: '400', size: 12 },
+        boxPadding: 4,
+        usePointStyle: true
+    };
 
     SEASONS.forEach(season => {
         const ctx = document.getElementById(`chart-${season}`).getContext('2d');
@@ -34,8 +45,8 @@ export function initCharts() {
                     title: {
                         display: true,
                         text: season.toUpperCase(),
-                        color: '#e2e8f0',
-                        font: { size: 12, weight: 'bold' }
+                        color: '#FFFFFF',
+                        font: { family: "'Poppins', system-ui, sans-serif", size: 12, weight: '600' }
                     },
                     legend: { display: false },
                     tooltip: {
@@ -49,9 +60,11 @@ export function initCharts() {
                     },
                     y: {
                         stacked: true,
-                        title: { display: true, text: 'MW' },
+                        title: { display: true, text: 'MW', color: '#B0B7C6', font: { family: "'Poppins', system-ui, sans-serif", size: 11, weight: '600' } },
                         min: 0,
-                        max: 10 // Fixed scale for consistency? Or dynamic? Let's try dynamic first.
+                        max: 10,
+                        grid: { color: 'rgba(255, 255, 255, 0.12)' },
+                        ticks: { color: '#B0B7C6', font: { family: "'Poppins', system-ui, sans-serif", size: 10 } }
                     },
                     y1: {
                         type: 'linear',
@@ -126,6 +139,7 @@ export function updateCharts(sampleData) {
                 backgroundColor: COLORS.solar,
                 borderColor: COLORS.solarBorder,
                 borderWidth: 1,
+                borderRadius: 0,
                 stack: 'stack0',
                 order: 2
             },
@@ -136,6 +150,7 @@ export function updateCharts(sampleData) {
                 backgroundColor: COLORS.battery,
                 borderColor: COLORS.batteryBorder,
                 borderWidth: 1,
+                borderRadius: 0,
                 stack: 'stack0',
                 order: 2
             },
@@ -146,6 +161,7 @@ export function updateCharts(sampleData) {
                 backgroundColor: COLORS.unserved,
                 borderColor: COLORS.unservedBorder,
                 borderWidth: 1,
+                borderRadius: 0,
                 stack: 'stack0',
                 order: 2
             },
@@ -153,7 +169,7 @@ export function updateCharts(sampleData) {
                 type: 'line',
                 label: 'Solar Potential',
                 data: data.solar_gen,
-                borderColor: '#fbbf24', // Amber
+                borderColor: '#FFC400', // Filament Yellow
                 borderDash: [5, 5],
                 borderWidth: 1,
                 pointRadius: 0,

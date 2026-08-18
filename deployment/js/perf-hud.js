@@ -40,7 +40,7 @@ function paint() {
         const avg = s.count ? s.sum / s.count : 0;
         // Warn-colour the "last" cell when a single op blows past ~16ms (one
         // 60fps frame) so the dominant cost is obvious at a glance.
-        const hot = s.last > 16 ? ' style="color:#fca5a5"' : '';
+        const hot = s.last > 16 ? ' style="color:#E04B00;font-weight:600"' : '';
         rows.push(
             `<tr><td>${label}</td><td${hot}>${fmt(s.last)}</td>` +
             `<td>${fmt(avg)}</td><td>${fmt(s.max)}</td><td>${s.count}</td></tr>`
@@ -93,24 +93,25 @@ function build() {
     // All styling is inline so this never touches the app's CSS files.
     Object.assign(rootEl.style, {
         position: 'fixed', left: '8px', bottom: '8px', zIndex: '100000',
-        font: '11px/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
-        color: '#e5e7eb', background: 'rgba(17,24,39,0.86)',
-        border: '1px solid rgba(148,163,184,0.35)', borderRadius: '6px',
+        font: '11px/1.35 "Poppins", system-ui, sans-serif',
+        fontVariantNumeric: 'tabular-nums',
+        color: '#FFFFFF', background: 'rgba(25, 34, 56, 0.95)',
+        border: '1px solid rgba(255, 255, 255, 0.12)', borderRadius: '0px',
         padding: '6px 8px', maxWidth: '300px', pointerEvents: 'auto',
-        boxShadow: '0 2px 10px rgba(0,0,0,0.4)', userSelect: 'none', cursor: 'move'
+        boxShadow: 'none', userSelect: 'none', cursor: 'move'
     });
     rootEl.innerHTML =
         `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px">` +
         `<span style="font-weight:600;letter-spacing:.04em">PERF · ${shortBrowser()} · DPR ${window.devicePixelRatio || 1}</span>` +
-        `<span><button type="button" data-act="copy" style="cursor:pointer;background:none;border:1px solid rgba(148,163,184,.4);color:#cbd5e1;border-radius:4px;padding:0 5px">copy</button> ` +
-        `<button type="button" data-act="reset" style="cursor:pointer;background:none;border:1px solid rgba(148,163,184,.4);color:#cbd5e1;border-radius:4px;padding:0 5px">reset</button></span>` +
+        `<span><button type="button" data-act="copy" style="cursor:pointer;background:none;border:1px solid rgba(255,255,255,.12);color:#FFFFFF;border-radius:0px;padding:0 5px">copy</button> ` +
+        `<button type="button" data-act="reset" style="cursor:pointer;background:none;border:1px solid rgba(255,255,255,.12);color:#FFFFFF;border-radius:0px;padding:0 5px">reset</button></span>` +
         `</div>` +
         `<table style="border-collapse:collapse;width:100%">` +
-        `<thead><tr style="color:#94a3b8;text-align:right">` +
-        `<th style="text-align:left;font-weight:500">op</th><th style="font-weight:500">last</th>` +
-        `<th style="font-weight:500">avg</th><th style="font-weight:500">max</th><th style="font-weight:500">n</th></tr></thead>` +
+        `<thead><tr style="color:#B0B7C6;text-align:right">` +
+        `<th style="text-align:left;font-weight:600">op</th><th style="font-weight:600">last</th>` +
+        `<th style="font-weight:600">avg</th><th style="font-weight:600">max</th><th style="font-weight:600">n</th></tr></thead>` +
         `<tbody></tbody></table>` +
-        `<div style="margin-top:3px;color:#94a3b8">ms per op · red = &gt;16ms</div>`;
+        `<div style="margin-top:3px;color:#B0B7C6">ms per op · orange = &gt;16ms</div>`;
     bodyEl = rootEl.querySelector('tbody');
     rootEl.addEventListener('click', (e) => {
         const act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');

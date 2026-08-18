@@ -20,8 +20,8 @@ export function createSharedPopup() {
  */
 export function buildTooltipHtml(title, lines = []) {
     const linesHtml = lines.filter(Boolean).join('\n');
-    return `<div class="bg-surface text-on-surface border border-outline px-3 py-2 rounded text-xs max-w-xs">
-        <div class="font-semibold">${title}</div>
+    return `<div class="bg-black text-white border border-white/12 px-3 py-2 text-xs max-w-xs font-sans">
+        <div class="font-semibold text-white">${title}</div>
         ${linesHtml}
     </div>`;
 }
@@ -97,9 +97,9 @@ export function buildLcoeTooltip(data, formatCurrency, formatNumber) {
 
     if (!data.meetsTarget) {
         if (data.includeDieselBackup) {
-            lines.push(`<div class="text-amber-300">Target solar + battery CF not met; showing the highest-solar-share firm configuration.</div>`);
+            lines.push(`<div class="text-yellow">Target solar + battery CF not met; showing the highest-solar-share firm configuration.</div>`);
         } else {
-            lines.push(`<div class="text-amber-300">Target CF for 1\u00a0MW baseload not met in this dataset.</div>`);
+            lines.push(`<div class="text-yellow">Target CF for 1\u00a0MW baseload not met in this dataset.</div>`);
             lines.push(`<div>Highest config (${data.maxConfigSolar ?? '--'} MW_DC, ${data.maxConfigBatt ?? '--'} MWh)</div>`);
         }
     }

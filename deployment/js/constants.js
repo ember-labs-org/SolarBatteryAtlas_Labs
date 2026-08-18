@@ -5,10 +5,10 @@
 export const ALL_FUELS = ['coal', 'oil_gas', 'bioenergy', 'nuclear'];
 
 export const FUEL_COLORS = {
-    coal: '#f97316',
-    oil_gas: '#38bdf8',
-    bioenergy: '#84cc16',
-    nuclear: '#a855f7'
+    coal: '#E04B00',
+    oil_gas: '#37A6E6',
+    bioenergy: '#13CE74',
+    nuclear: '#97CCED'
 };
 
 export const BASE_LOAD_MW = 1000;
@@ -36,14 +36,14 @@ export const VIEW_MODE_EXPLANATIONS = {
 
 export const CF_COLOR_SCALE = {
     domain: [0, 0.05, 0.4, 0.7, 1.0],
-    range: ["#0049ff", "#0049ff", "#00c853", "#ff9800", "#d32f2f"]
+    range: ["#37A6E6", "#37A6E6", "#13CE74", "#FFC400", "#E04B00"]
 };
 
 // Color scale for Energy Access (0% to 100%)
-// Red (low) -> Yellow -> Green (high)
+// Orange (low) -> Yellow -> Green (high)
 export const ACCESS_COLOR_SCALE = {
     domain: [0, 50, 100],
-    range: ["#ef4444", "#eab308", "#22c55e"]
+    range: ["#E04B00", "#FFC400", "#13CE74"]
 };
 
 export const POTENTIAL_MULTIPLE_BUCKETS = [
