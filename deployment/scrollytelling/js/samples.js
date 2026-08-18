@@ -23,8 +23,8 @@ const seasonDataCache = new Map();
 let cachedSummaryMap = null; // Cached coordinate map for enrichment
 
 // Dynamic Chart.js loader for samples module
-// SF Pro for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
-const CHART_FONT_FAMILY = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+// Poppins for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
+const CHART_FONT_FAMILY = "'Poppins', system-ui, sans-serif";
 
 async function ensureChartJsLoaded() {
     if (chartJsLoaded || window.Chart) {
