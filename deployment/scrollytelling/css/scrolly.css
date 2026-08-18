@@ -1,34 +1,337 @@
-/* Scrollytelling Styles for Solar + Battery Atlas */
+/* ============================================================
+   Ember Labs Design System — Scrollytelling Article Stylesheet
+   Canonical Tokens, Typography, Layout & Dataviz Overlays
+   ============================================================ */
 
-/* Design tokens — dark Ember palette (kept in sync with ../css/style.css) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
 :root {
-    --bg-page: #0b0d0c;
-    --card: #15181a;
-    --elevated: #1f2325;
-    --text: #ECEFF5;
-    --muted: #9aa19f;
-    --divider: #2a2f31;
-    --input: #0f1213;
-    --ember: #f59e0b;
-    --ember-hover: #fbbf24;
-    --solar: #f59e0b;
-    --battery: #a855f7;
-    /* SF Pro (Apple system font, à la Substack). Kept in sync with
-       ../css/style.css and Tailwind's font-sans. */
-    --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'SF Pro', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    /* ---- neutrals (three-step contrast scale) ---- */
+    --el-navy: #192238;     /* primary / darkest surface: step cards, panels */
+    --el-canvas: #414F6F;   /* mid surface: article canvas / background */
+    --el-slate: #626E88;    /* secondary / lighter surface */
+    --el-black: #000000;    /* top nav bar, tooltip fills, loading backdrop */
+    --el-white: #FFFFFF;    /* primary text, secondary button borders */
+
+    /* ---- accents ---- */
+    --el-yellow: #FFC400;   /* primary accent: interactive controls, badges */
+    --el-yellow-hover: #E6B300;
+    --el-yellow-active: #CC9F00;
+    --el-orange: #E04B00;   /* secondary accent: alarm lamp, costs, deficit */
+    --el-orange-hover: #C64300;
+
+    /* ---- dataviz & semantics ---- */
+    --el-green: #13CE74;    /* headline / positive metric numerals */
+    --el-blue: #37A6E6;     /* dataviz series 2 (battery) */
+    --el-blue-light: #97CCED; /* dataviz series sub-step (vapour blue) */
+    --el-muted: #B0B7C6;    /* secondary text, gridlines, unfilled tracks */
+
+    /* ---- official 6-colour categorical palette ---- */
+    --el-chart-cat-1: #FFC400;
+    --el-chart-cat-2: #37A6E6;
+    --el-chart-cat-3: #13CE74;
+    --el-chart-cat-4: #E04B00;
+    --el-chart-cat-5: #C4D9E9;
+    --el-chart-cat-6: #FFF4A3;
+
+    /* ---- sequential ramps ---- */
+    --el-ramp-yellow-1: #B77A00; --el-ramp-yellow-2: #CC9900; --el-ramp-yellow-3: #FFC400; --el-ramp-yellow-4: #FFDA44; --el-ramp-yellow-5: #FFF4A3;
+    --el-ramp-green-1: #0B6638;  --el-ramp-green-2: #109553;  --el-ramp-green-3: #13CE74;  --el-ramp-green-4: #A3D9A5;  --el-ramp-green-5: #D3EADF;
+    --el-ramp-blue-1: #203772;   --el-ramp-blue-2: #1E609C;   --el-ramp-blue-3: #37A6E6;   --el-ramp-blue-4: #97CCED;   --el-ramp-blue-5: #C4D9E9;
+    --el-ramp-orange-1: #891B05; --el-ramp-orange-2: #BF3100; --el-ramp-orange-3: #E04B00; --el-ramp-orange-4: #EE7309; --el-ramp-orange-5: #FCA311;
+
+    /* ---- type scale ---- */
+    --el-h1: 60px;
+    --el-h2: 42px;
+    --el-h3: 36px;
+    --el-h4: 32px;
+    --el-h5: 24px;
+    --el-h6: 22px;
+    --el-body: 20px;
+    --el-caption: 15px;
+    --el-label: 15px;
+
+    --el-font: 'Poppins', system-ui, sans-serif;
+
+    /* ---- spacing & geometry ---- */
+    --el-radius: 0px;
+    --el-radius-badge: 0px;
+    --el-gap: 20px;
+    --el-pad-card: 28px;
+    --el-pad-section: 48px;
+
+    /* ---- interaction & overlays ---- */
+    --el-white-wash-08: rgba(255, 255, 255, 0.08);
+    --el-white-wash-12: rgba(255, 255, 255, 0.12);
+    --el-divider: rgba(255, 255, 255, 0.12);
+    --el-overlay: rgba(25, 34, 56, 0.75);
+
+    /* ---- Legacy Aliases ---- */
+    --bg-page: var(--el-canvas);
+    --card: var(--el-navy);
+    --elevated: var(--el-slate);
+    --text: var(--el-white);
+    --muted: var(--el-muted);
+    --divider: var(--el-divider);
+    --input: var(--el-white-wash-08);
+    --ember: var(--el-yellow);
+    --ember-hover: var(--el-yellow-hover);
+    --solar: var(--el-yellow);
+    --battery: var(--el-blue);
+    --font-sans: var(--el-font);
 }
 
-/* ========== Layout ========== */
+/* UA Margin Reset & Global Rules */
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--el-font);
+    background-color: var(--el-canvas);
+    color: var(--el-white);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Zero Radius & Zero Shadow Enforcement */
+* {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--el-navy);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--el-canvas);
+    border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--el-muted);
+}
+
+/* ================================================================
+   Ember Labs Base Components (.el-*)
+   ================================================================ */
+
+.el-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: var(--el-yellow);
+    color: var(--el-navy);
+    font-family: var(--el-font);
+    font-size: var(--el-label);
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+}
+
+.el-btn-primary:hover {
+    background-color: var(--el-yellow-hover);
+}
+
+.el-btn-primary:active {
+    background-color: var(--el-yellow-active);
+}
+
+.el-btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background-color: transparent;
+    color: var(--el-white);
+    font-family: var(--el-font);
+    font-size: var(--el-label);
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 10px 20px;
+    border: 2px solid var(--el-white);
+    border-radius: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+}
+
+.el-btn-secondary:hover {
+    background-color: var(--el-white-wash-08);
+}
+
+.el-btn-group {
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--el-divider);
+    background: transparent;
+}
+
+.el-btn-group button,
+.el-btn-group .el-btn {
+    border: none;
+    border-right: 1px solid var(--el-divider);
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    font-family: var(--el-font);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.el-btn-group button:last-child,
+.el-btn-group .el-btn:last-child {
+    border-right: none;
+}
+
+.el-btn-group button:hover {
+    background: var(--el-white-wash-08);
+    color: var(--el-white);
+}
+
+.el-btn-group button.active,
+.el-btn-group button[aria-pressed="true"] {
+    background: var(--el-yellow);
+    color: var(--el-navy);
+}
+
+.el-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--el-yellow);
+    color: var(--el-navy);
+    font-family: var(--el-font);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    padding: 6px 12px;
+    border-radius: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.el-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--el-font);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 0;
+}
+
+.el-tag--neutral { background: var(--el-white-wash-12); color: var(--el-white); }
+.el-tag--info    { background: rgba(55, 166, 230, 0.18); color: var(--el-blue); }
+.el-tag--success { background: rgba(19, 206, 116, 0.18); color: var(--el-green); }
+.el-tag--warning { background: rgba(255, 196, 0, 0.18); color: var(--el-yellow); }
+.el-tag--danger  { background: rgba(224, 75, 0, 0.18); color: var(--el-orange); }
+
+.el-card {
+    background-color: var(--el-navy);
+    color: var(--el-white);
+    border: 1px solid var(--el-divider);
+    border-radius: 0;
+    padding: var(--el-pad-card);
+}
+
+.el-stat {
+    background-color: var(--el-navy);
+    color: var(--el-white);
+    border: 1px solid var(--el-divider);
+    border-radius: 0;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+}
+
+.el-stat__label {
+    font-family: var(--el-font);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--el-white);
+    margin-bottom: 2px;
+}
+
+.el-stat__sublabel {
+    font-family: var(--el-font);
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 12px;
+}
+
+.el-stat__value {
+    font-family: var(--el-font);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--el-green);
+    line-height: 1;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.el-stat__unit {
+    font-family: var(--el-font);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--el-white);
+}
+
+.el-stat__delta {
+    font-family: var(--el-font);
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 8px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Ember Labs Square Spinner */
+.el-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(255, 255, 255, 0.15);
+    border-top-color: var(--el-yellow);
+    border-radius: 0 !important;
+    animation: el-spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes el-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ================================================================
+   Scrollytelling Layout & Structure
+   ================================================================ */
+
 .scrolly-container {
     display: flex;
     min-height: 100vh;
+    background-color: var(--el-canvas);
 }
 
 .scrolly-article {
     width: 45%;
-    min-width: 400px;
-    max-width: 600px;
-    background: linear-gradient(to right, var(--bg-page), var(--card));
+    min-width: 420px;
+    max-width: 620px;
+    background: var(--el-canvas);
+    border-right: 1px solid var(--el-divider);
     z-index: 10;
     position: relative;
 }
@@ -37,8 +340,9 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: max(55%, calc(100% - 600px));
+    width: max(55%, calc(100% - 620px));
     height: 100vh;
+    background-color: var(--el-navy);
     z-index: 1;
 }
 
@@ -52,76 +356,86 @@
         width: 100%;
         min-width: unset;
         max-width: unset;
+        border-right: none;
     }
 
     .scrolly-visual {
         position: sticky;
         width: 100%;
         height: 50vh;
+        border-bottom: 1px solid var(--el-divider);
     }
 }
 
-/* ========== Hero Section ========== */
+/* ================================================================
+   Hero Section
+   ================================================================ */
+
 .scrolly-hero {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4rem 3rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: var(--el-pad-section) 32px;
+    background: var(--el-navy);
+    border-bottom: 1px solid var(--el-divider);
 }
 
 .scrolly-hero-content {
-    text-align: center;
-    max-width: 480px;
+    text-align: left;
+    max-width: 520px;
 }
 
 .scrolly-title {
-    font-family: var(--font-sans);
-    font-size: 3rem;
-    font-weight: 700;
-    color: white;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, #fff 0%, #f59e0b 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-family: var(--el-font);
+    font-size: var(--el-h2);
+    font-weight: 600;
+    color: var(--el-white);
+    line-height: 1.15;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
 }
 
 .scrolly-subtitle {
-    font-family: var(--font-sans);
-    font-size: 1.25rem;
+    font-family: var(--el-font);
+    font-size: var(--el-body);
     font-weight: 400;
-    font-style: italic;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-bottom: 2rem;
+    color: var(--el-muted);
+    line-height: 1.4;
+    margin-bottom: 24px;
 }
 
 .scrolly-byline {
-    font-size: 0.875rem;
-    color: var(--muted);
-    margin-bottom: 3rem;
+    font-family: var(--el-font);
+    font-size: var(--el-caption);
+    color: var(--el-muted);
+    margin-bottom: 32px;
 }
 
 .scroll-indicator {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    color: var(--muted);
-    opacity: 0.7;
+    gap: 8px;
+    color: var(--el-muted);
+    opacity: 0.85;
+    font-size: 13px;
+    font-weight: 600;
 }
 
-/* ========== Article Summary (collapsible) ========== */
+/* ================================================================
+   Article Summary (Collapsible)
+   ================================================================ */
+
 .scrolly-summary {
-    padding: 2.5rem 3rem 3rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 32px;
+    background: var(--el-navy);
+    border-bottom: 1px solid var(--el-divider);
 }
 
 .scrolly-summary-content {
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
 }
 
@@ -130,39 +444,38 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    gap: 0.75rem;
-    padding: 0.5rem 0;
+    gap: 12px;
+    padding: 12px 0;
     background: none;
     border: none;
-    border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+    border-bottom: 1px solid var(--el-divider);
     cursor: pointer;
     text-align: left;
 }
 
 .scrolly-summary-title {
-    font-family: var(--font-sans);
-    font-size: 0.8rem;
+    font-family: var(--el-font);
+    font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: #f59e0b;
+    letter-spacing: 0.08em;
+    color: var(--el-yellow);
 }
 
 .scrolly-summary-icon {
-    color: #f59e0b;
-    font-size: 1.5rem;
-    transition: transform 0.35s ease;
+    color: var(--el-yellow);
+    font-size: 20px;
+    transition: transform 0.25s ease;
 }
 
 .scrolly-summary.is-open .scrolly-summary-icon {
     transform: rotate(180deg);
 }
 
-/* Smooth fold via max-height (collapsed by default) */
 .scrolly-summary-collapse {
     overflow: hidden;
     max-height: 0;
-    transition: max-height 0.45s ease;
+    transition: max-height 0.35s ease;
 }
 
 .scrolly-summary.is-open .scrolly-summary-collapse {
@@ -172,47 +485,52 @@
 .scrolly-summary-list {
     list-style: none;
     margin: 0;
-    padding: 1.5rem 0 0;
+    padding: 20px 0 0;
 }
 
 .scrolly-summary-list li {
     position: relative;
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #cdd3e0;
-    padding-left: 1.25rem;
-    margin-bottom: 1.1rem;
+    font-family: var(--el-font);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--el-white);
+    padding-left: 18px;
+    margin-bottom: 14px;
 }
 
 .scrolly-summary-list li:last-child {
     margin-bottom: 0;
 }
 
+/* Ember Labs square bullet */
 .scrolly-summary-list li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.62rem;
+    top: 6px;
     width: 6px;
     height: 6px;
-    border-radius: 50%;
-    background: #f59e0b;
+    border-radius: 0 !important;
+    background: var(--el-yellow);
 }
 
 .scrolly-summary-list strong {
-    color: #fff;
+    color: var(--el-white);
     font-weight: 600;
 }
 
-/* ========== Article Sections ========== */
+/* ================================================================
+   Narrative Article Sections & Step Cards
+   ================================================================ */
+
 .scrolly-section {
     min-height: 120vh;
-    padding: 7rem 3rem;
+    padding: 80px 32px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--el-divider);
     position: relative;
+    background-color: var(--el-canvas);
 }
 
 .scrolly-section::before {
@@ -221,36 +539,51 @@
     left: 0;
     top: 0;
     bottom: 0;
-    width: 3px;
+    width: 4px;
     background: transparent;
-    transition: background 0.3s ease;
+    transition: background 0.2s ease;
 }
 
 .scrolly-section.active::before {
-    background: linear-gradient(to bottom, transparent, #f59e0b, transparent);
+    background: var(--el-yellow);
 }
 
 .scrolly-section-content {
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
+    background: var(--el-navy);
+    border: 1px solid var(--el-divider);
+    padding: var(--el-pad-card);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* ========== Typography ========== */
+.scrolly-section.visible .scrolly-section-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================================================================
+   Typography
+   ================================================================ */
+
 .scrolly-heading {
-    font-family: var(--font-sans);
-    font-size: 2rem;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 2rem;
-    line-height: 1.2;
+    font-family: var(--el-font);
+    font-size: var(--el-h5);
+    font-weight: 600;
+    color: var(--el-white);
+    margin-top: 0;
+    margin-bottom: 18px;
+    line-height: 1.15;
 }
 
 .scrolly-section p {
-    font-family: var(--font-sans);
-    font-size: 1.125rem;
-    line-height: 1.9;
-    color: #cdd3e0;
-    margin-bottom: 1.5rem;
+    font-family: var(--el-font);
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 16px;
 }
 
 .scrolly-section p:last-of-type {
@@ -260,188 +593,183 @@
 /* Drop cap */
 .scrolly-drop-cap::first-letter {
     float: left;
-    font-size: 4.5rem;
-    line-height: 0.8;
-    padding-right: 0.75rem;
-    padding-top: 0.25rem;
-    color: #f59e0b;
-    font-weight: 700;
+    font-size: 3.5rem;
+    line-height: 0.85;
+    padding-right: 10px;
+    padding-top: 4px;
+    color: var(--el-yellow);
+    font-weight: 600;
+    font-family: var(--el-font);
 }
 
 /* Emphasis */
 .scrolly-section strong {
-    color: #f59e0b;
+    color: var(--el-white);
     font-weight: 600;
 }
 
 .scrolly-section em {
     font-style: italic;
-    color: var(--text);
+    color: var(--el-white);
 }
 
-/* Final paragraph */
-.scrolly-final {
-    font-size: 1.25rem;
-    color: var(--text);
-    font-style: italic;
-    border-left: 3px solid #f59e0b;
-    padding-left: 1.5rem;
-    margin-top: 2rem;
-}
-
-/* ========== Callout Box ========== */
+/* Callout Box */
 .scrolly-callout {
     display: flex;
     align-items: flex-start;
-    gap: 1rem;
-    background: rgba(245, 158, 11, 0.1);
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    border-radius: 0.75rem;
-    padding: 1.25rem;
-    margin: 2rem 0;
+    gap: 12px;
+    background: var(--el-white-wash-08);
+    border-left: 3px solid var(--el-yellow);
+    border-top: 1px solid var(--el-divider);
+    border-right: 1px solid var(--el-divider);
+    border-bottom: 1px solid var(--el-divider);
+    border-radius: 0;
+    padding: 16px 18px;
+    margin: 24px 0;
 }
 
 .scrolly-callout .material-symbols-outlined {
-    font-size: 1.5rem;
+    font-size: 20px;
+    color: var(--el-yellow);
     flex-shrink: 0;
-    margin-top: 0.125rem;
+    margin-top: 2px;
 }
 
 .scrolly-callout p {
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
+    font-family: var(--el-font);
+    font-size: 14px;
     margin: 0;
-    color: var(--text);
+    color: var(--el-white);
     line-height: 1.5;
 }
 
-/* ========== CTA Button ========== */
+/* CTA Button */
 .scrolly-cta {
-    margin-top: 3rem;
+    margin-top: 32px;
     text-align: center;
 }
 
 .scrolly-button {
     display: inline-flex;
     align-items: center;
-    gap: 0.75rem;
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    color: black;
-    font-family: var(--font-sans);
+    gap: 8px;
+    background-color: var(--el-yellow);
+    color: var(--el-navy);
+    font-family: var(--el-font);
     font-weight: 600;
-    font-size: 1rem;
-    padding: 1rem 2rem;
-    border-radius: 9999px;
+    font-size: 15px;
+    padding: 12px 24px;
+    border-radius: 0 !important;
     text-decoration: none;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+    transition: background-color 0.15s ease;
 }
 
 .scrolly-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 30px rgba(245, 158, 11, 0.4);
+    background-color: var(--el-yellow-hover);
 }
 
-.scrolly-button .material-symbols-outlined {
-    font-size: 1.25rem;
-}
-
-/* ========== Footer ========== */
+/* Footer */
 .scrolly-footer {
-    padding: 4rem 3rem;
-    background: var(--card);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: var(--el-pad-section) 32px;
+    background: var(--el-navy);
+    border-top: 1px solid var(--el-divider);
 }
 
 .scrolly-footer-content {
-    max-width: 500px;
+    max-width: 520px;
     margin: 0 auto;
 }
 
-/* ========== Visual Panel Elements ========== */
+/* ================================================================
+   Visual Panel Elements (Overlays, Section Dots, Legends)
+   ================================================================ */
+
 .section-indicator {
     position: absolute;
-    right: 1.5rem;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 10px;
     z-index: 20;
 }
 
+/* Ember Labs Square Section Dots */
 .section-dot {
     width: 10px;
     height: 10px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0 !important;
+    background: var(--el-white-wash-12);
+    border: 1px solid var(--el-divider);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .section-dot:hover {
-    background: rgba(255, 255, 255, 0.4);
+    background: var(--el-muted);
 }
 
 .section-dot.active {
-    background: #f59e0b;
-    border-color: #f59e0b;
-    transform: scale(1.2);
+    background: var(--el-yellow);
+    border-color: var(--el-yellow);
 }
 
-/* The floating title/subtitle box is hidden globally — the legend (and, on chart
-   sections, the chart title + article prose) already says what is on screen. */
 .visual-label {
     display: none;
 }
 
-.visual-label-title {
-    font-weight: 600;
-    font-size: 1rem;
-    color: white;
-    margin-bottom: 0.25rem;
-}
-
-.visual-label-subtitle {
-    font-size: 0.75rem;
-    color: var(--muted);
+/* Overlays / Control Panels */
+.potential-toggle,
+.visual-legend,
+#weekly-samples-panel,
+#lcoe-outlook-panel {
+    background: var(--el-navy);
+    border: 1px solid var(--el-divider);
+    border-radius: 0 !important;
+    color: var(--el-white);
 }
 
 .potential-toggle {
     position: absolute;
-    top: 1.25rem;
-    right: 1.25rem;
-    left: auto;
+    top: 20px;
+    right: 20px;
     z-index: 20;
-    background: rgb(21, 24, 26);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.625rem;
-    padding: 0.5rem 0.625rem;
-    width: 188px;
+    padding: 10px 12px;
+    width: 200px;
     display: flex;
     flex-direction: column;
-    gap: 0.375rem;
+    gap: 8px;
 }
 
 .visual-legend {
     position: absolute;
-    bottom: 1.5rem;
-    right: 1.25rem;
-    background: rgb(21, 24, 26);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.625rem;
-    padding: 0.5rem 0.625rem;
-    width: 156px;
+    bottom: 24px;
+    right: 20px;
+    padding: 12px 14px;
+    width: 180px;
     z-index: 20;
 }
 
-#lcoe-outlook-panel {
+#weekly-samples-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
     z-index: 25;
+    padding: 14px 16px;
+    width: 320px;
 }
 
-/* Section 4: Demand & Supply by Latitude chart. Covers the map area (above the map,
-   below the bottom chart-container which occupies the lower 280px). */
+#lcoe-outlook-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 25;
+    padding: 14px 16px;
+    width: 240px;
+}
+
+/* Latitude chart container */
 #latitude-chart-container {
     position: absolute;
     top: 0;
@@ -449,10 +777,11 @@
     right: 0;
     height: calc(100% - 280px);
     z-index: 15;
-    background: #0a0a0a;
+    background: var(--el-navy);
+    border-bottom: 1px solid var(--el-divider);
     display: flex;
     flex-direction: column;
-    padding: 2.5rem 1rem 0.5rem;
+    padding: 48px 20px 12px;
 }
 
 #latitude-chart-container.hidden {
@@ -468,53 +797,44 @@
 @media (max-width: 1024px) {
     #latitude-chart-container {
         height: calc(100% - 200px);
-        padding: 2.25rem 0.5rem 0.5rem;
+        padding: 36px 12px 12px;
     }
 }
 
-/* Chart view (Section 4): reserve a clean top control bar so the Map/Chart toggle
-   and the cost-basis control sit ABOVE the chart instead of on top of it, and add
-   right padding so the chart axis clears the section-indicator dots. */
 #latitude-chart-container.cp-chart-mode {
-    padding: 3.5rem 2.75rem 0.5rem 1rem;
+    padding: 56px 44px 12px 20px;
 }
 
 @media (max-width: 1024px) {
     #latitude-chart-container.cp-chart-mode {
-        padding: 3.25rem 1.75rem 0.5rem 0.5rem;
+        padding: 48px 28px 12px 12px;
     }
 
-    /* Narrow screens: dock the Map/Chart toggle top-left so it clears the
-       top-right cost-basis control instead of colliding with it at centre. */
     #latitude-view-toggle {
-        left: 0.5rem;
+        left: 12px;
         transform: none;
     }
 }
 
-/* The shared "Cost Assumptions" overlay (every LCOE map section) and the Section 4
-   chart-mode pill both collapse to the same single-row Cost Basis control. */
 #lcoe-outlook-panel.compact,
 #lcoe-outlook-panel.cp-chart-cost {
     width: auto;
     max-width: none;
-    padding: 0.3rem 0.6rem;
+    padding: 8px 12px;
 }
 
 #lcoe-outlook-panel.compact > div:first-child,
 #lcoe-outlook-panel.cp-chart-cost > div:first-child,
 #lcoe-outlook-panel.compact #lcoe-outlook-timeline,
 #lcoe-outlook-panel.cp-chart-cost #lcoe-outlook-timeline {
-    /* hide the title / play row and the year slider */
     display: none;
 }
 
 #lcoe-outlook-panel.compact > div:last-child,
 #lcoe-outlook-panel.cp-chart-cost > div:last-child {
-    /* lay the cost-basis label + Global/Local toggle out horizontally */
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
     margin-top: 0;
 }
 
@@ -523,329 +843,105 @@
     margin-top: 0;
 }
 
-/* While the latitude chart is showing, dock the pill into the top control bar
-   (clear of the chart) instead of the default top-right card position. */
 #lcoe-outlook-panel.cp-chart-cost {
-    top: 0.5rem;
-    right: 1.25rem;
+    top: 12px;
+    right: 20px;
 }
 
-
-/* Legend Gradients */
+/* Legend Gradients (Flat rectangular strips) */
 .legend-gradient {
     background: linear-gradient(to right,
             #0049ff 0%,
             #00c853 40%,
-            #facc15 70%,
-            #f97316 90%,
+            #FFC400 70%,
+            #E04B00 90%,
             #d32f2f 100%);
+    border: 1px solid var(--el-divider);
+    height: 8px;
 }
 
 .legend-gradient-cost {
     background: linear-gradient(to right,
-            #0b1d3a 0%,
-            #1d4ed8 15%,
-            #16a34a 45%,
-            #eab308 65%,
-            #f59e0b 82.5%,
-            #dc2626 100%);
-    background-size: 100% 100%;
+            #192238 0%,
+            #37A6E6 20%,
+            #13CE74 45%,
+            #FFC400 70%,
+            #E04B00 100%);
+    border: 1px solid var(--el-divider);
+    height: 8px;
 }
 
 .legend-gradient-pop {
     background: linear-gradient(to right,
-            rgba(59, 130, 246, 0.1) 0%,
-            rgba(59, 130, 246, 0.4) 33%,
-            #3b82f6 66%,
-            #1e40af 100%);
+            rgba(55, 166, 230, 0.1) 0%,
+            rgba(55, 166, 230, 0.4) 33%,
+            #37A6E6 66%,
+            #192238 100%);
+    border: 1px solid var(--el-divider);
+    height: 8px;
 }
 
-/* ========== Animations ========== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+/* ================================================================
+   Interactive Sliders & Segmented Controls
+   ================================================================ */
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: var(--el-muted);
+    height: 6px;
+    border-radius: 0 !important;
+    outline: none;
 }
 
-/* Voronoi ripple wave effect for hero state */
-@keyframes cell-hop {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-6px);
-    }
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 0 !important;
+    background: var(--el-yellow);
+    border: 1px solid var(--el-navy);
+    cursor: pointer;
 }
 
-.voronoi-hop {
-    animation: cell-hop 0.6s ease-in-out forwards;
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 0 !important;
+    background: var(--el-yellow);
+    border: 1px solid var(--el-navy);
+    cursor: pointer;
 }
 
-.voronoi-hover {
-    stroke: #ffffff !important;
-    stroke-width: 1.2 !important;
-    stroke-opacity: 1 !important;
+/* Grid-style Segmented Toggle Buttons */
+.grid-segmented button,
+#weekly-config-toggle button,
+#weekly-season-toggle button,
+#potential-toggle-buttons button,
+#potential-display-toggle-buttons button,
+#lcoe-outlook-cost-toggle button {
+    border-radius: 0 !important;
+    font-family: var(--el-font);
+    font-weight: 600;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-@keyframes dot-hop {
-    0%,
-    100% {
-        transform: translateY(0) scale(1);
-    }
+/* ================================================================
+   Bottom Chart Container
+   ================================================================ */
 
-    50% {
-        transform: translateY(-4px) scale(1.4);
-    }
-}
-
-.intro-dot-hop {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: dot-hop 0.8s ease-in-out both;
-}
-
-@keyframes intro-breathe {
-    0%,
-    100% {
-        opacity: 0.9;
-    }
-
-    50% {
-        opacity: 1;
-    }
-}
-
-.intro-breathe {
-    animation: intro-breathe 6s ease-in-out infinite;
-}
-
-/* Reduce Motion: hold the intro at its resting state for opted-in users.
-   The loading spinner is intentionally left spinning — a small loader is not the
-   kind of motion this setting targets, and a frozen spinner reads as "hung". */
-@media (prefers-reduced-motion: reduce) {
-    .intro-breathe {
-        animation: none;
-    }
-}
-
-@keyframes intro-group-fade {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-.intro-group-fade {
-    opacity: 0;
-    animation-name: intro-group-fade;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards;
-}
-
-@keyframes voronoi-fade-in {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-.voronoi-fade-in {
-    animation-name: voronoi-fade-in;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards;
-}
-
-.dot-fade-in {
-    animation-name: voronoi-fade-in;
-    animation-timing-function: ease-out;
-    animation-fill-mode: forwards;
-}
-
-.scrolly-section-content {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.scrolly-section.visible .scrolly-section-content {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* ========== Smooth Scrolling ========== */
-html {
-    scroll-behavior: smooth;
-}
-
-/* ========== Custom Scrollbar ========== */
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--card);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--elevated);
-    border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--muted);
-}
-
-/* ========== Mobile Adjustments ========== */
-@media (max-width: 768px) {
-    .scrolly-hero {
-        padding: 3rem 1.5rem;
-    }
-
-    .scrolly-title {
-        font-size: 2.25rem;
-    }
-
-    .scrolly-subtitle {
-        font-size: 1rem;
-    }
-
-    .scrolly-section {
-        padding: 4rem 1.5rem;
-        min-height: auto;
-    }
-
-    .scrolly-heading {
-        font-size: 1.5rem;
-    }
-
-    .scrolly-section p {
-        font-size: 1rem;
-    }
-
-    .scrolly-drop-cap::first-letter {
-        font-size: 3.5rem;
-    }
-
-    .section-indicator {
-        right: 0.75rem;
-    }
-
-    .visual-label {
-        top: 0.75rem;
-        left: 0.75rem;
-        padding: 0.75rem 1rem;
-    }
-
-    .potential-toggle {
-        top: 0.75rem;
-        right: 0.75rem;
-        left: auto;
-        width: 200px;
-    }
-
-    .visual-legend {
-        bottom: 1rem;
-        right: 0.75rem;
-        width: 160px;
-        padding: 0.75rem;
-    }
-
-    #lcoe-outlook-panel {
-        top: 0.75rem;
-        right: 0.75rem;
-        width: 200px;
-        padding: 0.75rem;
-    }
-}
-
-/* ========== Transition Effects ========== */
-.transition-overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-color: var(--bg-page);
-    opacity: 0;
-    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 50;
-}
-
-.transition-overlay.active {
-    opacity: 1;
-}
-
-.transition-overlay.scroll-driven {
-    transition: none !important;
-    pointer-events: none;
-}
-
-#map {
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* The overlay-driven black hold is the single source of truth for map reveals.
-   A per-layer opacity transition here would fight that reveal (the map would
-   fade independently after the overlay lifts), so keep the layer opaque/stable. */
-.leaflet-zoom-animated {
-    transition: none;
-}
-
-/* ========== Subtle in-map loader (shown only during an unavoidable wait) ========== */
-.map-loader {
-    position: absolute;
-    inset: 0;
-    z-index: 60; /* above the transition overlay (z-index: 50) */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.35s ease;
-}
-
-.map-loader.visible {
-    opacity: 1;
-}
-
-.map-loader-spinner {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.18);
-    border-top-color: rgba(255, 255, 255, 0.7);
-    animation: map-loader-spin 0.9s linear infinite;
-}
-
-@keyframes map-loader-spin {
-    to { transform: rotate(360deg); }
-}
-
-/* ========== Chart Container ========== */
 #chart-container {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     height: 0;
-    background: rgb(11, 13, 12);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--el-navy);
+    border-top: 1px solid var(--el-divider);
     z-index: 25;
     overflow: hidden;
-    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: height 0.35s ease;
 }
 
 #chart-container.chart-slide-in {
@@ -857,31 +953,31 @@ html {
 }
 
 .chart-wrapper {
-    padding: 0.75rem 1.5rem 1.25rem 1.5rem;
+    padding: 14px 24px 20px 24px;
     height: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .chart-header {
-    margin-bottom: 0.5rem;
+    margin-bottom: 8px;
 }
 
 .chart-title {
-    font-size: 0.875rem;
+    font-family: var(--el-font);
+    font-size: 15px;
     font-weight: 600;
-    color: white;
-    margin-bottom: 0.25rem;
-    min-height: 2.25rem;
-    /* Sufficient for 2 lines of text */
+    color: var(--el-white);
+    margin-bottom: 4px;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .chart-subtitle {
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-bottom: 0.5rem;
+    font-family: var(--el-font);
+    font-size: 13px;
+    color: var(--el-muted);
+    margin-bottom: 8px;
 }
 
 .chart-canvas-wrapper {
@@ -894,48 +990,35 @@ html {
     max-height: 100%;
 }
 
-/* ========== Clickable Data Links ========== */
+/* Data Links & Tooltips */
 .data-link {
-    color: #f59e0b;
+    color: var(--el-yellow);
     border-bottom: 1px dotted currentColor;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: background-color 0.15s ease;
     padding-bottom: 1px;
     text-decoration: none;
 }
 
 .data-link:hover {
-    background: rgba(245, 158, 11, 0.15);
-    border-bottom-style: solid;
+    background: var(--el-white-wash-08);
 }
 
-.data-link:active {
-    background: rgba(245, 158, 11, 0.25);
-}
-
-/* Data link visual feedback when activated */
-.data-link.active {
-    background: rgba(245, 158, 11, 0.2);
-    border-bottom: 2px solid #f59e0b;
-}
-
-/* Tooltip for data links */
 .data-tooltip {
     position: fixed;
-    /* 95% opaque background → backdrop blur is imperceptible but costs Safari a
-       full map-layer re-composite. Dropped for performance; no visible change. */
-    background: rgba(21, 24, 26, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.5rem;
-    padding: 0.75rem 1rem;
-    font-size: 0.8125rem;
-    color: white;
+    background: var(--el-black);
+    border: 1px solid var(--el-divider);
+    border-radius: 0 !important;
+    padding: 10px 14px;
+    font-family: var(--el-font);
+    font-size: 13px;
+    color: var(--el-white);
     max-width: 280px;
     z-index: 100;
     pointer-events: none;
     opacity: 0;
-    transform: translateY(8px);
-    transition: opacity 0.2s, transform 0.2s;
+    transform: translateY(4px);
+    transition: opacity 0.15s, transform 0.15s;
 }
 
 .data-tooltip.visible {
@@ -943,11 +1026,10 @@ html {
     transform: translateY(0);
 }
 
-/* ========== Animation Indicator (Battery etc) ========== */
+/* ================================================================
+   Leaflet & Map Overrides
+   ================================================================ */
 
-
-/* ========== Leaflet Popup Overrides ========== */
-/* Remove default Leaflet white background and shadow for our custom tooltips */
 .leaflet-popup.bg-transparent .leaflet-popup-content-wrapper {
     background: transparent;
     border: none;
@@ -963,21 +1045,16 @@ html {
     margin: 0;
 }
 
-/* ========== Visual Panel Layout for Charts ========== */
 .scrolly-visual.with-chart #map {
     height: calc(100% - 280px);
-    transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: height 0.35s ease;
 }
 
-/* When a bottom chart is showing it covers the lower 280px of the panel, where the
-   map legend normally sits — so lift the legend above the chart (and nudge it left of
-   the section-dot rail) so the colour key stays visible over the map. */
 .scrolly-visual.with-chart .visual-legend {
-    bottom: calc(280px + 0.75rem);
-    right: 2.75rem;
+    bottom: calc(280px + 14px);
+    right: 48px;
 }
 
-/* Mobile chart adjustments */
 @media (max-width: 1024px) {
     #chart-container.chart-slide-in {
         height: 200px;
@@ -988,11 +1065,37 @@ html {
     }
 
     .scrolly-visual.with-chart .visual-legend {
-        bottom: calc(200px + 0.5rem);
-        right: 2.25rem;
+        bottom: calc(200px + 10px);
+        right: 36px;
     }
 
     .chart-wrapper {
-        padding: 0.75rem 1rem;
+        padding: 10px 16px;
     }
+}
+
+/* Subtle In-Map Loader */
+.map-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.map-loader.visible {
+    opacity: 1;
+}
+
+.map-loader-spinner {
+    width: 28px;
+    height: 28px;
+    border-radius: 0 !important;
+    border: 3px solid rgba(255, 255, 255, 0.18);
+    border-top-color: var(--el-yellow);
+    animation: el-spin 0.8s linear infinite;
 }
