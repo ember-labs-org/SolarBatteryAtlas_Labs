@@ -1,37 +1,82 @@
-# SolarMap2
+# Solar + Battery Atlas
 
-This repo splits the experience into:
+An interactive map showing how well solar plus batteries can supply a constant 1 GW of electricity at around 4,900 locations worldwide, what it costs, and where good solar resources line up with population, electricity demand and existing power plants.
 
-- `deployment/` — everything that gets deployed to GitHub Pages, including the interactive atlas and the "Article: Harnessing the Sun" at `deployment/scrollytelling/`.
-- `workspace/` — the pipeline scripts, source data, and caches used to regenerate `deployment/data`.
+Published on Ember Labs. Developed by the Ember Futures team.
 
-## What’s new in the Atlas
+## Repository layout
 
-- **Capacity Factor, LCOE, and Transmission views** now pick the lowest-cost build per location, support reference comparisons, and keep legend scales locked when needed.
-- **Population view** includes a “Map vs. Charts” toggle: Map mode overlays CF or LCOE on the population cells while Charts summarize the chosen metric by population percentile and latitude buckets. The charts also keep the sidebar controls and a metric selector in sync, and the helper copy clarifies how to keep tuning solar + storage.
-- **Info panel** and helper text now explain the latest UX, datasets, and how to read the maps/charts.
+| Path | What it is |
+| --- | --- |
+| `index.html` | Entry page. Redirects to the Atlas. |
+| `deployment/` | The app: HTML, CSS, JavaScript and the data it loads. This is what gets published. |
+| `deployment/data/` | Data used by the app (about 28 MB), plus `samples/` (about 2.3 GB, see below). |
+| `deployment/scrollytelling/` | The "Harnessing the Sun" article. Not linked from the Ember Labs version. |
+| `workspace/scripts/pipeline/` | Simulation scripts that generate the capacity factor results and sample weeks. |
+| `scripts/build-dist.mjs` | Builds a minified copy of `deployment/` into `dist/` for deployment. |
 
-## Typical workflow
+## Running locally
 
-1. Run the pipeline scripts under `workspace/scripts/pipeline` (they read from `workspace/input_data` and write generated outputs to `workspace/outputs`).
-2. Inspect intermediate outputs in `workspace/output` or `workspace/data`.
-3. Copy `deployment/` to the deployment repo and push to GitHub Pages.
+```bash
+npm install
+npm run dev
+```
 
-Each pipeline module resolves file paths relative to the repo root, so `python workspace/pipeline/<script>.py` works without extra wiring.
+Then open the local address Vite prints. To build a deployable copy:
+
+```bash
+npm run build   # rebuilds Tailwind CSS, then writes dist/ (without data/samples)
+```
+
+## Large data files
+
+`deployment/data/samples/` holds 290 Parquet files (about 2.3 GB) used by the Sample Weeks view. This is too large for GitHub Pages, which limits a published site to 1 GB.
+
+For deployment, host the samples elsewhere (for example a cloud storage bucket) and tell the app where they are:
+
+- with the build script, set `SAMPLES_BASE_URL` (and `SAMPLES_LIGHT_BASE_URL`) before running `npm run build`; or
+- set `window.__SAMPLES_BASE_URL__` in `deployment/index.html` before the app scripts load.
+
+The URL must end with a slash. Everything else in `deployment/data/` ships with the app.
 
 ## Data sources
 
-- **Solar/weather inputs:** NASA/POWER Surface Meteorology and Solar Energy data (https://power.larc.nasa.gov) sampled per location, resampled to hourly baseload outputs, and stored as `workspace/data/solar_profiles.csv`.
-- **Population totals:** NASA SEDAC Gridded Population of the World, Version 4 (GPWv4) 2020 raster (`workspace/data/gpw_v4_population_count_rev11_2020_2pt5_min.asc`), summed per Voronoi cell and exported alongside the front-end dataset `deployment/data/voronoi_population_2020.csv`.
+| Data | Source | Used for |
+| --- | --- | --- |
+| Hourly solar and weather data | NASA POWER | Capacity factors, sample weeks, LCOE |
+| Population (2020) | NASA SEDAC, Gridded Population of the World v4 | Supply-demand matching |
+| Electricity demand | Chen et al. (2022), *Scientific Data*, gridded electricity consumption from nighttime lights | Supply-demand matching |
+| Power plants | Global Energy Monitor plant trackers (December 2024), CC BY 4.0 | Power plant layer, displaceable capacity |
+| Solar potential | Global Solar Atlas PVOUT (World Bank / Solargis) | Potential map |
+| Grid reliability and access | HREA, University of Michigan (Min et al., 2024) | Supply-demand matching |
+| Cost of capital | Hatton et al. (2025), *Scientific Data* | LCOE (local mode) |
+| Solar and battery capital costs | IRENA, IEA and BNEF | LCOE (local mode) |
+| Gas prices | IGU Wholesale Gas Price Survey (2024 data) | LCOE comparison |
+| Diesel prices | World Bank / GlobalPetrolPrices | LCOE comparison |
+| Land outline | Natural Earth 50m land (public domain) | Map background |
+| Night lights image | NASA Black Marble (2016) | Background imagery |
 
-## Pipeline overview
+Licence terms for BNEF, GlobalPetrolPrices and IGU data are being confirmed.
 
-1. `pipeline/01_selectlocations.py` samples evenly spread land coordinates using Natural Earth land polygons.
-2. `pipeline/voronoi_population.py` reprojects the sampled cells, intersects them with the GPWv4 raster, and exports summary CSVs.
-3. `workspace/scripts/pipeline/run.py` reads `workspace/input_data/solar_profiles.csv`, simulates every solar (1–20 GW) and battery (0–36 GWh) pair against a 1 GW baseload using a 90% battery round-trip efficiency, and writes the summary Parquet plus sample shards to `workspace/outputs`.
-4. `pipeline/fetch_power_plants.py` downloads the WRI Global Power Plant Database, filters it to coal/gas/oil units, and saves a Parquet snapshot to `workspace/data/global_power_plants_coal_gas_oil.parquet` for downstream analyses.
-5. `pipeline/plot_power_plants.py` reads that Parquet and generates `workspace/data/global_power_plants_coal_gas_oil_map.png`, a bubble map where bubble size reflects installed MW.
-6. `pipeline/voronoi_fossil_capacity.py` joins the filtered power plants with the Voronoi cells (each baseload location) and exports `workspace/data/voronoi_fossil_capacity.csv`, listing coal/gas/oil MW totals per Voronoi centroid.
-7. `pipeline/voronoi_solar_potential_gee.py` computes rooftop + utility solar technical potential per Voronoi zone in Google Earth Engine and exports a CSV of TWh/year plus diagnostics (requires an EE asset for the zones).
+## Method in brief
 
-Running `cd workspace && python3 -m scripts.pipeline.run --overwrite` rebuilds the atlas. Use `--sample N` to work with a reduced number of locations when testing.
+For each location, `workspace/scripts/pipeline/simulation.py` runs an hourly simulation of a 1 GW constant load supplied by every combination of solar (1–20 GW) and battery (0–36 GWh) capacity, with 90% battery round-trip efficiency. The battery charges from surplus solar and discharges when solar falls short. Sample weeks are the first 72 hours of January, April, July and October. LCOE and transmission costs are calculated in the browser from these results and the cost assumptions selected in the app.
+
+To rerun the simulation:
+
+```bash
+cd workspace
+python3 -m scripts.pipeline.run --overwrite      # add --sample N to test on N locations
+```
+
+## Pipeline status
+
+The repository does not yet contain the full data pipeline. Still to be added:
+
+- `workspace/scripts/pipeline/data_loader.py` (imported by `run.py`) and the conversion of NASA POWER irradiance into hourly solar output per kW
+- location sampling and Voronoi cell creation
+- the scripts that build each `deployment/data/voronoi_*.csv` file
+- the Google Earth Engine script for solar potential (PVOUT)
+- download steps or source URLs and dates for the raw input data
+
+Until these are added, the data files in `deployment/data/` can't be regenerated from this repository.
