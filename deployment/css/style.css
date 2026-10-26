@@ -1,28 +1,26 @@
 /* ============================================================
-   Solar + Battery Atlas — design tokens (dark Ember)
+   Solar + Battery Atlas — design tokens (Ember brand palette)
    Single source of truth. Tailwind mirrors these via its inline
    config in index.html so utility classes stay unchanged.
    ============================================================ */
 :root {
-    --bg-page: #0b0d0c;
-    --card: #15181a;
-    --elevated: #1f2325;
-    --text: #ECEFF5;
-    --muted: #9aa19f;
-    --divider: #2a2f31;
-    --input: #0f1213;
-    --ember: #f59e0b;
-    --ember-hover: #fbbf24;
+    --bg-page: #000000;
+    --card: #192238;      /* Neutral 5 */
+    --elevated: #3E4860;  /* Neutral 4 */
+    --text: #FFFFFF;
+    --muted: #B0B7C6;     /* Neutral 2 */
+    --divider: #3E4860;   /* Neutral 4 */
+    --input: #000000;
+    --ember: #FFC400;     /* Yellow 3 */
+    --ember-hover: #FFDA44; /* Yellow 2 */
     --solar: #f59e0b;
     --battery: #a855f7;
-    /* Land fill for the local basemap (js/basemap.js), sampled from the CARTO
-       dark_nolabels tiles it replaced so the map looks unchanged. The ocean is
-       just the map container's own background, already set per app. */
-    --map-land: #262626;
-    /* SF Pro (Apple system font, à la Substack). Falls back gracefully on
-       non-Apple platforms. Single source of truth — Tailwind's font-sans is
+    /* Land fill for the local basemap (js/basemap.js). The ocean is the map
+       container's own background (--bg-page). */
+    --map-land: #192238;  /* Neutral 5 */
+    /* Ember brand typeface. Single source of truth — Tailwind's font-sans is
        set to the same stack in tailwind.config.js. */
-    --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'SF Pro', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --font-sans: 'Poppins', 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 
 /* Custom Scrollbar */
@@ -472,7 +470,7 @@ input[type="range"].slider-battery::-moz-range-thumb:hover {
 
 .toggle-btn.is-active {
     background: var(--ember);
-    color: #0b0d0c;
+    color: #000000;
     font-weight: 500;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -516,7 +514,7 @@ label.check-row:hover {
     padding: 0 1.25rem;
     border-radius: 9999px;
     background: var(--ember);
-    color: #0b0d0c;
+    color: #000000;
     font-weight: 500;
     border: none;
     cursor: pointer;
@@ -627,7 +625,7 @@ label.check-row:hover {
 .tour-callout__body {
     font-size: 13px;
     line-height: 1.55;
-    color: #cdd3d1;
+    color: #D8DBE6; /* Neutral 1 */
 }
 .tour-callout__body b { color: #fff; font-weight: 600; }
 
@@ -664,7 +662,7 @@ label.check-row:hover {
 .tour-callout__back:disabled { opacity: 0.35; cursor: default; }
 .tour-callout__next {
     background: var(--ember);
-    color: #06140d;
+    color: #000000;
     border: 1px solid var(--ember);
 }
 .tour-callout__next:hover { background: var(--ember-hover); border-color: var(--ember-hover); }
@@ -758,7 +756,7 @@ label.check-row:hover {
     font-size: 14px;
     font-weight: 600;
     background: var(--ember);
-    color: #06140d;
+    color: #000000;
     border: 1px solid var(--ember);
     border-radius: 9999px;
     padding: 10px 28px;
@@ -873,4 +871,22 @@ label.check-row:hover {
     .tour-nudge__icon {
         animation: none;
     }
+}
+
+/* Ember Transition bar: Blue 5 to Green 3, left to right, directly under
+   each major heading (ember-branding skill). */
+.ember-transition-bar {
+    display: block;
+    height: 4px;
+    width: 25%;
+    min-width: 48px;
+    max-width: 120px;
+    margin-top: 0.5rem;
+    background: linear-gradient(to right, #203772, #13CE74);
+}
+.ember-transition-bar--compact {
+    height: 3px;
+    width: 48px;
+    min-width: 0;
+    margin-top: 2px;
 }

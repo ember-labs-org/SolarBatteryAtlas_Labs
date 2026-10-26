@@ -8,10 +8,9 @@
 // dropping the tiles removes the last third-party runtime dependency from the
 // map. Natural Earth is public domain: no attribution required.
 //
-// Colours are sampled from the dark_nolabels tiles this replaces, so the look
-// is unchanged: land #262626 over ocean #090909. Dark Matter draws a flat land
-// fill with no distinct coastline stroke (the intermediate greys along coasts
-// are just antialiasing), so we do the same.
+// Colours follow Ember's brand palette: land is Neutral 5 (#192238, via the
+// --map-land CSS variable) over the map container's black background. Flat
+// land fill with no coastline stroke.
 //
 // Canvas, not SVG: the SVG renderer is the known interaction bottleneck (see
 // DEPLOYMENT.md). Unlike voronoi-canvas.js — which projects screen-space cells
@@ -43,7 +42,7 @@ export function addLandBasemap(map, worldGeoJSON, options = {}) {
         pane.style.pointerEvents = 'none';
     }
 
-    const land = options.land || cssVar('--map-land', '#262626');
+    const land = options.land || cssVar('--map-land', '#192238');
 
     const layer = L.geoJSON(worldGeoJSON, {
         pane: PANE,
