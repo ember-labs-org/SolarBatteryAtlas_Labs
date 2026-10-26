@@ -208,7 +208,7 @@ function buildSteps(ctx) {
         {
             target: '[data-tour="right-actions"]',
             title: 'You’ve seen it all',
-            body: 'For the narrative version, read the <b>Article</b>; for data sources and methods, open <b>Info</b>. You can replay this tour anytime from <b>Take a Tour</b>. We’ll now drop you back where you started. Happy exploring!',
+            body: 'For data sources and methods, open <b>Info</b>. You can replay this tour anytime from <b>Take a Tour</b>. We’ll now drop you back where you started. Happy exploring!',
             placement: 'bottom',
         },
     ];

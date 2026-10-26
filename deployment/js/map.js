@@ -253,10 +253,8 @@ function refreshCurrentMap() {
 export function ensureWorldGeoJsonLoaded() {
     if (worldGeoJSON) return Promise.resolve(worldGeoJSON);
     if (worldGeoJsonPromise) return worldGeoJsonPromise;
-    const sources = [
-        'data/world.geojson',
-        'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_land.geojson'
-    ];
+    // Natural Earth 50m land, shipped with the app (public domain).
+    const sources = ['data/world.geojson'];
     worldGeoJsonPromise = (async () => {
         for (const source of sources) {
             try {
@@ -269,7 +267,7 @@ export function ensureWorldGeoJsonLoaded() {
             }
         }
         if (!worldGeoJSON) {
-            console.error('Could not load world GeoJSON data from local or remote sources.');
+            console.error('Could not load world GeoJSON data (data/world.geojson).');
         }
         return worldGeoJSON;
     })();
