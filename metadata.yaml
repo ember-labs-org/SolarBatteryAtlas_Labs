@@ -1,21 +1,12 @@
-Tool title: Solar Battery Atlas
-Tool blurb: >- 
-  Curabitur vitae placerat libero, et elementum arcu. Phasellus egestas sed enim vel viverra. 
-  Donec eget venenatis odio, id tincidunt neque. Nam volutpat at odio venenatis euismod. Curabitur nisi metus, 
-  commodo nec sodales vel, fermentum vitae quam. Nullam vel libero nulla. Ut ullamcorper mattis sem, sed vehicula 
-  dui tincidunt a. Pellentesque.
-Data confidence: 3/5
-Date published: 2026-06-01
+Tool title: Solar + Battery Atlas
+Tool blurb: >-
+  See where solar and batteries can supply round-the-clock electricity, and at what cost.
+  The Atlas simulates a constant 1 GW load at around 4,900 locations worldwide, mapping
+  reliability, cost and how solar resources line up with population, demand and existing
+  power plants.
+Data confidence: 3/5 # Confidence scores are paused. Confirm before publishing.
+Date published: 2026-06-01 # Placeholder. Replace with the actual launch date.
 Description: |-
-  Curabitur vitae placerat libero, et elementum arcu. Phasellus egestas sed enim vel viverra. 
-  Donec eget venenatis odio, id tincidunt neque. Nam volutpat at odio venenatis euismod. Curabitur nisi metus, 
-  commodo nec sodales vel, fermentum vitae quam. Nullam vel libero nulla. Ut ullamcorper mattis sem, sed vehicula.
-  Curabitur vitae placerat libero, et elementum arcu. Phasellus egestas sed enim vel viverra. 
-  Donec eget venenatis odio, id tincidunt neque. Nam volutpat at odio venenatis euismod. Curabitur nisi metus, 
-  commodo nec sodales vel, fermentum vitae quam. Nullam vel libero nulla. Ut ullamcorper mattis sem, sed vehicula.
-  Curabitur vitae placerat libero, et elementum arcu. Phasellus egestas sed enim vel viverra. 
-  Donec eget venenatis odio, id tincidunt neque. Nam volutpat at odio venenatis euismod. Curabitur nisi metus, 
-  commodo nec sodales vel, fermentum vitae quam. Nullam vel libero nulla. Ut ullamcorper mattis sem, sed vehicula.
-  [120 to 160 characters, can be based on the blurb]
-Last updated: 2026-06-01
+  Explore where solar plus batteries can deliver constant, round-the-clock power worldwide, how reliable it is and what it costs.
+Last updated: 2026-10-26
 Image: "deployment/data/BlackMarble_2016_01deg.jpg"

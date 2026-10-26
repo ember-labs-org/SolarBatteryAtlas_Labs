@@ -1,0 +1,37 @@
+# .github/workflows/sync-upstream.yml (in the Ember Labs repo)
+#
+# Once a week, checks the Ember Futures repo for new commits. If there are any,
+# it opens a pull request into main so the changes can be reviewed before they
+# go live. The Labs changes (Ember branding, no Article link, no Beta tag) are
+# kept, because the pull request merges new commits on top of them. If the
+# Ember Futures repo changes the same lines, GitHub will show a conflict to resolve.
+name: Sync from Ember Futures
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays 07:00 UTC
+  workflow_dispatch: # also allows a manual run from the Actions tab
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch Ember Futures and open a PR if there are changes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git remote add upstream https://github.com/Ember-Futures/SolarBatteryAtlas.git
+          git fetch upstream main
+          if [ -z "$(git log --oneline HEAD..upstream/main)" ]; then
+            echo "No new changes"; exit 0
+          fi
+          git push -f origin refs/remotes/upstream/main:refs/heads/upstream-sync
+          gh pr list --head upstream-sync --state open --json number --jq 'length' | grep -q '^0$' && \
+            gh pr create --head upstream-sync --base main \
+              --title "Updates from Ember Futures" \
+              --body "Weekly check found new changes in Ember-Futures/SolarBatteryAtlas. Review before merging: keep the Ember branding, the hidden Article link and the removed Beta tag." \
+            || echo "PR already open"
