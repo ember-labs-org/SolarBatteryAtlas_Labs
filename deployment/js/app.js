@@ -129,7 +129,7 @@ function applyChartDpiCap() {
     if (window.Chart) {
         window.Chart.defaults.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
         // SF Pro for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
-        window.Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+        window.Chart.defaults.font.family = 'Poppins, system-ui, sans-serif';
     }
 }
 
@@ -776,7 +776,7 @@ const _worldMapBackgroundPlugin = {
                 }
             });
             const path = window.d3.geoPath(transform, oc);
-            oc.fillStyle = 'rgba(148, 163, 184, 0.18)';
+            oc.fillStyle = 'rgba(176, 183, 198, 0.18)';
             oc.beginPath();
             path(_chartWorldGeoJson);
             oc.fill();
@@ -2050,7 +2050,7 @@ function renderSupplyLegendFromInfo(info) {
         const rows = [];
         if (info.underflowLabel) {
             rows.push({
-                color: info.underflowColor || '#0b5ea8',
+                color: info.underflowColor || '#C4D9E9',
                 text: info.underflowLabel
             });
         }
@@ -2071,7 +2071,9 @@ function renderSupplyLegendFromInfo(info) {
                 swatch.style.display = 'inline-block';
                 swatch.style.width = '12px';
                 swatch.style.height = '12px';
-                swatch.style.borderRadius = '3px';
+                swatch.style.borderRadius = '0';
+                // Navy no-data swatch needs an outline to show on the navy panel.
+                if (row.color === LCOE_NO_DATA_COLOR) swatch.style.border = '1px solid #B0B7C6';
                 const label = document.createElement('span');
                 label.textContent = row.text;
                 wrapper.appendChild(swatch);
@@ -2669,11 +2671,11 @@ function updatePopulationLegend(popData, overlayMode = 'none', baseLayer = 'popu
         }
         if (legendAccessBar) {
             if (accessMetric === 'no_access_pop') {
-                legendAccessBar.style.background = 'linear-gradient(to right, #1e293b, #991b1b, #ff0000)';
+                legendAccessBar.style.background = 'linear-gradient(to right, #FCA311, #E04B00, #891B05)';
             } else if (accessMetric === 'no_access') {
-                legendAccessBar.style.background = 'linear-gradient(to right, #ef4444, #eab308, #22c55e)';
+                legendAccessBar.style.background = 'linear-gradient(to right, #D3EADF, #13CE74, #0B6638)';
             } else {
-                legendAccessBar.style.background = 'linear-gradient(to right, #ef4444, #6b7280)';
+                legendAccessBar.style.background = 'linear-gradient(to right, #E04B00, #B0B7C6)';
             }
         }
         if (legendAccessTitle) {
@@ -2791,7 +2793,7 @@ function updateSupplyLegend(overlayMode = 'none', lcoeColorInfo = null, potentia
         if (legendSupplyPotentialBuckets) {
             legendSupplyPotentialBuckets.classList.toggle('hidden', !usesBuckets);
             if (usesBuckets) {
-                const noData = `<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#6b7280"></span><span>No data</span></div>`;
+                const noData = `<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:#192238;border:1px solid #B0B7C6"></span><span>No data</span></div>`;
                 const items = buckets.map(bucket => (
                     `<div class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm" style="background:${bucket.color}"></span><span>${bucket.label}</span></div>`
                 ));
@@ -2875,7 +2877,7 @@ function renderLegendFromInfo(info) {
         const rows = [];
         if (info.underflowLabel) {
             rows.push({
-                color: info.underflowColor || '#0b5ea8',
+                color: info.underflowColor || '#C4D9E9',
                 text: info.underflowLabel
             });
         }
@@ -2896,7 +2898,9 @@ function renderLegendFromInfo(info) {
                 swatch.style.display = 'inline-block';
                 swatch.style.width = '12px';
                 swatch.style.height = '12px';
-                swatch.style.borderRadius = '3px';
+                swatch.style.borderRadius = '0';
+                // Navy no-data swatch needs an outline to show on the navy panel.
+                if (row.color === LCOE_NO_DATA_COLOR) swatch.style.border = '1px solid #B0B7C6';
                 const label = document.createElement('span');
                 label.textContent = row.text;
                 wrapper.appendChild(swatch);
@@ -3334,7 +3338,7 @@ function buildStackedHistogram(metrics, overlayMode, selectedFuels, bucketCount 
     const datasets = fuelList.map(fuel => ({
         label: capitalizeWord(fuel),
         data: buckets.map(b => b.stacks[fuel] || 0),
-        backgroundColor: FUEL_COLORS[fuel] || '#ccc',
+        backgroundColor: FUEL_COLORS[fuel] || '#B0B7C6',
         stack: 'stack0'
     }));
 
@@ -3775,8 +3779,8 @@ async function renderAccessCharts(populationData, reliabilityData, cfData, lcoeD
                 datasets: [{
                     label: 'Population (millions)',
                     data: uptimeHist.data,
-                    backgroundColor: '#22c55e',
-                    borderColor: '#16a34a',
+                    backgroundColor: '#13CE74',
+                    borderColor: '#13CE74',
                     borderWidth: 1
                 }]
             },
@@ -3868,8 +3872,8 @@ async function renderAccessCharts(populationData, reliabilityData, cfData, lcoeD
                     datasets: [{
                         label: 'Population (millions)',
                         data,
-                        backgroundColor: isCf ? '#fbbf24' : '#10b981',
-                        borderColor: isCf ? '#f59e0b' : '#059669',
+                        backgroundColor: isCf ? '#FFC400' : '#13CE74',
+                        borderColor: isCf ? '#FFC400' : '#13CE74',
                         borderWidth: 1
                     }]
                 },
@@ -3914,7 +3918,7 @@ async function renderAccessCharts(populationData, reliabilityData, cfData, lcoeD
                         data: comparison.distributionData.data,
                         backgroundColor: comparison.distributionData.data.map((_, i) => {
                             const bucketMin = -100 + i * 10;
-                            return bucketMin >= 0 ? '#22c55e' : '#ef4444';
+                            return bucketMin >= 0 ? '#13CE74' : '#37A6E6'; // two-sided: green vs blue
                         }),
                         borderWidth: 0
                     }]
@@ -4046,7 +4050,7 @@ function handleHistogramClick(bucket, metrics, overlayMode, baseLayer) {
                 // User wants fuel colors (from FUEL_COLORS)
                 // getValue must return the entire object so getColor can access fuel_group
                 getValue = d => d;
-                finalGetColor = d => FUEL_COLORS[d.fuel_group || d.fuel] || '#ccc';
+                finalGetColor = d => FUEL_COLORS[d.fuel_group || d.fuel] || '#B0B7C6';
 
                 // --- POPUP / TOOLTIPS ---
                 const plantPopup = L.popup({
@@ -4094,7 +4098,7 @@ function handleHistogramClick(bucket, metrics, overlayMode, baseLayer) {
                         const color = FUEL_COLORS[key];
                         const item = document.createElement('span');
                         item.className = 'inline-flex items-center mr-3';
-                        item.innerHTML = `<span style="background-color:${color};width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;"></span> ${capitalizeWord(key.replace('_', ' / '))}`;
+                        item.innerHTML = `<span style="background-color:${color};width:10px;height:10px;border-radius:0;display:inline-block;margin-right:4px;"></span> ${capitalizeWord(key.replace('_', ' / '))}`;
                         legendRange.appendChild(item);
                     });
                 }
@@ -4124,7 +4128,7 @@ function handleHistogramClick(bucket, metrics, overlayMode, baseLayer) {
     if (overlayMode === 'cf') {
         const scale = d3.scaleLinear()
             .domain([0, 0.05, 0.4, 0.7, 1.0])
-            .range(["#0049ff", "#0049ff", "#00c853", "#ff9800", "#d32f2f"])
+            .range(["#FFF4A3", "#FFDA44", "#FFC400", "#CC9900", "#B77A00"]) // Labs yellow ramp
             .interpolate(d3.interpolateRgb)
             .clamp(true);
         getColor = (v) => scale(v);
@@ -4132,15 +4136,15 @@ function handleHistogramClick(bucket, metrics, overlayMode, baseLayer) {
         const vals = metrics.map(m => m.metric).filter(Number.isFinite);
         const minV = Math.min(...vals);
         const maxV = Math.max(...vals);
-        const scale = d3.scaleSequential(d3.interpolateTurbo).domain([minV, maxV]);
+        const scale = d3.scaleSequential(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])).domain([minV, maxV]); // Labs blue ramp
         getColor = (v) => scale(v);
     } else if (baseLayer === 'electricity') {
         const vals = metrics.map(m => m.metric).filter(v => v > 0);
         const maxV = Math.max(...vals);
-        const s = d3.scaleSequentialLog(t => d3.interpolateGreys(1 - t)).domain([Math.max(0.1, maxV / 1000), maxV]);
+        const s = d3.scaleSequentialLog(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])).domain([Math.max(0.1, maxV / 1000), maxV]);
         getColor = (v) => s(Math.max(0.1, v));
     } else {
-        const scale = d3.scaleLinear().domain([min, max]).range(["#e5e7eb", "#1f2937"]);
+        const scale = d3.scaleSequential(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])).domain([min, max]); // Labs blue ramp
         getColor = (v) => scale(v);
     }
 
@@ -4332,8 +4336,8 @@ async function renderPopulationCharts(metrics, { overlayMode, baseLayer, selecte
                     type: 'bar',
                     label: demandLabel,
                     data: demandSeries,
-                    backgroundColor: '#fbbf24',
-                    borderColor: '#f59e0b',
+                    backgroundColor: '#FFC400',
+                    borderColor: '#FFC400',
                     borderWidth: 1
                 }
             ]
@@ -4517,8 +4521,8 @@ async function renderPopulationCharts(metrics, { overlayMode, baseLayer, selecte
             data: demandLineData,
             xAxisID: 'xDemand',
             yAxisID: 'y',
-            borderColor: '#fbbf24',
-            backgroundColor: 'rgba(251, 191, 36, 0.22)',
+            borderColor: '#FFC400',                    // categorical 1
+            backgroundColor: 'rgba(255, 196, 0, 0.92)', // Labs: bold area fill
             borderWidth: 2,
             pointRadius: 0,
             pointHoverRadius: 3,
@@ -4533,8 +4537,8 @@ async function renderPopulationCharts(metrics, { overlayMode, baseLayer, selecte
             data: supplyLineData,
             xAxisID: 'xSupply',
             yAxisID: 'y',
-            borderColor: '#38bdf8',
-            backgroundColor: 'rgba(56, 189, 248, 0.0)',
+            borderColor: '#37A6E6',                    // categorical 2
+            backgroundColor: 'rgba(55, 166, 230, 0)',
             borderWidth: 2.5,
             pointRadius: 0,
             pointHoverRadius: 3,
@@ -4552,8 +4556,8 @@ async function renderPopulationCharts(metrics, { overlayMode, baseLayer, selecte
             data: metricScatterData,
             xAxisID: 'xSupply',
             yAxisID: 'y',
-            backgroundColor: 'rgba(52, 211, 153, 0.25)',
-            borderColor: 'rgba(52, 211, 153, 0)',
+            backgroundColor: 'rgba(19, 206, 116, 0.25)', // categorical 3
+            borderColor: 'rgba(19, 206, 116, 0)',
             pointRadius: 1.5,
             pointHoverRadius: 3,
             order: 3
@@ -4604,17 +4608,17 @@ async function renderPopulationCharts(metrics, { overlayMode, baseLayer, selecte
         scales: {
             xDemand: {
                 position: 'top',
-                title: { display: true, text: latPopLabel, color: '#fbbf24' },
-                grid: { color: 'rgba(255,255,255,0.04)', drawOnChartArea: true },
-                ticks: { color: '#fbbf24', callback: (v) => `${Number(v).toFixed(1)}%` },
+                title: { display: true, text: latPopLabel, color: '#FFFFFF' },
+                grid: { color: 'rgba(255, 255, 255, 0.12)', drawOnChartArea: true },
+                ticks: { color: '#B0B7C6', callback: (v) => `${Number(v).toFixed(1)}%` },
                 min: 0,
                 suggestedMax: demandSuggestedMax
             },
             xSupply: {
                 position: 'bottom',
-                title: { display: true, text: supplyAxisLabel, color: '#38bdf8' },
-                grid: { color: 'rgba(255,255,255,0.04)', drawOnChartArea: false },
-                ticks: { color: '#38bdf8', callback: supplyTickCallback },
+                title: { display: true, text: supplyAxisLabel, color: '#FFFFFF' },
+                grid: { color: 'rgba(255, 255, 255, 0.12)', drawOnChartArea: false },
+                ticks: { color: '#B0B7C6', callback: supplyTickCallback },
                 min: 0,
                 suggestedMax: supplySuggestedMax
             },
@@ -4625,9 +4629,9 @@ async function renderPopulationCharts(metrics, { overlayMode, baseLayer, selecte
                 ticks: {
                     stepSize: 30,
                     callback: (v) => `${v}°`,
-                    color: '#9ca3af'
+                    color: '#B0B7C6'
                 },
-                grid: { color: 'rgba(255,255,255,0.06)' }
+                grid: { color: 'rgba(255, 255, 255, 0.12)' }
             }
         }
     };
@@ -4698,7 +4702,7 @@ function prepareLcoeDisplayData() {
             if (Number.isFinite(p10) && p10 < lockedMin) {
                 lockedBase.underflowMin = p10;
                 lockedBase.underflowLabel = `< ${formatCurrencyLabel(lockedMin)}`;
-                lockedBase.underflowColor = '#0b5ea8';
+                lockedBase.underflowColor = '#C4D9E9';
             } else {
                 lockedBase.underflowMin = null;
                 lockedBase.underflowLabel = '';
@@ -5778,7 +5782,7 @@ async function updatePotentialView() {
     if (legendPotentialBuckets) {
         legendPotentialBuckets.classList.toggle('hidden', !usesBuckets);
         if (usesBuckets) {
-            const noData = `<div class=\"flex items-center gap-2\"><span class=\"w-3 h-3 rounded-sm\" style=\"background:#6b7280\"></span><span>No data</span></div>`;
+            const noData = `<div class=\"flex items-center gap-2\"><span class=\"w-3 h-3 rounded-sm\" style=\"background:#192238;border:1px solid #B0B7C6\"></span><span>No data</span></div>`;
             const items = buckets.map(bucket => (
                 `<div class=\"flex items-center gap-2\"><span class=\"w-3 h-3 rounded-sm\" style=\"background:${bucket.color}\"></span><span>${bucket.label}</span></div>`
             ));
@@ -5944,9 +5948,9 @@ document.addEventListener('DOMContentLoaded', () => {
             btnRel.classList.add('is-active');
             btnNone.classList.remove('is-active');
 
-            // Update Gradient (Red -> Grey)
+            // Update Gradient (orange -> muted)
             if (legendBar) {
-                legendBar.style.background = 'linear-gradient(to right, #ef4444, #6b7280)';
+                legendBar.style.background = 'linear-gradient(to right, #E04B00, #B0B7C6)';
             }
             if (legendTitle) legendTitle.textContent = 'Grid Reliability';
             if (legendMin) legendMin.textContent = '0%';
@@ -5967,9 +5971,9 @@ document.addEventListener('DOMContentLoaded', () => {
             btnNone.classList.add('is-active');
             btnRel.classList.remove('is-active');
 
-            // Update Gradient (Dark Grey -> Red)
+            // Update Gradient (Labs orange ramp)
             if (legendBar) {
-                legendBar.style.background = 'linear-gradient(to right, #1e293b, #991b1b, #ff0000)';
+                legendBar.style.background = 'linear-gradient(to right, #FCA311, #E04B00, #891B05)';
             }
             if (legendTitle) legendTitle.textContent = 'Population Without Access';
             if (legendMin) legendMin.textContent = 'Low';

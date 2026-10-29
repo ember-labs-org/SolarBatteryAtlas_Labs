@@ -35,7 +35,7 @@ function applyChartDpiCap() {
     if (window.Chart) {
         window.Chart.defaults.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
         // SF Pro for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
-        window.Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+        window.Chart.defaults.font.family = 'Poppins, system-ui, sans-serif';
     }
 }
 
@@ -529,13 +529,14 @@ function renderFrame(season, frameIndex) {
         }
 
         // Colors
-        // Yellow (Solar): #facc15 -> [250, 204, 21]
-        // Purple (Battery): #a855f7 -> [168, 85, 247]
-        // Grey (Other): #9ca3af -> [156, 163, 175]
+        // Ember Labs colours, blended by share:
+        // Solar (categorical 1): #FFC400 -> [255, 196, 0]
+        // Battery (categorical 2): #37A6E6 -> [55, 166, 230]
+        // Other / gap (orange): #E04B00 -> [224, 75, 0]
 
-        const r = Math.round(solarShare * 250 + batteryShare * 168 + otherShare * 156);
-        const g = Math.round(solarShare * 204 + batteryShare * 85 + otherShare * 163);
-        const b = Math.round(solarShare * 21 + batteryShare * 247 + otherShare * 175);
+        const r = Math.round(solarShare * 255 + batteryShare * 55 + otherShare * 224);
+        const g = Math.round(solarShare * 196 + batteryShare * 166 + otherShare * 75);
+        const b = Math.round(solarShare * 0 + batteryShare * 230 + otherShare * 0);
 
         const color = `rgb(${r}, ${g}, ${b})`;
 
@@ -672,35 +673,35 @@ async function renderSampleChartForSelected(forceShow = true) {
                 {
                     label: 'Solar',
                     data: solarData,
-                    backgroundColor: '#facc15',
+                    backgroundColor: '#FFC400', // categorical 1
                     borderWidth: 0,
                     stack: 'supply'
                 },
                 {
                     label: 'Battery (discharge)',
                     data: dischargeData,
-                    backgroundColor: '#a855f7',
+                    backgroundColor: '#37A6E6', // categorical 2
                     borderWidth: 0,
                     stack: 'supply'
                 },
                 {
                     label: 'Other',
                     data: otherData,
-                    backgroundColor: '#94a3b8',
+                    backgroundColor: '#E04B00', // gap covered by other sources
                     borderWidth: 0,
                     stack: 'supply'
                 },
                 {
                     label: 'Battery (charge)',
                     data: chargeData,
-                    backgroundColor: '#0ea5e9',
+                    backgroundColor: '#97CCED', // --el-blue-light: pairs with battery
                     borderWidth: 0,
                     stack: 'supply'
                 },
                 {
                     label: 'Curtailed Solar',
                     data: curtailedData,
-                    backgroundColor: '#fb923c',
+                    backgroundColor: '#FFF4A3', // lighter step of solar
                     borderWidth: 0,
                     stack: 'supply'
                 },
@@ -708,7 +709,7 @@ async function renderSampleChartForSelected(forceShow = true) {
                     label: 'Demand (1 MW)',
                     data: demandData,
                     type: 'line',
-                    borderColor: '#f87171',
+                    borderColor: '#FFFFFF', // reference line
                     borderWidth: 1.5,
                     fill: false,
                     pointRadius: 0,
@@ -727,7 +728,7 @@ async function renderSampleChartForSelected(forceShow = true) {
             plugins: {
                 legend: {
                     labels: {
-                        color: '#cbd5f5',
+                        color: '#FFFFFF',
                         font: { size: 11 }
                     }
                 },
@@ -744,20 +745,20 @@ async function renderSampleChartForSelected(forceShow = true) {
             scales: {
                 x: {
                     stacked: true,
-                    ticks: { color: '#94a3b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }
+                    ticks: { color: '#B0B7C6', maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }
                 },
                 y: {
                     stacked: true,
                     suggestedMin: 0,
                     suggestedMax: yMax,
                     ticks: {
-                        color: '#94a3b8',
+                        color: '#B0B7C6',
                         callback: val => `${val} MW`
                     },
                     title: {
                         display: true,
                         text: 'Output / Load (MW)',
-                        color: '#cbd5f5',
+                        color: '#FFFFFF',
                         font: { size: 11 }
                     }
                 }
