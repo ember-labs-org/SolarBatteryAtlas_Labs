@@ -4,7 +4,7 @@
    config in index.html so utility classes stay unchanged.
    ============================================================ */
 :root {
-    --bg-page: #192238;   /* --el-navy */
+    --bg-page: #414F6F;   /* --el-canvas: the tool's background */
     --card: #192238;      /* --el-navy */
     --elevated: #414F6F;  /* --el-canvas */
     --text: #FFFFFF;
@@ -17,7 +17,7 @@
     --battery: #37A6E6;   /* chart categorical 2 */
     /* Land fill for the local basemap (js/basemap.js). The ocean is the map
        container's own background (--bg-page). */
-    --map-land: #414F6F;  /* --el-canvas */
+    --map-land: #626E88;  /* --el-slate */
     /* Ember brand typeface. Single source of truth — Tailwind's font-sans is
        set to the same stack in tailwind.config.js. */
     --font-sans: 'Poppins', system-ui, sans-serif;
@@ -923,4 +923,17 @@ label.check-row:hover {
 }
 .leaflet-container a.leaflet-popup-close-button:hover {
     color: var(--ember);
+}
+
+/* The tool runs inside an iframe on the Ember Labs page: fill the frame
+   rather than the viewport (no 100vh), and let the host set the height. */
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+/* Modal backdrop: --el-overlay, navy-tinted, never black. */
+.el-overlay {
+    background: rgba(25, 34, 56, 0.75);
 }

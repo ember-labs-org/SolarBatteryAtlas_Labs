@@ -42,7 +42,7 @@ module.exports = {
                 'ember-hover': '#E6B300',      // --el-yellow-hover
                 'on-surface': '#FFFFFF',       // --el-white
                 outline: '#414F6F',            // --el-canvas
-                'bg-page': '#192238',          // --el-navy
+                'bg-page': '#414F6F',          // --el-canvas: the tool's background
                 muted: '#B0B7C6',              // --el-muted
                 input: '#192238',              // --el-navy
                 accent: '#FFC400',             // --el-yellow
