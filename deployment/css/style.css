@@ -184,72 +184,46 @@ body.split-maps #legend-stack {
     line-height: 1.5;
 }
 
-/* Legend Gradient */
-.legend-gradient {
+/* Legend gradients: Ember Labs sequential ramps (light = low, dark = high),
+   matching the map scales in js/map.js, js/constants.js and js/app.js. */
+.legend-gradient {            /* capacity factor: yellow ramp */
     background: linear-gradient(to right,
-            #1e3a8a 0%,
-            #1e3a8a 5%,
-            #00c853 40%,
-            #ff9800 70%,
-            #d32f2f 100%);
+            #FFF4A3 0%, #FFDA44 5%, #FFC400 40%, #CC9900 70%, #B77A00 100%);
 }
 
-.legend-gradient-cost {
+.legend-gradient-cost {       /* LCOE: blue ramp */
     background: linear-gradient(to right,
-            #0b1d3a 0%,
-            #1d4ed8 15%,
-            #16a34a 45%,
-            #eab308 65%,
-            #f59e0b 82.5%,
-            #dc2626 100%);
-    background-size: 100% 100%;
+            #C4D9E9 0%, #97CCED 25%, #37A6E6 50%, #1E609C 75%, #203772 100%);
 }
 
-.legend-gradient-delta {
+.legend-gradient-delta {      /* two-sided: green = cheaper, blue = more expensive (flagged to Rey) */
     background: linear-gradient(to right,
-            #22c55e 0%,
-            #22c55e 33%,
-            #cbd5e1 50%,
-            #ef4444 67%,
-            #ef4444 100%);
-    background-size: 100% 100%;
+            #0B6638 0%, #13CE74 25%, #B0B7C6 50%, #37A6E6 75%, #203772 100%);
 }
 
-.legend-gradient-tx {
-    background: linear-gradient(to right,
-            #cbd5e1 0%,
-            #86efac 50%,
-            #22c55e 100%);
-    background-size: 100% 100%;
+.legend-gradient-tx {         /* green ramp */
+    background: linear-gradient(to right, #D3EADF 0%, #13CE74 50%, #0B6638 100%);
 }
 
-/* Population legend — harmonized with dark Ember slate palette */
-.legend-gradient-pop {
+.legend-gradient-pop {        /* population: blue ramp */
     background: linear-gradient(to right,
-            #1f2325 0%,
-            #626e88 30%,
-            #9aa19f 60%,
-            #d6dbe9 85%,
-            #ECEFF5 100%);
+            #C4D9E9 0%, #97CCED 25%, #37A6E6 50%, #1E609C 75%, #203772 100%);
 }
 
-/* Potential legend — darkened low end so it reads on the dark bg */
-.legend-gradient-potential {
+.legend-gradient-potential {  /* solar potential: green ramp */
     background: linear-gradient(to right,
-            #14532d 0%,
-            #166534 20%,
-            #16a34a 40%,
-            #22c55e 60%,
-            #4ade80 80%,
-            #86efac 100%);
-    background-size: 100% 100%;
+            #D3EADF 0%, #A3D9A5 25%, #13CE74 50%, #109553 75%, #0B6638 100%);
 }
 
 .legend-gradient-potential-multiple {
-    background: linear-gradient(to right,
-            #f8b4b4 0%,
-            #facc15 50%,
-            #16a34a 100%);
+    background: linear-gradient(to right, #B0B7C6 0%, #A3D9A5 50%, #0B6638 100%);
+}
+
+.legend-gradient-cost,
+.legend-gradient-delta,
+.legend-gradient-tx,
+.legend-gradient-potential,
+.legend-gradient-potential-multiple {
     background-size: 100% 100%;
 }
 

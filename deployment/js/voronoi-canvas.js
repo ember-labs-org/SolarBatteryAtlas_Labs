@@ -109,8 +109,8 @@ export function createVoronoiCanvasLayer(map, d3, L, deps) {
         if (naPattern) return naPattern;
         const p = document.createElement('canvas'); p.width = 6; p.height = 6;
         const pc = p.getContext('2d');
-        pc.fillStyle = 'rgba(100,116,139,0.18)'; pc.fillRect(0, 0, 6, 6);
-        pc.strokeStyle = 'rgba(148,163,184,0.7)'; pc.lineWidth = 1.5;
+        pc.fillStyle = 'rgba(98, 110, 136, 0.18)'; pc.fillRect(0, 0, 6, 6);
+        pc.strokeStyle = 'rgba(176, 183, 198, 0.7)'; pc.lineWidth = 1.5;
         pc.beginPath(); pc.moveTo(-1, 5); pc.lineTo(5, -1); pc.moveTo(1, 7); pc.lineTo(7, 1); pc.stroke();
         naPattern = bctx.createPattern(p, 'repeat');
         return naPattern;

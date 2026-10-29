@@ -3,13 +3,14 @@ let charts = {};
 
 const SEASONS = ['winter', 'spring', 'summer', 'fall'];
 const COLORS = {
-    solar: 'rgba(251, 191, 36, 0.5)', // Amber 400
-    solarBorder: 'rgba(251, 191, 36, 1)',
-    battery: 'rgba(34, 211, 238, 0.5)', // Cyan 400
-    batteryBorder: 'rgba(34, 211, 238, 1)',
-    unserved: 'rgba(248, 113, 113, 0.5)', // Red 400
-    unservedBorder: 'rgba(248, 113, 113, 1)',
-    soc: 'rgba(16, 185, 129, 1)' // Emerald 500 (Line)
+    // Ember Labs chart palette; stacked areas at 0.92 opacity.
+    solar: 'rgba(255, 196, 0, 0.92)',    // categorical 1
+    solarBorder: '#FFC400',
+    battery: 'rgba(55, 166, 230, 0.92)', // categorical 2
+    batteryBorder: '#37A6E6',
+    unserved: 'rgba(224, 75, 0, 0.92)',  // orange: the gap still to cover
+    unservedBorder: '#E04B00',
+    soc: '#13CE74'                       // categorical 3 (line)
 };
 
 export function initCharts() {
@@ -153,7 +154,7 @@ export function updateCharts(sampleData) {
                 type: 'line',
                 label: 'Solar Potential',
                 data: data.solar_gen,
-                borderColor: '#fbbf24', // Amber
+                borderColor: '#FFC400', // categorical 1
                 borderDash: [5, 5],
                 borderWidth: 1,
                 pointRadius: 0,

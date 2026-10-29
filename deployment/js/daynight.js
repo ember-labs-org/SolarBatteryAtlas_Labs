@@ -58,7 +58,7 @@ let opts = {
                               // cities read as a soft glow, not hard dots. 0 = old sharp look.
     lightsGlowStrength: 0.6,  // additive opacity of the halo (0–1).
     lightsGlowWarmth: 0.5,    // how strongly to bias the halo toward amber (0–1).
-    lightsGlowColor: 'rgb(255,176,92)', // warm amber the halo is blended toward.
+    lightsGlowColor: 'rgb(255,218,68)', // Labs yellow ramp 4 the halo is blended toward.
     resolutionDivisor: 50,
     panBuffer: 0.25,   // draw the canvas this fraction larger than the viewport on each
                        // side so it doesn't expose an edge gap while the map is dragged.

@@ -4,11 +4,13 @@
 
 export const ALL_FUELS = ['coal', 'oil_gas', 'bioenergy', 'nuclear'];
 
+// Ember Labs categorical chart colours. Colour 1 (yellow) means solar across
+// this tool and colour 4 (orange) is reserved for warnings, so plants use 2, 3, 5, 6.
 export const FUEL_COLORS = {
-    coal: '#f97316',
-    oil_gas: '#38bdf8',
-    bioenergy: '#84cc16',
-    nuclear: '#a855f7'
+    coal: '#C4D9E9',      // categorical 5
+    oil_gas: '#37A6E6',   // categorical 2
+    bioenergy: '#13CE74', // categorical 3
+    nuclear: '#FFF4A3'    // categorical 6
 };
 
 export const BASE_LOAD_MW = 1000;
@@ -24,7 +26,7 @@ export const MMBTU_PER_MWH = 3.412;
 export const TX_WACC = 0.06;
 export const TX_LIFE = 50;
 
-export const LCOE_NO_DATA_COLOR = '#611010';
+export const LCOE_NO_DATA_COLOR = '#192238'; // --el-navy: no result
 
 export const VIEW_MODE_EXPLANATIONS = {
     capacity: 'Capacity Factor Map shows what share of the year a given solar + storage build can sustain a 1\u00a0MW baseload.',
@@ -36,47 +38,40 @@ export const VIEW_MODE_EXPLANATIONS = {
 
 export const CF_COLOR_SCALE = {
     domain: [0, 0.05, 0.4, 0.7, 1.0],
-    range: ["#0049ff", "#0049ff", "#00c853", "#ff9800", "#d32f2f"]
+    range: ["#FFF4A3", "#FFDA44", "#FFC400", "#CC9900", "#B77A00"] // Labs yellow ramp, light = low
 };
 
 // Color scale for Energy Access (0% to 100%)
-// Red (low) -> Yellow -> Green (high)
+// Labs green ramp, light (low) -> dark (high)
 export const ACCESS_COLOR_SCALE = {
     domain: [0, 50, 100],
-    range: ["#ef4444", "#eab308", "#22c55e"]
+    range: ["#D3EADF", "#13CE74", "#0B6638"]
 };
 
 export const POTENTIAL_MULTIPLE_BUCKETS = [
-    { max: 1,    label: '< 1×',        color: "#F6C9C9" }, // light red
-    { max: 3,    label: '1–3×',        color: "#F2A65A" }, // orange
-    { max: 10,   label: '3–10×',       color: "#F2D96B" }, // yellow
-    { max: 100,  label: '10–100×',     color: "#CDEB6A" }, // yellow-green
-    { max: 1000, label: '100–1000×',   color: "#6FC36A" }, // distinct green
-    { max: null, label: '1000×+',      color: "#1F7A4E" }  // deep green
+    { max: 1,    label: '< 1×',        color: "#B0B7C6" }, // --el-muted: below 1x
+    { max: 3,    label: '1–3×',        color: "#D3EADF" }, // green ramp 5
+    { max: 10,   label: '3–10×',       color: "#A3D9A5" }, // green ramp 4
+    { max: 100,  label: '10–100×',     color: "#13CE74" }, // green ramp 3
+    { max: 1000, label: '100–1000×',   color: "#109553" }, // green ramp 2
+    { max: null, label: '1000×+',      color: "#0B6638" }  // green ramp 1
 ];
 
 
 // Annual solar generation potential per person (ground + rooftop), MWh/person/yr.
 // Log-decade buckets: the metric spans < 1 to ~11 million MWh/cap across zones
-// (median ~1,260), so a linear scale is useless. Same red→green ramp as the
-// multiple buckets: red = little potential per person, green = abundant.
+// (median ~1,260), so a linear scale is useless. Same scale as the multiple buckets:
+// muted = little potential per person, dark green = abundant.
 export const POTENTIAL_PER_CAPITA_BUCKETS = [
-    { max: 10,     label: '< 10',           color: "#F6C9C9" }, // light red
-    { max: 100,    label: '10–100',         color: "#F2A65A" }, // orange
-    { max: 1000,   label: '100–1,000',      color: "#F2D96B" }, // yellow
-    { max: 10000,  label: '1,000–10,000',   color: "#CDEB6A" }, // yellow-green
-    { max: 100000, label: '10,000–100,000', color: "#6FC36A" }, // distinct green
-    { max: null,   label: '100,000+',       color: "#1F7A4E" }  // deep green
+    { max: 10,     label: '< 10',           color: "#B0B7C6" }, // --el-muted: below 1x
+    { max: 100,    label: '10–100',         color: "#D3EADF" }, // green ramp 5
+    { max: 1000,   label: '100–1,000',      color: "#A3D9A5" }, // green ramp 4
+    { max: 10000,  label: '1,000–10,000',   color: "#13CE74" }, // green ramp 3
+    { max: 100000, label: '10,000–100,000', color: "#109553" }, // green ramp 2
+    { max: null,   label: '100,000+',       color: "#0B6638" }  // green ramp 1
 ];
 
-export const POTENTIAL_TOTAL_COLORS = [
-    '#f0fdf4',
-    '#bbf7d0',
-    '#4ade80',
-    '#22c55e',
-    '#15803d',
-    '#14532d'
-];
+export const POTENTIAL_TOTAL_COLORS = ['#D3EADF', '#A3D9A5', '#13CE74', '#109553', '#0B6638']; // Labs green ramp
 
 /**
  * Feature flags used for staged rollout of browser performance optimizations.

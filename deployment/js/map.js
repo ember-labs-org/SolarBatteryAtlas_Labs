@@ -152,9 +152,8 @@ function buildPopulationScale(values) {
     const valid = values.filter(Number.isFinite);
     const min = valid.length ? Math.min(...valid) : 0;
     const max = valid.length ? Math.max(...valid) : 1;
-    return d3.scaleLinear()
+    return d3.scaleSequential(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])) // Labs blue ramp
         .domain([min, max])
-        .range(["#111827", "#f3f4f6"])
         .clamp(true);
 }
 
@@ -168,18 +167,15 @@ function buildLcoeScale(domain, options = {}) {
             scaleDomain[i] = scaleDomain[i - 1] + 1;
         }
     }
-    const baseRange = ["#0b1d3a", "#1d4ed8", "#16a34a", "#eab308", "#f59e0b", "#dc2626"];
-    let range = baseRange;
-    if (scaleDomain.length === 4) {
-        range = [baseRange[0], baseRange[2], baseRange[4], baseRange[5]];
-    } else if (scaleDomain.length === 5) {
-        range = [baseRange[0], baseRange[1], baseRange[2], baseRange[4], baseRange[5]];
-    } else if (scaleDomain.length < 4) {
-        range = [baseRange[0], baseRange[4], baseRange[5]];
-    }
+    // Labs blue ramp, light = cheap, dark = expensive. Exact ramp steps when the
+    // scale has five stops, otherwise sampled evenly along the ramp.
+    const ramp = ['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'];
+    let range = scaleDomain.length === ramp.length
+        ? ramp
+        : d3.quantize(d3.interpolateRgbBasis(ramp), Math.max(2, scaleDomain.length));
     if (underflowMin !== null && scaleDomain[0] > underflowMin) {
         scaleDomain.unshift(underflowMin);
-        range = [baseRange[0], ...range];
+        range = [ramp[0], ...range];
     }
     return d3.scaleLinear()
         .domain(scaleDomain)
@@ -193,7 +189,7 @@ function buildTxScale(domain) {
         ? domain : defaultDomain;
     return d3.scaleLinear()
         .domain(scaleDomain)
-        .range(["#cbd5e1", "#86efac", "#22c55e"])
+        .range(["#D3EADF", "#13CE74", "#0B6638"]) // Labs green ramp
         .clamp(true);
 }
 
@@ -201,7 +197,9 @@ function buildDeltaScale(maxAbs) {
     const span = Math.max(1, maxAbs || 1);
     return d3.scaleDiverging()
         .domain([-span, 0, span])
-        .interpolator(d3.interpolateRgbBasis(["#22c55e", "#cbd5e1", "#ef4444"]))
+        // Two-sided scale (not yet in the Labs design system, flagged to Rey):
+        // green ramp = cheaper, muted = no difference, blue ramp = more expensive.
+        .interpolator(d3.interpolateRgbBasis(["#0B6638", "#13CE74", "#B0B7C6", "#37A6E6", "#203772"]))
         .clamp(true);
 }
 
@@ -219,16 +217,16 @@ function buildLcoeColorScaleFromInfo(colorInfo) {
 }
 
 function getLcoeColor(row, colorInfo, colorScale) {
-    if (!row || !colorInfo || !colorScale) return '#611010';
-    if (!row.meetsTarget) return '#611010';
+    if (!row || !colorInfo || !colorScale) return '#192238';
+    if (!row.meetsTarget) return '#192238';
     if (colorInfo.type === 'delta') {
-        return Number.isFinite(row.lcoe) && Number.isFinite(row.delta) ? colorScale(row.delta) : '#611010';
+        return Number.isFinite(row.lcoe) && Number.isFinite(row.delta) ? colorScale(row.delta) : '#192238';
     }
     if (colorInfo.type === 'tx') {
         const val = row.txMetrics ? row.txMetrics.breakevenPerGwKm : 0;
-        return Number.isFinite(row.lcoe) && val > 0 ? colorScale(val) : '#611010';
+        return Number.isFinite(row.lcoe) && val > 0 ? colorScale(val) : '#192238';
     }
-    return Number.isFinite(row.lcoe) ? colorScale(row.lcoe) : '#611010';
+    return Number.isFinite(row.lcoe) ? colorScale(row.lcoe) : '#192238';
 }
 
 let worldGeoJSON = null;
@@ -1222,8 +1220,8 @@ export function updatePopulationSimple(popData, { baseLayer = 'population', over
         if (demands.length > 0) {
             const minD = d3.min(demands);
             const maxD = d3.max(demands);
-            // Use same scale as population: interpolateGreys inverted (black = low, white = high)
-            demandScale = d3.scaleSequential(t => d3.interpolateGreys(1 - t)).domain([minD, maxD]);
+            // Same scale as population: Labs blue ramp (light = low, dark = high)
+            demandScale = d3.scaleSequential(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])).domain([minD, maxD]);
         }
     }
 
@@ -1268,7 +1266,7 @@ export function updatePopulationSimple(popData, { baseLayer = 'population', over
                 baseColor = demandScale(val);
                 displayPop = false; // We use voronoi fill for electricity, not dots (or maybe dots?)
             } else {
-                baseColor = '#1e293b'; // slate-800 for no data
+                baseColor = '#192238'; // --el-navy for no data
                 displayPop = false;
             }
         } else if (baseLayer === 'plants') {
@@ -1487,7 +1485,7 @@ export function updatePopulationSimple(popData, { baseLayer = 'population', over
         });
         filteredPlants.forEach(plant => {
             if (!Number.isFinite(plant.latitude) || !Number.isFinite(plant.longitude)) return;
-            const color = FOSSIL_COLORS[plant.fuel_group] || '#e2e8f0';
+            const color = FOSSIL_COLORS[plant.fuel_group] || '#FFFFFF';
             const baseCapacity = Number.isFinite(plant.capacity_mw) ? Math.max(plant.capacity_mw, 0) : 0;
             const radius = Math.max(2, Math.min(12, Math.sqrt(baseCapacity) * 0.15));
             const marker = L.circleMarker([plant.latitude, plant.longitude], {
@@ -1524,21 +1522,21 @@ export function updatePopulationSimple(popData, { baseLayer = 'population', over
     // instead of one per Voronoi cell.
     const reliabilityColorScale = d3.scaleLinear()
         .domain([0, 100])
-        .range(["#ef4444", "#6b7280"])
+        .range(["#E04B00", "#B0B7C6"]) // orange = unreliable grid, muted = reliable
         .clamp(true);
     const noAccessPopScale = d3.scaleLog()
         .domain([100, 10000, 1000000])
-        .range(["#1e293b", "#991b1b", "#ff0000"])
+        .range(["#FCA311", "#E04B00", "#891B05"]) // Labs orange ramp: people without access
         .clamp(true);
 
     // Define base layer fill function (demand layer)
     const baseFill = (d) => {
         if (baseLayer === 'uptime') {
-            // Grid Reliability (Red -> Grey)
+            // Grid Reliability (orange -> muted)
             const relKey = roundedKey(d.latitude, d.longitude, 2);
             const rel = reliabilityByCoord.get(relKey);
 
-            if (!rel || !rel.hrea_covered) return '#1e293b'; // No data
+            if (!rel || !rel.hrea_covered) return '#192238'; // No data
 
             const gridUptime = rel.avg_reliability_access_only !== undefined ? rel.avg_reliability_access_only : rel.avg_reliability;
             return reliabilityColorScale(gridUptime);
@@ -1550,12 +1548,12 @@ export function updatePopulationSimple(popData, { baseLayer = 'population', over
 
             if (currentAccessMetric === 'no_access_pop') {
                 const popNoAccess = (rel && rel.hrea_covered) ? (rel.total_pop_reliability || 0) * (rel.pct_no_access || 0) : 0;
-                if (popNoAccess <= 0) return '#111827'; // Darkest grey for universal access
+                if (popNoAccess <= 0) return '#192238'; // navy: universal access
                 return noAccessPopScale(Math.max(1, popNoAccess));
             }
 
-            if (!rel) return '#1e293b'; // No data
-            if (!rel.hrea_covered) return '#1e293b';
+            if (!rel) return '#192238'; // No data
+            if (!rel.hrea_covered) return '#192238';
 
             // Determine value based on metric
             let val = 0;
@@ -1581,7 +1579,7 @@ export function updatePopulationSimple(popData, { baseLayer = 'population', over
             if (val > 0 && demandScale) {
                 return demandScale(val);
             }
-            return '#1e293b'; // slate-800 for no data
+            return '#192238'; // --el-navy for no data
         } else if (baseLayer === 'population') {
             const popVal = d.population_2020 || 0;
             return popScale(popVal);
@@ -1600,14 +1598,14 @@ export function updatePopulationSimple(popData, { baseLayer = 'population', over
         if (overlayMode === 'access') {
             const relKey = roundedKey(d.latitude, d.longitude, 2);
             const rel = reliabilityByCoord.get(relKey);
-            if (!rel) return '#1e293b';
-            if (!rel.hrea_covered) return '#1e293b'; // No Data
+            if (!rel) return '#192238';
+            if (!rel.hrea_covered) return '#192238'; // No Data
 
             // Determine value based on metric
             let val = 0;
             if (currentAccessMetric === 'no_access_pop') {
                 const popNoAccess = (rel.total_pop_reliability || 0) * (rel.pct_no_access || 0);
-                if (popNoAccess <= 0) return '#111827';
+                if (popNoAccess <= 0) return '#192238';
                 return noAccessPopScale(Math.max(1, popNoAccess));
             } else if (currentAccessMetric === 'no_access') {
                 const pct = rel.pct_no_access || 0;
@@ -1664,7 +1662,7 @@ export function updateSupplyMap({ overlayMode = 'none', cfData = [], lcoeData = 
     const potentialFallbackKey = potentialState?.level === 'level2' ? 'pvout_level2_twh_y' : 'pvout_level1_twh_y';
     const potentialIsMultiple = potentialState?.displayMode === 'multiple';
     const potentialIsPerCapita = potentialState?.displayMode === 'per_capita';
-    const potentialNoDataColor = '#6b7280';
+    const potentialNoDataColor = '#192238';
     const potentialScale = overlayMode === 'potential' && potentialState && potentialState.valueCount
         ? (potentialIsMultiple
             ? (val) => bucketColor(POTENTIAL_MULTIPLE_BUCKETS, val)
@@ -1849,7 +1847,7 @@ function renderVoronoiDual(mapPoints, data, baseFill, overlayFill, options = {})
             .enter()
             .append("path")
             .attr("d", (_, i) => voronoi.renderCell(i))
-            .attr("fill", d => baseFill ? baseFill(d) : "#111827")
+            .attr("fill", d => baseFill ? baseFill(d) : "#192238")
             .attr("fill-opacity", baseOpacity)
             .attr("stroke", "rgba(255,255,255,0.08)")
             .attr("stroke-width", 0.5)
@@ -2028,7 +2026,7 @@ export function updatePotentialMap(potentialData, { level = 'level1', min = null
     const values = potentialData.map(d => readTotal(d)).filter(v => Number.isFinite(v));
     const scaleMin = Number.isFinite(min) ? min : (values.length ? Math.min(...values) : 0);
     const scaleMax = Number.isFinite(max) ? max : (values.length ? Math.max(...values) : 1);
-    const noDataColor = '#6b7280';
+    const noDataColor = '#192238';
 
     const totalInterpolator = d3.interpolateRgbBasis(POTENTIAL_TOTAL_COLORS);
     const colorScale = isMultiple
@@ -2219,7 +2217,7 @@ export function updateLcoeMap(bestData, options = {}) {
     });
 
     bestData.forEach(d => {
-        let color = '#611010'; // default for missing/non-target cells (deep red)
+        let color = '#192238'; // default for missing/non-target cells (navy)
         if (d.meetsTarget) {
             color = getLcoeColor(d, colorInfo, colorScale);
         }
@@ -2692,9 +2690,9 @@ function renderVoronoi(mapPoints, data, fillAccessor, options = {}) {
 
 function getDominanceColor(source) {
     switch (source) {
-        case 's': return '#facc15'; // yellow - solar
-        case 'b': return '#a855f7'; // purple - battery
-        default: return '#9ca3af';  // gray - other
+        case 's': return '#FFC400'; // categorical 1 - solar
+        case 'b': return '#37A6E6'; // categorical 2 - battery
+        default: return '#E04B00';  // orange - gap covered by other sources
     }
 }
 
@@ -2831,11 +2829,11 @@ function renderSampleVoronoi(mapPoints, locations) {
     naPattern.append("rect")
         .attr("width", 6)
         .attr("height", 6)
-        .attr("fill", "rgba(100,116,139,0.18)");
+        .attr("fill", "rgba(98, 110, 136, 0.18)");
     naPattern.append("line")
         .attr("x1", 0).attr("y1", 0)
         .attr("x2", 0).attr("y2", 6)
-        .attr("stroke", "rgba(148,163,184,0.7)")
+        .attr("stroke", "rgba(176, 183, 198, 0.7)")
         .attr("stroke-width", 1.5);
 
     const g = svg.append("g")
