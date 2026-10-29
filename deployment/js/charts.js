@@ -13,10 +13,10 @@ const COLORS = {
 };
 
 export function initCharts() {
-    Chart.defaults.color = '#94a3b8';
-    Chart.defaults.borderColor = '#1e293b';
+    Chart.defaults.color = '#B0B7C6'; // --el-muted
+    Chart.defaults.borderColor = 'rgba(255, 255, 255, 0.12)'; // --el-divider
     // SF Pro for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
-    Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+    Chart.defaults.font.family = 'Poppins, system-ui, sans-serif';
 
     SEASONS.forEach(season => {
         const ctx = document.getElementById(`chart-${season}`).getContext('2d');
@@ -34,7 +34,7 @@ export function initCharts() {
                     title: {
                         display: true,
                         text: season.toUpperCase(),
-                        color: '#e2e8f0',
+                        color: '#FFFFFF',
                         font: { size: 12, weight: 'bold' }
                     },
                     legend: { display: false },

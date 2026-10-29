@@ -129,7 +129,7 @@ function applyChartDpiCap() {
     if (window.Chart) {
         window.Chart.defaults.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
         // SF Pro for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
-        window.Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+        window.Chart.defaults.font.family = 'Poppins, system-ui, sans-serif';
     }
 }
 
@@ -2071,7 +2071,7 @@ function renderSupplyLegendFromInfo(info) {
                 swatch.style.display = 'inline-block';
                 swatch.style.width = '12px';
                 swatch.style.height = '12px';
-                swatch.style.borderRadius = '3px';
+                swatch.style.borderRadius = '0';
                 const label = document.createElement('span');
                 label.textContent = row.text;
                 wrapper.appendChild(swatch);
@@ -2896,7 +2896,7 @@ function renderLegendFromInfo(info) {
                 swatch.style.display = 'inline-block';
                 swatch.style.width = '12px';
                 swatch.style.height = '12px';
-                swatch.style.borderRadius = '3px';
+                swatch.style.borderRadius = '0';
                 const label = document.createElement('span');
                 label.textContent = row.text;
                 wrapper.appendChild(swatch);
@@ -4094,7 +4094,7 @@ function handleHistogramClick(bucket, metrics, overlayMode, baseLayer) {
                         const color = FUEL_COLORS[key];
                         const item = document.createElement('span');
                         item.className = 'inline-flex items-center mr-3';
-                        item.innerHTML = `<span style="background-color:${color};width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:4px;"></span> ${capitalizeWord(key.replace('_', ' / '))}`;
+                        item.innerHTML = `<span style="background-color:${color};width:10px;height:10px;border-radius:0;display:inline-block;margin-right:4px;"></span> ${capitalizeWord(key.replace('_', ' / '))}`;
                         legendRange.appendChild(item);
                     });
                 }
@@ -4625,7 +4625,7 @@ async function renderPopulationCharts(metrics, { overlayMode, baseLayer, selecte
                 ticks: {
                     stepSize: 30,
                     callback: (v) => `${v}°`,
-                    color: '#9ca3af'
+                    color: '#B0B7C6'
                 },
                 grid: { color: 'rgba(255,255,255,0.06)' }
             }

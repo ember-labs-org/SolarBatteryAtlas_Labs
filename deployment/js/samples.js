@@ -35,7 +35,7 @@ function applyChartDpiCap() {
     if (window.Chart) {
         window.Chart.defaults.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
         // SF Pro for canvas-rendered chart text (Chart.js doesn't inherit CSS fonts).
-        window.Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "SF Pro", "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+        window.Chart.defaults.font.family = 'Poppins, system-ui, sans-serif';
     }
 }
 
@@ -727,7 +727,7 @@ async function renderSampleChartForSelected(forceShow = true) {
             plugins: {
                 legend: {
                     labels: {
-                        color: '#cbd5f5',
+                        color: '#FFFFFF',
                         font: { size: 11 }
                     }
                 },
@@ -744,20 +744,20 @@ async function renderSampleChartForSelected(forceShow = true) {
             scales: {
                 x: {
                     stacked: true,
-                    ticks: { color: '#94a3b8', maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }
+                    ticks: { color: '#B0B7C6', maxRotation: 0, autoSkip: true, maxTicksLimit: 12 }
                 },
                 y: {
                     stacked: true,
                     suggestedMin: 0,
                     suggestedMax: yMax,
                     ticks: {
-                        color: '#94a3b8',
+                        color: '#B0B7C6',
                         callback: val => `${val} MW`
                     },
                     title: {
                         display: true,
                         text: 'Output / Load (MW)',
-                        color: '#cbd5f5',
+                        color: '#FFFFFF',
                         font: { size: 11 }
                     }
                 }

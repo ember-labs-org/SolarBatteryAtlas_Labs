@@ -1,26 +1,26 @@
 /* ============================================================
-   Solar + Battery Atlas — design tokens (Ember brand palette)
+   Solar + Battery Atlas — design tokens (Ember Labs Design System)
    Single source of truth. Tailwind mirrors these via its inline
    config in index.html so utility classes stay unchanged.
    ============================================================ */
 :root {
-    --bg-page: #000000;
-    --card: #192238;      /* Neutral 5 */
-    --elevated: #3E4860;  /* Neutral 4 */
+    --bg-page: #192238;   /* --el-navy */
+    --card: #192238;      /* --el-navy */
+    --elevated: #414F6F;  /* --el-canvas */
     --text: #FFFFFF;
-    --muted: #B0B7C6;     /* Neutral 2 */
-    --divider: #3E4860;   /* Neutral 4 */
-    --input: #000000;
-    --ember: #FFC400;     /* Yellow 3 */
-    --ember-hover: #FFDA44; /* Yellow 2 */
-    --solar: #f59e0b;
-    --battery: #a855f7;
+    --muted: #B0B7C6;     /* --el-muted */
+    --divider: rgba(255, 255, 255, 0.12); /* --el-divider */
+    --input: rgba(255, 255, 255, 0.08); /* --el-white-wash-08 */
+    --ember: #FFC400;     /* --el-yellow */
+    --ember-hover: #E6B300; /* --el-yellow-hover */
+    --solar: #FFC400;     /* chart categorical 1 */
+    --battery: #37A6E6;   /* chart categorical 2 */
     /* Land fill for the local basemap (js/basemap.js). The ocean is the map
        container's own background (--bg-page). */
-    --map-land: #192238;  /* Neutral 5 */
+    --map-land: #414F6F;  /* --el-canvas */
     /* Ember brand typeface. Single source of truth — Tailwind's font-sans is
        set to the same stack in tailwind.config.js. */
-    --font-sans: 'Poppins', 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-sans: 'Poppins', system-ui, sans-serif;
 }
 
 /* Custom Scrollbar */
@@ -35,7 +35,7 @@
 
 ::-webkit-scrollbar-thumb {
     background: var(--elevated);
-    border-radius: 4px;
+    border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -135,28 +135,28 @@ body.split-maps #legend-stack {
 
 /* Marker clusters — ember accent */
 .marker-cluster-small {
-    background-color: rgba(245, 158, 11, 0.6);
+    background-color: rgba(255, 196, 0, 0.6);
 }
 
 .marker-cluster-small div {
-    background-color: rgba(245, 158, 11, 0.6);
+    background-color: rgba(255, 196, 0, 0.6);
 }
 
 /* Chart Tooltip Customization */
 #chartjs-tooltip {
     opacity: 1;
     position: absolute;
-    background: rgba(21, 24, 26, 0.95);
+    background: #000000; /* --el-black: tooltips */
     color: var(--text);
     border: 1px solid var(--divider);
-    border-radius: 8px;
+    border-radius: 0;
     pointer-events: none;
     transform: translate(-50%, 0);
     transition: all .1s ease;
     padding: 8px 12px;
     font-family: var(--font-sans);
     font-size: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.35), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
 }
 
 /* Leaflet Popup Customization */
@@ -164,16 +164,16 @@ body.split-maps #legend-stack {
     /* Background is 95% opaque, so a backdrop blur is imperceptible — but it forces
        Safari to re-composite the whole map layer under the filter on every backdrop
        change (pan/zoom/recolor). Dropped for performance; no visible change. */
-    background-color: rgba(21, 24, 26, 0.95);
+    background-color: var(--card);
     color: var(--text);
     border: 1px solid var(--divider);
-    border-radius: 1rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.35), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    box-shadow: none;
     padding: 0;
 }
 
 .leaflet-popup-tip {
-    background-color: rgba(21, 24, 26, 0.95);
+    background-color: var(--card);
     border: 1px solid var(--divider);
     border-top: none;
     border-left: none;
@@ -284,9 +284,9 @@ input[type="range"] {
     -webkit-appearance: none;
     appearance: none;
     width: 100%;
-    height: 6px;
-    background: var(--divider);
-    border-radius: 9999px;
+    height: 4px;
+    background: var(--muted);   /* unfilled track: --el-muted */
+    border-radius: 0;
     accent-color: var(--ember);
     cursor: pointer;
     outline: none;
@@ -297,11 +297,11 @@ input[type="range"]::-webkit-slider-thumb {
     appearance: none;
     width: 20px;
     height: 20px;
-    border-radius: 9999px;
+    border-radius: 0;
     background: var(--ember);
-    border: 2px solid var(--text);
+    border: 2px solid var(--card); /* thin dark border, square handle */
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    box-shadow: none;
     transition: transform 0.15s ease, background 0.15s ease;
 }
 
@@ -313,11 +313,11 @@ input[type="range"]::-webkit-slider-thumb:hover {
 input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    border-radius: 9999px;
+    border-radius: 0;
     background: var(--ember);
-    border: 2px solid var(--text);
+    border: 2px solid var(--card); /* thin dark border, square handle */
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    box-shadow: none;
     transition: transform 0.15s ease, background 0.15s ease;
 }
 
@@ -327,43 +327,48 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 input[type="range"]::-moz-range-track {
-    background: var(--divider);
-    height: 6px;
-    border-radius: 9999px;
+    background: var(--muted);
+    height: 4px;
+    border-radius: 0;
+}
+
+input[type="range"]::-moz-range-progress {
+    background: var(--ember);   /* filled track: --el-yellow */
+    height: 4px;
 }
 
 /* Solar slider — amber thumb (semantic data category) */
 input[type="range"].slider-solar {
-    accent-color: var(--solar);
+    accent-color: var(--ember);
 }
 input[type="range"].slider-solar::-webkit-slider-thumb {
-    background: var(--solar);
+    background: var(--ember);
 }
 input[type="range"].slider-solar::-webkit-slider-thumb:hover {
-    background: #fbbf24;
+    background: var(--ember-hover);
 }
 input[type="range"].slider-solar::-moz-range-thumb {
-    background: var(--solar);
+    background: var(--ember);
 }
 input[type="range"].slider-solar::-moz-range-thumb:hover {
-    background: #fbbf24;
+    background: var(--ember-hover);
 }
 
-/* Battery slider — cyan thumb (semantic data category) */
+/* Battery slider — yellow thumb like every Labs control */
 input[type="range"].slider-battery {
-    accent-color: var(--battery);
+    accent-color: var(--ember);
 }
 input[type="range"].slider-battery::-webkit-slider-thumb {
-    background: var(--battery);
+    background: var(--ember);
 }
 input[type="range"].slider-battery::-webkit-slider-thumb:hover {
-    background: #22d3ee;
+    background: var(--ember-hover);
 }
 input[type="range"].slider-battery::-moz-range-thumb {
-    background: var(--battery);
+    background: var(--ember);
 }
 input[type="range"].slider-battery::-moz-range-thumb:hover {
-    background: #22d3ee;
+    background: var(--ember-hover);
 }
 
 /* Number inputs — bigger, clearer, always-visible steppers */
@@ -373,7 +378,7 @@ input[type="range"].slider-battery::-moz-range-thumb:hover {
     padding: 0.375rem 0.625rem;
     background: var(--input);
     border: 1px solid var(--divider);
-    border-radius: 8px;
+    border-radius: 0;
     color: var(--text);
     font-size: 0.8125rem;
     font-family: var(--font-sans);
@@ -387,7 +392,7 @@ input[type="range"].slider-battery::-moz-range-thumb:hover {
 .num-input:focus {
     outline: none;
     border-color: var(--ember);
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+    box-shadow: none;
 }
 
 .num-input::-webkit-inner-spin-button,
@@ -408,7 +413,7 @@ input[type="range"].slider-battery::-moz-range-thumb:hover {
     padding: 0.375rem 0.625rem;
     background: var(--input);
     border: 1px solid var(--divider);
-    border-radius: 8px;
+    border-radius: 0;
     color: var(--text);
     font-size: 0.8125rem;
     font-family: var(--font-sans);
@@ -418,7 +423,7 @@ input[type="range"].slider-battery::-moz-range-thumb:hover {
 .text-input:focus {
     outline: none;
     border-color: var(--ember);
-    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+    box-shadow: none;
 }
 
 /* Toggle groups — segmented control pattern, bigger hit targets */
@@ -429,7 +434,7 @@ input[type="range"].slider-battery::-moz-range-thumb:hover {
     padding: 3px;
     gap: 2px;
     background: var(--elevated);
-    border-radius: 8px;
+    border-radius: 0;
 }
 
 .toggle-group.toggle-group-grid {
@@ -451,9 +456,9 @@ input[type="range"].slider-battery::-moz-range-thumb:hover {
     justify-content: center;
     min-height: 26px;
     padding: 0 10px;
-    border-radius: 6px;
+    border-radius: 0;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--muted);
     background: transparent;
     border: none;
@@ -471,8 +476,8 @@ input[type="range"].slider-battery::-moz-range-thumb:hover {
 .toggle-btn.is-active {
     background: var(--ember);
     color: #000000;
-    font-weight: 500;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    box-shadow: none;
 }
 
 /* Tiny variant (used inline in dense panels) */
@@ -512,10 +517,10 @@ label.check-row:hover {
     gap: 0.5rem;
     min-height: 40px;
     padding: 0 1.25rem;
-    border-radius: 9999px;
+    border-radius: 0;
     background: var(--ember);
     color: #000000;
-    font-weight: 500;
+    font-weight: 600;
     border: none;
     cursor: pointer;
     transition: background 0.15s ease, transform 0.15s ease;
@@ -538,7 +543,7 @@ label.check-row:hover {
     gap: 0.5rem;
     min-height: 40px;
     padding: 0 1.25rem;
-    border-radius: 9999px;
+    border-radius: 0;
     background: transparent;
     color: var(--text);
     border: 1px solid var(--divider);
@@ -555,7 +560,7 @@ label.check-row:hover {
 /* Unified focus ring for keyboard users */
 :focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--ember);
+    box-shadow: none;
 }
 
 /* View tabs — active state driven by .is-active; bg-primary still works
@@ -574,17 +579,16 @@ label.check-row:hover {
     position: fixed;
     z-index: 10000;
     border: 2px solid var(--ember);
-    border-radius: 14px;
+    border-radius: 0;
     pointer-events: none;
-    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.22),
-                0 0 18px 2px rgba(245, 158, 11, 0.45);
+    box-shadow: none;
     transition: left 0.25s ease, top 0.25s ease, width 0.25s ease, height 0.25s ease;
     animation: tour-ring-pulse 1.8s ease-in-out infinite;
 }
 
 @keyframes tour-ring-pulse {
-    0%, 100% { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.20), 0 0 16px 1px rgba(245, 158, 11, 0.40); }
-    50%      { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.30), 0 0 26px 4px rgba(245, 158, 11, 0.60); }
+    0%, 100% { box-shadow: none; }
+    50%      { box-shadow: none; }
 }
 
 /* Callout box */
@@ -595,8 +599,8 @@ label.check-row:hover {
     max-width: calc(100vw - 16px);
     background: var(--card);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 16px;
-    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+    border-radius: 0;
+    box-shadow: none;
     padding: 18px 18px 14px;
     color: var(--text);
     font-family: var(--font-sans);
@@ -625,7 +629,7 @@ label.check-row:hover {
 .tour-callout__body {
     font-size: 13px;
     line-height: 1.55;
-    color: #D8DBE6; /* Neutral 1 */
+    color: #FFFFFF;
 }
 .tour-callout__body b { color: #fff; font-weight: 600; }
 
@@ -647,9 +651,9 @@ label.check-row:hover {
 .tour-callout__btn {
     font-family: var(--font-sans);
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     padding: 6px 14px;
-    border-radius: 9999px;
+    border-radius: 0;
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
@@ -705,8 +709,8 @@ label.check-row:hover {
 .tour-chooser__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    background: rgba(25, 34, 56, 0.75); /* --el-overlay: navy-tinted, never black */
+    backdrop-filter: none;
 }
 
 .tour-chooser__card {
@@ -715,8 +719,8 @@ label.check-row:hover {
     max-width: 420px;
     background: var(--card);
     border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 20px;
-    box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.75);
+    border-radius: 0;
+    box-shadow: none;
     padding: 32px 28px;
     color: var(--text);
 }
@@ -758,7 +762,7 @@ label.check-row:hover {
     background: var(--ember);
     color: #000000;
     border: 1px solid var(--ember);
-    border-radius: 9999px;
+    border-radius: 0;
     padding: 10px 28px;
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease;
@@ -773,11 +777,9 @@ label.check-row:hover {
     align-items: center;
     gap: 12px;
     max-width: 400px;
-    background:
-        linear-gradient(180deg, rgba(245, 158, 11, 0.18), rgba(245, 158, 11, 0.06)),
-        var(--card);
+    background: var(--card);
     border: 3px solid var(--ember);
-    border-radius: 16px;
+    border-radius: 0;
     padding: 18px 18px 18px 20px;
     color: var(--text);
     font-family: var(--font-sans);
@@ -792,7 +794,7 @@ label.check-row:hover {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: inherit;
+    border-radius: 0;
     pointer-events: none;
     animation: tour-nudge-radiate2 1.8s ease-out 1.3s infinite;
 }
@@ -803,7 +805,7 @@ label.check-row:hover {
     top: -9px;
     width: 16px;
     height: 16px;
-    background: rgba(61, 48, 23, 1);
+    background: var(--card);
     border-left: 3px solid var(--ember);
     border-top: 3px solid var(--ember);
     transform: rotate(45deg);
@@ -814,14 +816,14 @@ label.check-row:hover {
     flex-shrink: 0;
     transform-origin: 50% 80%;
     animation: tour-nudge-wave 1.6s ease-in-out 0.4s infinite;
-    filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.7));
+    filter: none;
 }
 .tour-nudge__text {
     font-size: 17px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 1.3;
     letter-spacing: 0.2px;
-    text-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+    text-shadow: none;
 }
 .tour-nudge__close {
     flex-shrink: 0;
@@ -851,13 +853,13 @@ label.check-row:hover {
 }
 /* Primary expanding ring + constant glow (drop shadow stays underneath). */
 @keyframes tour-nudge-radiate {
-    0%        { box-shadow: 0 16px 34px -10px rgba(0, 0, 0, 0.7), 0 0 22px 2px rgba(245, 158, 11, 0.45), 0 0 0 0 rgba(245, 158, 11, 0.75); }
-    70%, 100% { box-shadow: 0 16px 34px -10px rgba(0, 0, 0, 0.7), 0 0 22px 2px rgba(245, 158, 11, 0.45), 0 0 0 32px rgba(245, 158, 11, 0); }
+    0%        { box-shadow: none; }
+    70%, 100% { box-shadow: none; }
 }
 /* Secondary expanding ring, offset in time for a continuous radar pulse. */
 @keyframes tour-nudge-radiate2 {
-    0%        { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6); }
-    70%, 100% { box-shadow: 0 0 0 48px rgba(245, 158, 11, 0); }
+    0%        { box-shadow: none; }
+    70%, 100% { box-shadow: none; }
 }
 
 /* Respect the OS "Reduce Motion" setting: stop the decorative, infinitely-looping
@@ -873,20 +875,52 @@ label.check-row:hover {
     }
 }
 
-/* Ember Transition bar: Blue 5 to Green 3, left to right, directly under
-   each major heading (ember-branding skill). */
-.ember-transition-bar {
-    display: block;
-    height: 4px;
-    width: 25%;
-    min-width: 48px;
-    max-width: 120px;
-    margin-top: 0.5rem;
-    background: linear-gradient(to right, #203772, #13CE74);
+/* Leaflet's own stylesheet (loaded from unpkg) ships rounded corners, drop
+   shadows and white controls. Bring its controls, tooltips and attribution
+   into the Ember Labs system: sharp corners, no shadows, Labs tokens only. */
+.leaflet-bar,
+.leaflet-bar a,
+.leaflet-control-layers,
+.leaflet-tooltip,
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip,
+.leaflet-control-attribution {
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
-.ember-transition-bar--compact {
-    height: 3px;
-    width: 48px;
-    min-width: 0;
-    margin-top: 2px;
+.leaflet-bar {
+    border: 1px solid var(--divider) !important;
+}
+.leaflet-bar a,
+.leaflet-bar a:hover {
+    background: var(--card);
+    color: var(--text);
+    border-bottom: 1px solid var(--divider);
+}
+.leaflet-bar a:hover {
+    color: var(--ember);
+}
+.leaflet-tooltip {
+    background: #000000;            /* --el-black: tooltips */
+    color: var(--text);
+    border: 1px solid var(--divider);
+    font-family: var(--font-sans);
+}
+.leaflet-tooltip-top::before { border-top-color: #000000; }
+.leaflet-tooltip-bottom::before { border-bottom-color: #000000; }
+.leaflet-tooltip-left::before { border-left-color: #000000; }
+.leaflet-tooltip-right::before { border-right-color: #000000; }
+.leaflet-container .leaflet-control-attribution {
+    background: var(--card);
+    color: var(--muted);
+    font-family: var(--font-sans);
+}
+.leaflet-container .leaflet-control-attribution a {
+    color: var(--text);
+}
+.leaflet-container a.leaflet-popup-close-button {
+    color: var(--muted);
+}
+.leaflet-container a.leaflet-popup-close-button:hover {
+    color: var(--ember);
 }
