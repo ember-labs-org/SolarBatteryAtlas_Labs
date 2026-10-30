@@ -2050,7 +2050,7 @@ function renderSupplyLegendFromInfo(info) {
         const rows = [];
         if (info.underflowLabel) {
             rows.push({
-                color: info.underflowColor || '#C4D9E9',
+                color: info.underflowColor || '#FFC400',
                 text: info.underflowLabel
             });
         }
@@ -2877,7 +2877,7 @@ function renderLegendFromInfo(info) {
         const rows = [];
         if (info.underflowLabel) {
             rows.push({
-                color: info.underflowColor || '#C4D9E9',
+                color: info.underflowColor || '#FFC400',
                 text: info.underflowLabel
             });
         }
@@ -4128,7 +4128,7 @@ function handleHistogramClick(bucket, metrics, overlayMode, baseLayer) {
     if (overlayMode === 'cf') {
         const scale = d3.scaleLinear()
             .domain([0, 0.05, 0.4, 0.7, 1.0])
-            .range(["#FFF4A3", "#FFDA44", "#FFC400", "#CC9900", "#B77A00"]) // Labs yellow ramp
+            .range(["#203772", "#1E609C", "#37A6E6", "#13CE74", "#FFC400"]) // same multi-hue ramp as the main CF map
             .interpolate(d3.interpolateRgb)
             .clamp(true);
         getColor = (v) => scale(v);
@@ -4136,16 +4136,20 @@ function handleHistogramClick(bucket, metrics, overlayMode, baseLayer) {
         const vals = metrics.map(m => m.metric).filter(Number.isFinite);
         const minV = Math.min(...vals);
         const maxV = Math.max(...vals);
-        const scale = d3.scaleSequential(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])).domain([minV, maxV]); // Labs blue ramp
+        const scale = d3.scaleSequential(d3.interpolateRgbBasis(['#FFC400', '#13CE74', '#37A6E6', '#1E609C', '#203772'])).domain([minV, maxV]); // LCOE: cheap = yellow, expensive = dark blue
         getColor = (v) => scale(v);
     } else if (baseLayer === 'electricity') {
         const vals = metrics.map(m => m.metric).filter(v => v > 0);
         const maxV = Math.max(...vals);
-        const s = d3.scaleSequentialLog(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])).domain([Math.max(0.1, maxV / 1000), maxV]);
+        const s = d3.scaleSequentialLog(d3.interpolateRgbBasis(['#203772', '#1E609C', '#37A6E6', '#97CCED', '#C4D9E9'])).domain([Math.max(0.1, maxV / 1000), maxV]); // dense = bright
         getColor = (v) => s(Math.max(0.1, v));
     } else {
-        const scale = d3.scaleSequential(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])).domain([min, max]); // Labs blue ramp
-        getColor = (v) => scale(v);
+        // Population: log scale, dense = bright (matches the main population map)
+        const posVals = metrics.map(m => m.metric).filter(v => Number.isFinite(v) && v > 0);
+        const hi = posVals.length ? Math.max(...posVals) : 1;
+        const lo = Math.max(posVals.length ? Math.min(...posVals) : 1, hi / 1e6);
+        const scale = d3.scaleSequentialLog(d3.interpolateRgbBasis(['#203772', '#1E609C', '#37A6E6', '#97CCED', '#C4D9E9'])).domain([lo, Math.max(hi, lo * 10)]).clamp(true);
+        getColor = (v) => scale(Math.max(lo, v));
     }
 
     if (closeBtn) {
@@ -4702,7 +4706,7 @@ function prepareLcoeDisplayData() {
             if (Number.isFinite(p10) && p10 < lockedMin) {
                 lockedBase.underflowMin = p10;
                 lockedBase.underflowLabel = `< ${formatCurrencyLabel(lockedMin)}`;
-                lockedBase.underflowColor = '#C4D9E9';
+                lockedBase.underflowColor = '#FFC400';
             } else {
                 lockedBase.underflowMin = null;
                 lockedBase.underflowLabel = '';

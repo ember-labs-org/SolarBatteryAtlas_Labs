@@ -38,7 +38,7 @@ export const VIEW_MODE_EXPLANATIONS = {
 
 export const CF_COLOR_SCALE = {
     domain: [0, 0.05, 0.4, 0.7, 1.0],
-    range: ["#FFF4A3", "#FFDA44", "#FFC400", "#CC9900", "#B77A00"] // Labs yellow ramp, light = low
+    range: ["#203772", "#1E609C", "#37A6E6", "#13CE74", "#FFC400"] // Ember multi-hue ramp: dark blue (low) -> yellow (high); lightness rises steadily
 };
 
 // Color scale for Energy Access (0% to 100%)

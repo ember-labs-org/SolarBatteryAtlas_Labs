@@ -148,13 +148,22 @@ function endMapPerf(marker, extra = {}) {
     }
 }
 
-function buildPopulationScale(values) {
-    const valid = values.filter(Number.isFinite);
-    const min = valid.length ? Math.min(...valid) : 0;
-    const max = valid.length ? Math.max(...valid) : 1;
-    return d3.scaleSequential(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])) // Labs blue ramp
-        .domain([min, max])
+// Population is very uneven (a few huge cells, many small ones), so a linear scale
+// leaves almost every cell in the palest colour. A log scale gives each tenfold step in
+// population its own shade. Dense = bright so busy areas stand out on the dark map.
+// Cells with zero (or below the floor) take the darkest colour via clamp.
+export const POP_RAMP = ['#203772', '#1E609C', '#37A6E6', '#97CCED', '#C4D9E9'];
+export function buildLogRampScale(values, ramp = POP_RAMP) {
+    const positive = values.filter(v => Number.isFinite(v) && v > 0);
+    const max = positive.length ? Math.max(...positive) : 1;
+    const min = positive.length ? Math.min(...positive) : 1;
+    const floor = Math.max(min, max / 1e6, 1e-9);   // keep the range to ~6 orders of magnitude
+    return d3.scaleSequentialLog(d3.interpolateRgbBasis(ramp))
+        .domain([floor, Math.max(max, floor * 10)])
         .clamp(true);
+}
+function buildPopulationScale(values) {
+    return buildLogRampScale(values);
 }
 
 function buildLcoeScale(domain, options = {}) {
@@ -167,9 +176,10 @@ function buildLcoeScale(domain, options = {}) {
             scaleDomain[i] = scaleDomain[i - 1] + 1;
         }
     }
-    // Labs blue ramp, light = cheap, dark = expensive. Exact ramp steps when the
-    // scale has five stops, otherwise sampled evenly along the ramp.
-    const ramp = ['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'];
+    // Ember multi-hue ramp, reversed from the CF map so bright = good on both:
+    // yellow = cheap, dark blue = expensive. Exact ramp steps when the scale has
+    // five stops, otherwise sampled evenly along the ramp.
+    const ramp = ['#FFC400', '#13CE74', '#37A6E6', '#1E609C', '#203772'];
     let range = scaleDomain.length === ramp.length
         ? ramp
         : d3.quantize(d3.interpolateRgbBasis(ramp), Math.max(2, scaleDomain.length));
@@ -1213,15 +1223,13 @@ export function updatePopulationSimple(popData, { baseLayer = 'population', over
     const popValues = popData.map(p => p.population_2020 || 0);
     const popScale = buildPopulationScale(popValues);
 
-    // Electricity scale (linear scale, black to white like population)
+    // Electricity scale: log scale, same colours as population
     let demandScale = null;
     if (baseLayer === 'electricity' && electricityDemandData && electricityDemandData.length > 0) {
         const demands = electricityDemandData.map(d => d.annual_demand_kwh || 0).filter(v => v > 0);
         if (demands.length > 0) {
-            const minD = d3.min(demands);
-            const maxD = d3.max(demands);
-            // Same scale as population: Labs blue ramp (light = low, dark = high)
-            demandScale = d3.scaleSequential(d3.interpolateRgbBasis(['#C4D9E9', '#97CCED', '#37A6E6', '#1E609C', '#203772'])).domain([minD, maxD]);
+            // Same log scale and colours as population (dense = bright)
+            demandScale = buildLogRampScale(demands);
         }
     }
 
