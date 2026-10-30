@@ -522,22 +522,22 @@
                         <div id="legend-item-coal"
                             class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
                             title="Toggle Coal">
-                            <span class="w-2 h-2 rounded-full bg-orange-500"></span> Coal
+                            <span class="w-2 h-2" style="background:#C4D9E9"></span> Coal
                         </div>
                         <div id="legend-item-oil_gas"
                             class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
                             title="Toggle Oil & Gas">
-                            <span class="w-2 h-2 rounded-full bg-sky-400"></span> Oil & Gas
+                            <span class="w-2 h-2" style="background:#37A6E6"></span> Oil & Gas
                         </div>
                         <div id="legend-item-bioenergy"
                             class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
                             title="Toggle Bioenergy">
-                            <span class="w-2 h-2 rounded-full bg-lime-500"></span> Bioenergy
+                            <span class="w-2 h-2" style="background:#13CE74"></span> Bioenergy
                         </div>
                         <div id="legend-item-nuclear"
                             class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
                             title="Toggle Nuclear">
-                            <span class="w-2 h-2 rounded-full bg-purple-500"></span> Nuclear
+                            <span class="w-2 h-2" style="background:#FFF4A3"></span> Nuclear
                         </div>
                     </div>
                 </div>
@@ -886,15 +886,15 @@
             <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Hourly Dispatch</div>
             <div class="space-y-2">
                 <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="w-3 h-3" style="background:#FFC400"></div>
                     <span class="text-xs text-gray-300">Solar Generation</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+                    <div class="w-3 h-3" style="background:#37A6E6"></div>
                     <span class="text-xs text-gray-300">Battery Discharge</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full bg-gray-500"></div>
+                    <div class="w-3 h-3" style="background:#E04B00"></div>
                     <span class="text-xs text-gray-300">Backup Generation</span>
                 </div>
                 <div class="flex items-center gap-2">
@@ -952,7 +952,7 @@
         <!-- Population Legend -->
         <div id="legend-population"
             class="hidden pointer-events-auto bg-surface border border-white/10 rounded-xl shadow-xl p-4 w-64">
-            <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Population</div>
+            <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Population (log scale)</div>
             <div class="w-full h-2 rounded-full mb-2 legend-gradient-pop"></div>
             <div class="flex justify-between text-[10px] font-mono text-gray-500">
                 <span id="legend-pop-min">0</span>
@@ -963,7 +963,7 @@
         <!-- Electricity Demand Legend -->
         <div id="legend-electricity"
             class="hidden pointer-events-auto bg-surface border border-white/10 rounded-xl shadow-xl p-4 w-64">
-            <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Electricity Demand (TWh/yr)
+            <div class="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Electricity Demand (TWh/yr, log scale)
             </div>
             <div class="w-full h-2 rounded-full mb-2 legend-gradient-pop"></div>
             <div class="flex justify-between text-[10px] font-mono text-gray-500">
@@ -992,7 +992,7 @@
                 <span id="legend-access-max">100%</span>
             </div>
             <div class="flex items-center gap-2 pt-2 border-t border-white/10">
-                <span class="w-3 h-3 rounded-sm bg-slate-700 border border-slate-600"></span>
+                <span class="w-3 h-3" style="background:#192238;border:1px solid #B0B7C6"></span>
                 <span id="legend-access-note" class="text-[10px] text-gray-400">No Data (HREA not covered)</span>
             </div>
         </div>

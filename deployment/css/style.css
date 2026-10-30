@@ -184,16 +184,16 @@ body.split-maps #legend-stack {
     line-height: 1.5;
 }
 
-/* Legend gradients: Ember Labs sequential ramps (light = low, dark = high),
+/* Legend gradients: Ember palette ramps,
    matching the map scales in js/map.js, js/constants.js and js/app.js. */
-.legend-gradient {            /* capacity factor: yellow ramp */
+.legend-gradient {            /* capacity factor: multi-hue, dark blue (low) -> yellow (high) */
     background: linear-gradient(to right,
-            #FFF4A3 0%, #FFDA44 5%, #FFC400 40%, #CC9900 70%, #B77A00 100%);
+            #203772 0%, #1E609C 5%, #37A6E6 40%, #13CE74 70%, #FFC400 100%);
 }
 
-.legend-gradient-cost {       /* LCOE: blue ramp */
+.legend-gradient-cost {       /* LCOE: multi-hue, yellow (cheap) -> dark blue (expensive) */
     background: linear-gradient(to right,
-            #C4D9E9 0%, #97CCED 25%, #37A6E6 50%, #1E609C 75%, #203772 100%);
+            #FFC400 0%, #13CE74 25%, #37A6E6 50%, #1E609C 75%, #203772 100%);
 }
 
 .legend-gradient-delta {      /* two-sided: green = cheaper, blue = more expensive (flagged to Rey) */
@@ -205,9 +205,9 @@ body.split-maps #legend-stack {
     background: linear-gradient(to right, #D3EADF 0%, #13CE74 50%, #0B6638 100%);
 }
 
-.legend-gradient-pop {        /* population: blue ramp */
+.legend-gradient-pop {        /* population and demand: log scale, dark blue (low) -> pale blue (high) */
     background: linear-gradient(to right,
-            #C4D9E9 0%, #97CCED 25%, #37A6E6 50%, #1E609C 75%, #203772 100%);
+            #203772 0%, #1E609C 25%, #37A6E6 50%, #97CCED 75%, #C4D9E9 100%);
 }
 
 .legend-gradient-potential {  /* solar potential: green ramp */
