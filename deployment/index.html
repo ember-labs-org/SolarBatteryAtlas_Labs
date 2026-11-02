@@ -53,6 +53,14 @@
          LAST among stylesheets to match the Play CDN's runtime injection
          point, preserving cascade ties exactly. -->
     <link rel="stylesheet" href="css/tailwind.css">
+
+    <!-- Ember Labs analytics: Umami, cookieless, no personal data. Only counts visits on the
+         live site (data-domains), so local previews are ignored. Events: js/analytics.js.
+         Website ID from Umami: Settings > Websites > Edit (one site for all Labs tools). -->
+    <script defer src="https://cloud.umami.is/script.js"
+        data-website-id="6190ccfa-b0f2-4ed2-8b40-3faf365e9485"
+        data-domains="ember-labs-org.github.io"></script>
+    <script defer src="js/analytics.js"></script>
 </head>
 
 <body
