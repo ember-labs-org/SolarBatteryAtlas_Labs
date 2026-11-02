@@ -17,7 +17,8 @@
  *   assumption_edited          {field}              cost and finance inputs (field name only)
  *   option_toggled             {option, on}         diesel backup, day/night
  *   sample_week_selected       {week}
- *   animation_played           {control}            sample weeks and LCOE-over-time play buttons
+ *   animation_played           {control}            Play pressed: sample weeks or LCOE over time
+ *   animation_paused           {control}            Pause pressed on the same buttons
  *   target_type_changed        {target}             utilization or LCOE target
  *   cost_mode_changed          {mode, section}      global or local assumptions
  *   base_layer_changed         {layer}              supply-demand base layer
@@ -99,7 +100,12 @@
             case 'btn-access-none': return track('access_view_changed', { view: 'no_access' });
             case 'chart-cumulative-toggle': return track('cumulative_toggled');
         }
-        if (PLAYS[b.id]) track('animation_played', { control: b.id });
+        // The same button reads "Play" or "Pause". This runs before the app updates the
+        // label, so the current label says which one was pressed.
+        if (PLAYS[b.id]) {
+            var pausing = /pause/i.test(b.textContent || '');
+            track(pausing ? 'animation_paused' : 'animation_played', { control: b.id });
+        }
     }, true);
 
     // Changes: sliders fire 'change' once on release, inputs once when edited.

@@ -41,7 +41,7 @@ The URL must end with a slash. Everything else in `deployment/data/` ships with 
 
 ## Analytics
 
-The Ember Labs version uses [Umami](https://umami.is) for cookieless usage tracking: no cookies and no personal data. The Umami script is loaded in `deployment/index.html` (with the website ID), and `deployment/js/analytics.js` lists and sends the events, such as view changes, slider settings, map clicks and the tour. It only counts visits on `ember-labs-org.github.io`, so local previews are ignored. If the script is blocked, the tool works as normal.
+The Ember Labs version uses [Umami](https://umami.is) for cookieless usage tracking: no cookies and no personal data. The Umami script is loaded in `deployment/index.html` (with the website ID), and `deployment/js/analytics.js` lists and sends the events, such as view changes, slider settings, map clicks and the tour. It also records page loading speed (Core Web Vitals). It only counts visits on `ember-labs-org.github.io`, so local previews are ignored. To exclude your own browser from the numbers, open the browser console on the live tool once and run `localStorage.setItem('umami.disabled', 1)`. If the script is blocked, the tool works as normal.
 
 ## Data sources
 
