@@ -39,6 +39,10 @@ For deployment, host the samples elsewhere (for example a cloud storage bucket) 
 
 The URL must end with a slash. Everything else in `deployment/data/` ships with the app.
 
+## Analytics
+
+The Ember Labs version uses [Umami](https://umami.is) for cookieless usage tracking: no cookies and no personal data. The Umami script is loaded in `deployment/index.html` (with the website ID), and `deployment/js/analytics.js` lists and sends the events, such as view changes, slider settings, map clicks and the tour. It only counts visits on `ember-labs-org.github.io`, so local previews are ignored. If the script is blocked, the tool works as normal.
+
 ## Data sources
 
 | Data | Source | Used for |
